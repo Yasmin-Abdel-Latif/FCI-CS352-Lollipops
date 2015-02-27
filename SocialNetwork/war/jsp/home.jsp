@@ -11,6 +11,7 @@
 <p> This is should be user home page </p>
 <p> Current implemented services "http://fci-swe-apps.appspot.com/rest/RegistrationService --- {requires: uname, email, password}" </p>
 <p> and "http://fci-swe-apps.appspot.com/rest/LoginService --- {requires: uname,  password}" </p>
-<p> you should implement sendFriendRequest service and addFriend service
+<p> you should implement sendFriendRequest service and addFriend service </p>
+<a href="/social/">Sign out</a> <br>
 </body>
 </html>
