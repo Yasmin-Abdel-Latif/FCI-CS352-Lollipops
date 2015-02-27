@@ -1,0 +1,2 @@
+# Web-Service
+Social media sites have changed the way we interact with each other. Sites like Facebook, Twitter, LinkedIn, Vine and more make it simple to stay connected in people’s lives. You can easily catch up with friends with their statuses, photos and videos they post. And social media is not just important for your personal life, it is also a great tool for businesses or anyone trying to develop their professional network or look for a job. In this project we will build our own version of social network.
