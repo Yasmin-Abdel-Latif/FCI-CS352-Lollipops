@@ -60,7 +60,8 @@ public class UserController {
 	 */
 	@GET
 	@Path("/")
-	public Response index() {
+	public Response index() 
+	{
 		return Response.ok(new Viewable("/jsp/entryPoint")).build();
 	}
 
@@ -72,10 +73,17 @@ public class UserController {
 	 */
 	@GET
 	@Path("/login")
-	public Response login() {
+	public Response login() 
+	{
 		return Response.ok(new Viewable("/jsp/login")).build();
 	}
-
+	
+	@GET
+	@Path("/SendFriendRequest")
+	public Response SendRequest() 
+	{
+		return Response.ok(new Viewable("/jsp/SendFriendRequest")).build();
+	}
 	/**
 	 * Action function to response to signup request, This function will act as
 	 * a controller part and it will calls RegistrationService to make
@@ -92,8 +100,8 @@ public class UserController {
 	@POST
 	@Path("/response")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String response(@FormParam("uname") String uname,
-			@FormParam("email") String email, @FormParam("password") String pass) {
+	public String response(@FormParam("uname") String uname, @FormParam("email") String email, @FormParam("password") String pass) 
+	{
 		String serviceUrl = "http://1-dot-direct-hallway-864.appspot.com/rest/RegistrationService";
 		try {
 			URL url = new URL(serviceUrl);
@@ -107,8 +115,7 @@ public class UserController {
 			connection.setRequestMethod("POST");
 			connection.setConnectTimeout(60000);  //60 Seconds
 			connection.setReadTimeout(60000);  //60 Seconds
-			connection.setRequestProperty("Content-Type",
-					"application/x-www-form-urlencoded;charset=UTF-8");
+			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 			OutputStreamWriter writer = new OutputStreamWriter(
 					connection.getOutputStream());
 			writer.write(urlParameters);
@@ -158,8 +165,8 @@ public class UserController {
 	@POST
 	@Path("/home")
 	@Produces("text/html")
-	public Response home(@FormParam("uname") String uname,
-			@FormParam("password") String pass) {
+	public Response home(@FormParam("uname") String uname, @FormParam("password") String pass) 
+	{
 		String serviceUrl = "http://1-dot-direct-hallway-864.appspot.com/rest/LoginService";
 		try {
 			URL url = new URL(serviceUrl);
@@ -215,6 +222,62 @@ public class UserController {
 		return null;
 
 	}
+	@POST
+	@Path("/request")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response Request(@FormParam("uname") String uname, @FormParam("FriendUserName") String FriendUserName) 
+	{
+		String serviceUrl = "http://1-dot-direct-hallway-864.appspot.com/rest/SendFriendRequestService";
+		try {
+			URL url = new URL(serviceUrl);
+			String urlParameters = "uname=" + uname + "&FriendUserName=" + FriendUserName;
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setInstanceFollowRedirects(false);
+			connection.setRequestMethod("POST");
+			connection.setConnectTimeout(60000);  //60 Seconds
+			connection.setReadTimeout(60000);  //60 Seconds
+			
+			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+			OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+			writer.write(urlParameters);
+			writer.flush();
+			String line, retJson = "";
+			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
+			while ((line = reader.readLine()) != null) 
+			{
+				retJson += line;
+			}
+			writer.close();
+			reader.close();
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+			if (object.get("Status").equals("Failed"))
+				return null;
+			Map<String, String> map = new HashMap<String, String>();
+			UserEntity user = UserEntity.getUser(object.toJSONString());
+			map.put("name", user.getName());
+			map.put("email", user.getEmail());
+			return Response.ok(new Viewable("/jsp/SendFriendRequest", map)).build();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		/*
+		 * UserEntity user = new UserEntity(uname, email, pass);
+		 * user.saveUser(); return uname;
+		 */
+		return null;
+
+	}
 
 }

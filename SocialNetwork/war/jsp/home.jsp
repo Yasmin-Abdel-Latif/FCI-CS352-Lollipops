@@ -13,5 +13,6 @@
 <p> and "http://fci-swe-apps.appspot.com/rest/LoginService --- {requires: uname,  password}" </p>
 <p> you should implement sendFriendRequest service and addFriend service </p>
 <a href="/social/">Sign out</a> <br>
+<a href="/social/SendFriendRequest/">Send Friend Request</a> <br>
 </body>
 </html>

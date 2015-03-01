@@ -47,6 +47,7 @@ public class Service {
 	 *            provided password
 	 * @return Status json
 	 */
+	@SuppressWarnings("unchecked")
 	@POST
 	@Path("/RegistrationService")
 	public String registrationService(@FormParam("uname") String uname,
@@ -65,16 +66,19 @@ public class Service {
 	 * @param pass provided user password
 	 * @return user in json format
 	 */
+	@SuppressWarnings("unchecked")
 	@POST
 	@Path("/LoginService")
-	public String loginService(@FormParam("uname") String uname,
-			@FormParam("password") String pass) {
+	public String loginService(@FormParam("uname") String uname, @FormParam("password") String pass) 
+	{
 		JSONObject object = new JSONObject();
 		UserEntity user = UserEntity.getUser(uname, pass);
-		if (user == null) {
+		if (user == null) 
+		{
 			object.put("Status", "Failed");
-
-		} else {
+		} 
+		else 
+		{
 			object.put("Status", "OK");
 			object.put("name", user.getName());
 			object.put("email", user.getEmail());
@@ -82,6 +86,32 @@ public class Service {
 		}
 
 		return object.toString();
+	}
+	/**
+	 * SendFriendRequest Service
+	 * @param uname provided user name
+	 * @param FriendUserName
+	 */
+	@POST
+	@Path("/SendFriendRequestService")
+	public String SendFriendRequestService(@FormParam("uname") String uname,@FormParam("FriendUserName") String FriendUserName)
+	{
+		UserEntity User = UserEntity.getUserWithName(uname);
+		UserEntity Friend = UserEntity.getUserWithName(FriendUserName);
+
+		if (Friend == null) 
+		{
+			return "Username requested Not Found";
+		} 
+		else 
+		{
+			User.setFriendUserName(FriendUserName);
+			User.setFriendRequestStatus(false);
+			Friend.setFriendRequest(uname);
+			User.updateUser();
+			Friend.updateUser();
+			return "Friend request was sent";
+		}
 
 	}
 
