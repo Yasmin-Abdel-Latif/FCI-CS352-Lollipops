@@ -6,7 +6,6 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER/App Engine"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/aopalliance-repackaged-2.4.0-b06.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/asm-debug-all-5.0.2.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/hk2-api-2.4.0-b06.jar"/>
@@ -32,5 +31,6 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/osgi-resource-locator-1.0.1.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/persistence-api-1.0.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/validation-api-1.1.0.Final.jar"/>
+	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
