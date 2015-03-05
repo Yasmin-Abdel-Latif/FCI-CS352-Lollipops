@@ -1,7 +1,5 @@
 package com.FCI.SWE.Models;
 
-import java.util.List;
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -9,12 +7,11 @@ import org.json.simple.parser.ParseException;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.FilterOperator;
+//import com.google.appengine.api.datastore.Query.FilterOperator;
 
 
 /**
@@ -32,9 +29,7 @@ public class UserEntity {
 	private String name;
 	private String email;
 	private String password;
-	private String FriendUserName;
-	private String FriendRequest;
-	private boolean FriendRequestStatus;
+	public static String myName;
 
 	/**
 	 * Constructor accepts user data
@@ -46,38 +41,25 @@ public class UserEntity {
 	 * @param password
 	 *            user provided password
 	 */
-	public UserEntity(String name, String email, String password) {
-		
+	public UserEntity(String name, String email, String password) 
+	{
 		this.name = name;
 		this.email = email;
 		this.password = password;
-		this.FriendRequestStatus = false;
-		this.FriendUserName = "";
-		this.FriendRequest = "";
-
+		UserEntity.myName = name;
 	}
-
-	public void setFriendUserName(String FriendUserName) {
-		this.FriendUserName = FriendUserName;
-	}
-	
-	public void setFriendRequest(String FriendRequest) {
-		this.FriendRequest = FriendRequest;
-	}
-	
-	public void setFriendRequestStatus(boolean FriendRequestStatus) {
-		this.FriendRequestStatus = FriendRequestStatus;
-	}
-	
-	public String getName() {
+	public String getName() 
+	{
 		return name;
 	}
 
-	public String getEmail() {
+	public String getEmail() 
+	{
 		return email;
 	}
 
-	public String getPass() {
+	public String getPass() 
+	{
 		return password;
 	}
 
@@ -129,6 +111,7 @@ public class UserEntity {
 			if (entity.getProperty("name").toString().equals(name) && entity.getProperty("password").toString().equals(pass)) 
 			{
 				UserEntity returnedUser = new UserEntity(entity.getProperty("name").toString(), entity.getProperty("email").toString(), entity.getProperty("password").toString());
+				myName= entity.getProperty("name").toString();
 				return returnedUser;
 			}
 		}
@@ -163,58 +146,26 @@ public class UserEntity {
 	public Boolean saveUser()
 	{
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-		Query gaeQuery = new Query("users");
-		PreparedQuery pq = datastore.prepare(gaeQuery);
-		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
-		
-		Key UserKey = KeyFactory.createKey("users", list.size() + 1);
+		Key UserKey = KeyFactory.createKey("users", (this.name.length()*2) + (this.password.length()*2) + (this.email.length()*2));
 	    Entity employee = new Entity("users", UserKey);
-	 
-		employee.setProperty("ID", list.size() + 1);
+	    
+		employee.setProperty("ID", (this.name.length()*2) + (this.password.length()*2) + (this.email.length()*2));
 		employee.setProperty("name", this.name);
 		employee.setProperty("email", this.email);
 		employee.setProperty("password", this.password);
-		employee.setProperty("Friend", this.FriendUserName);
-		employee.setProperty("Friend Request", this.FriendRequest);
-		employee.setProperty("Friend Request Status", this.FriendRequestStatus);
 		datastore.put(employee);
 
 		return true;
 	}
 	
-	@SuppressWarnings({ "deprecation" })
-	public String updateUser()
+	public String getMyName() 
 	{
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-		Query query = new Query("users");
-		query.addFilter("name", FilterOperator.EQUAL, this.name);
-		PreparedQuery pq = datastore.prepare(query);
-		Entity employee = pq.asSingleEntity();
-		
-		if(employee.getProperty("Friend").equals(""))
-		{
-			employee.setProperty("Friend", this.FriendUserName);
-		}
-		
-		if(!employee.getProperty("Friend").equals("") && !employee.getProperty("Friend").toString().contains(this.FriendUserName))
-		{
-			employee.setProperty("Friend", employee.getProperty("Friend") + "," +this.FriendUserName);
-			employee.setProperty("Friend Request Status", employee.getProperty("Friend Request Status") + "," + this.FriendRequestStatus);
-		}
+		return myName;
+	}
 
-		if(employee.getProperty("Friend Request").equals(""))
-		{
-			employee.setProperty("Friend Request", this.FriendRequest);
-		}
 
-		if(!employee.getProperty("Friend Request").equals("") && !employee.getProperty("Friend Request").toString().contains(this.FriendRequest))
-		{
-			employee.setProperty("Friend Request", employee.getProperty("Friend Request") + "," + this.FriendRequest);
-			employee.setProperty("Friend Request Status", employee.getProperty("Friend Request Status") + "," + this.FriendRequestStatus);
-		}
-
-		
-		datastore.put(employee);
-		return "Done";
+	public void setMyName(String myName) 
+	{
+		UserEntity.myName = myName;
 	}
 }
