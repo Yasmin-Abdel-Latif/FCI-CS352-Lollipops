@@ -25,6 +25,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.FCI.SWE.Models.Friend;
 import com.FCI.SWE.Models.UserEntity;
 
 /**
@@ -102,7 +103,7 @@ public class UserController {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String response(@FormParam("uname") String uname, @FormParam("email") String email, @FormParam("password") String pass) 
 	{
-		String serviceUrl = "http://1-dot-direct-hallway-864.appspot.com/rest/RegistrationService";
+		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/RegistrationService";
 		try {
 			URL url = new URL(serviceUrl);
 			String urlParameters = "uname=" + uname + "&email=" + email
@@ -167,7 +168,7 @@ public class UserController {
 	@Produces("text/html")
 	public Response home(@FormParam("uname") String uname, @FormParam("password") String pass) 
 	{
-		String serviceUrl = "http://1-dot-direct-hallway-864.appspot.com/rest/LoginService";
+		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/LoginService";
 		try {
 			URL url = new URL(serviceUrl);
 			String urlParameters = "uname=" + uname + "&password=" + pass;
@@ -225,12 +226,12 @@ public class UserController {
 	@POST
 	@Path("/request")
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response Request(@FormParam("uname") String uname, @FormParam("FriendUserName") String FriendUserName) 
+	public Response Request(@FormParam("friend") String fName) 
 	{
-		String serviceUrl = "http://1-dot-direct-hallway-864.appspot.com/rest/SendFriendRequestService";
+		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/SendFriendRequestService";
 		try {
 			URL url = new URL(serviceUrl);
-			String urlParameters = "uname=" + uname + "&FriendUserName=" + FriendUserName;
+			String urlParameters = "friend=" + fName;
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
@@ -258,10 +259,10 @@ public class UserController {
 			if (object.get("Status").equals("Failed"))
 				return null;
 			Map<String, String> map = new HashMap<String, String>();
-			UserEntity user = UserEntity.getUser(object.toJSONString());
-			map.put("name", user.getName());
-			map.put("email", user.getEmail());
-			return Response.ok(new Viewable("/jsp/SendFriendRequest", map)).build();
+			Friend fObj = Friend.getrequest(object.toJSONString());
+//			map.put("sName",UserEntity.myName);
+//			map.put("rName", fObj.getFriend());
+			return Response.ok(new Viewable("/jsp/home", map)).build();
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -272,12 +273,6 @@ public class UserController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		/*
-		 * UserEntity user = new UserEntity(uname, email, pass);
-		 * user.saveUser(); return uname;
-		 */
 		return null;
-
 	}
-
 }
