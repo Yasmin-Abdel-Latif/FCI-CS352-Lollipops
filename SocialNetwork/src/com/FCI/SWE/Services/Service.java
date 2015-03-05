@@ -9,6 +9,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.json.simple.JSONObject;
 
+import com.FCI.SWE.Models.Friend;
 import com.FCI.SWE.Models.UserEntity;
 
 
@@ -92,27 +93,25 @@ public class Service {
 	 * @param uname provided user name
 	 * @param FriendUserName
 	 */
+	@SuppressWarnings({ "unused", "unchecked" })
 	@POST
 	@Path("/SendFriendRequestService")
-	public String SendFriendRequestService(@FormParam("uname") String uname,@FormParam("FriendUserName") String FriendUserName)
+	public String requestService(@FormParam("friend") String friend) 
 	{
-		UserEntity User = UserEntity.getUserWithName(uname);
-		UserEntity Friend = UserEntity.getUserWithName(FriendUserName);
 
-		if (Friend == null) 
+		JSONObject object = new JSONObject();
+		object.put("friend", friend);
+		Friend friendObj = Friend.getrequest(object.toString());
+		friendObj.sendRequest();
+
+		if (friendObj == null) 
 		{
-			return "Username requested Not Found";
+			return "Failed";
 		} 
-		else 
+		else
 		{
-			User.setFriendUserName(FriendUserName);
-			User.setFriendRequestStatus(false);
-			Friend.setFriendRequest(uname);
-			User.updateUser();
-			Friend.updateUser();
-			return "Friend request was sent";
+			return "Friend Request Sent";
 		}
-
 	}
 
 }
