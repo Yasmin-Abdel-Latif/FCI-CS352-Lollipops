@@ -86,6 +86,50 @@ public class UserController {
 		return Response.ok(new Viewable("/jsp/login")).build();
 	}
 	
+	
+	/**
+	 * Action function to render Sign Out page, this function will be executed
+	 * using url like this /rest/signout
+	 * 
+	 * @return signOut page
+	 */
+	@GET
+	@Path("/signout")
+	public Response signOut() {
+		return Response.ok(new Viewable("/jsp/signOut")).build();
+	}
+	
+	/**
+	 * Action function to redirect user to startup page after signing out.
+	 * 
+	 * @return entryPoint page
+	 */
+	@POST
+	@Path("/redirectStartUp")
+	public Response redirectStartUp() {
+		userData.setName("");
+		userData.setPassword("");
+		return Response.ok(new Viewable("/jsp/entryPoint")).build();
+	}
+
+	/**
+	 * Action function to redirect user to home page if she/he chose to back up from signing out
+	 * This function does not create a new "user". The user is defined via her/his info in the datastore. It just passes vars here.
+	 * 
+	 * @return home page
+	 */
+	@POST
+	@Path("/redirectHome")
+	public Response redirectHome() {
+		UserEntity user =  new UserEntity(userData.getName(), userData.getPassword()); 
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("name", user.getName());
+		map.put("email", user.getEmail());
+		return Response.ok(new Viewable("/jsp/home", map)).build();
+
+	}
+
+	
 	@GET
 	@Path("/SendFriendRequest")
 	public Response SendRequest() 
@@ -246,6 +290,14 @@ public class UserController {
 		}
 		return null;
 	}
+
+	/**
+	 * Action function to send friend request to fName
+	 * 
+	 * @param fName
+	 * 			provided requested friend name
+	 * @return Home page view
+	 */
 	@POST
 	@Path("/request")
 	@Produces("text/html")
@@ -312,6 +364,14 @@ public class UserController {
 		}
 		return Response.ok(new Viewable("/jsp/home",map)).build();
 	}
+	
+	/**
+	 * Action function to accept friend request with name friend
+	 * 
+	 * @param friend
+	 * 			provided accepted friend name
+	 * @return Home page view
+	 */
 	@POST
 	@Path("/Accept")
 	@Produces("text/html")

@@ -48,19 +48,62 @@ public class UserEntity {
 		this.password = password;
 		UserEntity.myName = name;
 	}
+	/**
+	 * Constructor accepts user data
+	 * 
+	 * @param name
+	 *            user name
+	 * @param password
+	 *            user provided password
+	 */
+	public UserEntity(String name, String password) {
+		super();
+		this.name = name;
+		this.password = password;
+	}
+	/**
+	 * getter for user password
+	 * @return user password
+	 */
+	public String getPassword() {
+		return password;
+	}
+	/**
+	 * setter for user password
+	 * @param password
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	/**
+	 * setter for user name
+	 * @param name
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+	/**
+	 * setter for user email
+	 * @param email
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	/**
+	 * getter for user name
+	 * @return user name
+	 */
 	public String getName()
 	{
 		return name;
 	}
-
+	/**
+	 * getter for user email
+	 * @return user email
+	 */
 	public String getEmail() 
 	{
 		return email;
-	}
-
-	public String getPass() 
-	{
-		return password;
 	}
 
 	/**
@@ -138,6 +181,7 @@ public class UserEntity {
 		return null;
 	}
 
+	
 	/**
 	 * This method will be used to save user object in datastore
 	 * 
@@ -158,14 +202,5 @@ public class UserEntity {
 		return true;
 	}
 	
-	public String getMyName() 
-	{
-		return myName;
-	}
 
-
-	public void setMyName(String myName) 
-	{
-		UserEntity.myName = myName;
-	}
 }

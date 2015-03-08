@@ -87,7 +87,7 @@ public class Service {
 			object.put("Status", "OK");
 			object.put("name", user.getName());
 			object.put("email", user.getEmail());
-			object.put("password", user.getPass());
+			object.put("password", user.getPassword());
 		}
 		return object.toString();
 	}
@@ -118,6 +118,11 @@ public class Service {
 		}
 		return object.toString();
 	}
+	/**
+	 * Accept friend request service
+	 * @param friend provided accepted friend request name
+	 * @return friend request in json format
+	 */
 	@SuppressWarnings("unchecked")
 	@POST
 	@Path("/AcceptService")

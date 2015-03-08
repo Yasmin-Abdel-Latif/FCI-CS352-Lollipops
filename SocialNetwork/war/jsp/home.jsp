@@ -35,7 +35,7 @@ for(int i = 0 ; i < UserController.Friends.size() ; i++)
 <form action="/social/request" method="post">
  	Friend Name : <input type="text" name="friend" /> <br><br>
   	<input type="submit" value="send friend request"> <br><br>
-  	<a href="/social/">Sign out</a> <br>
+  	<a href="/social/signout">Sign out</a> <br>
 </form>
 </body>
 </html>
