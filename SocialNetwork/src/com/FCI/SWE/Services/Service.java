@@ -20,8 +20,8 @@ import com.FCI.SWE.Models.UserEntity;
  * This class contains REST services, also contains action function for web
  * application
  * 
- * @author Mohamed Samir
- * @version 1.0
+ * @author Mohammed Samir, Mariam Fouad, Nour Mohammed Srour Alwani, Yasmine Abdel Latif, Salwa Ahmed, Huda Mohammed
+ * @version 2.0
  * @since 2014-02-12
  *
  */
@@ -50,7 +50,7 @@ public class Service {
 	 *            provided user email
 	 * @param pass
 	 *            provided password
-	 * @return Status json
+	 * @return Status json in string fromat
 	 */
 	@SuppressWarnings("unchecked")
 	@POST
@@ -93,8 +93,8 @@ public class Service {
 	}
 	/**
 	 * SendFriendRequest Service
-	 * @param uname provided user name
 	 * @param FriendUserName
+	 * @return friend request in json format converted to string
 	 */
 	@SuppressWarnings({ "unchecked" })
 	@POST
@@ -120,8 +120,8 @@ public class Service {
 	}
 	/**
 	 * Accept friend request service
-	 * @param friend provided accepted friend request name
-	 * @return friend request in json format
+	 * @param sender friend name
+	 * @return friend request in json format converted to string
 	 */
 	@SuppressWarnings("unchecked")
 	@POST
