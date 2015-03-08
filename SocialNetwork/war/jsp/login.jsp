@@ -7,8 +7,8 @@
 </head>
 <body>
 <form action="/social/home" method="post">
-  Name : <input type="text" name="uname" /> <br>
-  Password : <input type="password" name="password" /> <br>
+  Name : <input type="TEXT" name="uname" placeholder="username"> <br>
+  Password : <input type="password" name="password" placeholder="password"> <br>
   <input type="submit" value="Login">
   
   </form>

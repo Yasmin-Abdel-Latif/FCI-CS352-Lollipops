@@ -48,7 +48,7 @@ public class UserEntity {
 		this.password = password;
 		UserEntity.myName = name;
 	}
-	public String getName() 
+	public String getName()
 	{
 		return name;
 	}
@@ -149,7 +149,7 @@ public class UserEntity {
 		Key UserKey = KeyFactory.createKey("users", (this.name.length()*2) + (this.password.length()*2) + (this.email.length()*2));
 	    Entity employee = new Entity("users", UserKey);
 	    
-		employee.setProperty("ID", (this.name.length()*2) + (this.password.length()*2) + (this.email.length()*2));
+		employee.setProperty("ID", (this.name.length()*2) + (this.password.length()*3) + (this.email.length()*4));
 		employee.setProperty("name", this.name);
 		employee.setProperty("email", this.email);
 		employee.setProperty("password", this.password);
