@@ -1,5 +1,7 @@
 package com.FCI.SWE.Services;
 
+import java.util.ArrayList;
+
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -9,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.json.simple.JSONObject;
 
+import com.FCI.SWE.Controller.UserController;
 import com.FCI.SWE.Models.Friend;
 import com.FCI.SWE.Models.UserEntity;
 
@@ -26,8 +29,9 @@ import com.FCI.SWE.Models.UserEntity;
 @Produces(MediaType.TEXT_PLAIN)
 public class Service {
 	
-	
-	
+	public static String nameLoggedin;
+	public static String FriendRequestName;
+	public static ArrayList<String> CheckedFriends;
 	
 	@GET
 	@Path("/index")
@@ -51,11 +55,11 @@ public class Service {
 	@SuppressWarnings("unchecked")
 	@POST
 	@Path("/RegistrationService")
-	public String registrationService(@FormParam("uname") String uname,
-			@FormParam("email") String email, @FormParam("password") String pass) {
+	public String registrationService(@FormParam("uname") String uname, @FormParam("email") String email, @FormParam("password") String pass) 
+	{
+		JSONObject object = new JSONObject();
 		UserEntity user = new UserEntity(uname, email, pass);
 		user.saveUser();
-		JSONObject object = new JSONObject();
 		object.put("Status", "OK");
 		return object.toString();
 	}
@@ -85,7 +89,6 @@ public class Service {
 			object.put("email", user.getEmail());
 			object.put("password", user.getPass());
 		}
-
 		return object.toString();
 	}
 	/**
@@ -93,7 +96,7 @@ public class Service {
 	 * @param uname provided user name
 	 * @param FriendUserName
 	 */
-	@SuppressWarnings({ "unused", "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	@POST
 	@Path("/SendFriendRequestService")
 	public String requestService(@FormParam("friend") String friend) 
@@ -101,17 +104,42 @@ public class Service {
 
 		JSONObject object = new JSONObject();
 		object.put("friend", friend);
+		object.put("name", UserController.userData.getName());
+		object.put("state", false);
 		Friend friendObj = Friend.getrequest(object.toString());
-		friendObj.sendRequest();
-
-		if (friendObj == null) 
+		boolean isDone = friendObj.sendRequest();
+		if (friendObj == null || !isDone) 
 		{
-			return "Failed";
+			object.put("Status", "Failed");
 		} 
 		else
 		{
-			return "Friend Request Sent";
+			object.put("Status", "OK");
 		}
+		return object.toString();
 	}
-
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("/AcceptService")
+	public String AcceptRequestService(@FormParam("fname") String friend) 
+	{
+		JSONObject object = new JSONObject();
+		object.put("friend", UserController.userData.getName());
+		object.put("name", friend);
+		object.put("state", false);
+		Friend friendObj = Friend.getrequest(object.toString());
+		
+		if (friendObj == null) 
+		{
+			object.put("Status", "Failed");
+		} 
+		else
+		{
+			friendObj.setState(true);
+			friendObj.Accept(UserController.userData.getName(),friend);
+			
+			object.put("Status", "OK");
+		}
+		return object.toString();
+	}
 }
