@@ -8,7 +8,7 @@
 <title>Insert title here</title>
 
 </head>
-<body background="http://wfiles.brothersoft.com/s/simple_aura-1920x1200.jpg" >
+<body background= "http://www.dualimg.com/wp-content/wallpapers/20130115/ooliizxpm5q734.jpg">
 <center><p><B><FONT COLOR="#CC0000" SIZE="6">${it.message}</FONT></B></p></center>
 <br>
 <TABLE ALIGN="CENTER" BORDER="3" BORDERCOLOR="#CC0000" BGCOLOR="#FFCCCC" WIDTH="500" CELLSPACING="1" CELLPADDING="3">

@@ -355,6 +355,7 @@ public class UserController {
 				map.put("message", "mnorna :D ");
 			}
 			Friend fObj = Friend.getrequest(object.toJSONString());
+			UserSentRequests = Friend.getUserSentRequests(userData.getName());
 			map.put("name", userData.getName());
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
