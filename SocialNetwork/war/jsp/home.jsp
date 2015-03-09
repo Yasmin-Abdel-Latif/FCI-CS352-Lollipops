@@ -73,8 +73,8 @@ for(int i = 0 ; i < UserController.Friends.size() ; i++)
 </TABLE>
 
 <br>
-<form action="/social/Accept" method = "POST" ALIGN="CENTER">
- 	<input type="text" name="fname" placeholder="Accepted Friend Request Name" 
+<center><form action="/social/Accept" method = "POST" >
+ 	<input type="text" name="fname" value="Accepted Friend Request Name" onfocus="this.style.color='#000'; this.value='';"
  	style="font-size:16px; 
  	height:30px; 
  	width:250px; 
@@ -85,10 +85,10 @@ for(int i = 0 ; i < UserController.Friends.size() ; i++)
 	color: #fff;
 	padding: 6px;"> <br><br>
  	<input type="image" src="http://www.clker.com/cliparts/M/C/n/R/d/n/accept-button-hi.png" alt="Submit" width="300" height="40"><br><br>
-</form>
+</form></center>
 <br>
-<form action="/social/request" method="post" ALIGN="CENTER">
- 	<input type="text" name="friend" placeholder="Friend Name"
+<center><form action="/social/request" method="post">
+ 	<input type="text" name="friend" value="Friend Name" onfocus="this.style.color='#000'; this.value='';"
  	style="font-size:16px; 
  	height:30px; 
  	width:250px; 
@@ -99,7 +99,8 @@ for(int i = 0 ; i < UserController.Friends.size() ; i++)
 	color: #fff;
 	padding: 6px;"> <br><br>
   	<input type="image" src="http://www.calvarymbcmagee.com/wp-content/uploads/2013/02/prayer-request-button.png" alt="Submit" width="300" height="40"><br><br>
-  	<FONT COLOR="#CC0000" SIZE="4"><B><a href="/social/signout">Sign out</a> <br></B></FONT>
+  	<FONT COLOR="#CC0000" SIZE="6"><B><a href="/social/signout">Sign out</a> <br></B></FONT>
 </form>
+</center>
 </body>
 </html>

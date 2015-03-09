@@ -106,7 +106,7 @@ public class UserController {
 	 * 
 	 * @return entryPoint page
 	 */
-	@POST
+	@GET
 	@Path("/redirectStartUp")
 	public Response redirectStartUp() {
 		userData.setName("");
@@ -121,7 +121,7 @@ public class UserController {
 	 * 
 	 * @return home page
 	 */
-	@POST
+	@GET
 	@Path("/redirectHome")
 	public Response redirectHome() {
 		UserEntity user = new UserEntity(userData.getName(),
@@ -342,8 +342,7 @@ public class UserController {
 			JSONObject object = (JSONObject) obj;
 
 			if (object.get("Status").equals("Failed"))
-				return Response.ok(new Viewable("/jsp/SendFriendRequest"))
-						.build();
+				return Response.ok(new Viewable("/jsp/SendFriendRequest")).build();
 			if (firstTime == true) {
 				map.put("message",
 						"Welcome " + userData.getName());
@@ -354,7 +353,6 @@ public class UserController {
 			} else {
 				map.put("message", "mnorna :D ");
 			}
-			Friend fObj = Friend.getrequest(object.toJSONString());
 			UserSentRequests = Friend.getUserSentRequests(userData.getName());
 			map.put("name", userData.getName());
 		} catch (MalformedURLException e) {
@@ -415,7 +413,6 @@ public class UserController {
 			JSONObject object = (JSONObject) obj;
 			if (object.get("Status").equals("Failed"))
 				return null;
-			Friend fObj = Friend.getrequest(object.toJSONString());
 			map.put("message",
 					"Welcome " + userData.getName());
 			FriendRequests = Friend.getUserFriendRequests(userData.getName());

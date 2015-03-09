@@ -103,18 +103,26 @@ public class Service {
 	{
 
 		JSONObject object = new JSONObject();
-		object.put("friend", friend);
-		object.put("name", UserController.userData.getName());
-		object.put("state", false);
-		Friend friendObj = Friend.getrequest(object.toString());
-		boolean isDone = friendObj.sendRequest();
-		if (friendObj == null || !isDone) 
+		UserEntity user = UserEntity.getUserWithName(friend);
+		if (user == null) 
 		{
 			object.put("Status", "Failed");
 		} 
-		else
+		else 
 		{
-			object.put("Status", "OK");
+			Friend friendObj = new Friend(friend,UserController.userData.getName());
+			boolean isDone = friendObj.sendRequest();
+			if (!isDone) 
+			{
+				object.put("Status", "Failed");
+			} 
+			else
+			{
+				object.put("friend", friend);
+				object.put("name", UserController.userData.getName());
+				object.put("state", false);
+				object.put("Status", "OK");
+			}
 		}
 		return object.toString();
 	}

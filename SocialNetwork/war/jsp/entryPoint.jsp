@@ -133,7 +133,7 @@ body{
 <div class="body"></div>
 <div class="grad"></div>
 <div class="header">
-	<div>Lolli<span><font color="#CC0000">pops</font></span></div>
+	<div><b>Lolli<span><font color="#990000">pops</font></span></b></div>
 </div>
 <div class="entryPoint">
 	<input type="button" value="Sign up" onclick="SignupButton()"><br>
