@@ -9,9 +9,10 @@
 
 </head>
 <body background= "http://www.dualimg.com/wp-content/wallpapers/20130115/ooliizxpm5q734.jpg">
-<center><p><B><FONT COLOR="#CC0000" SIZE="6">${it.message}</FONT></B></p></center>
+<center><p><B><FONT COLOR="#FFFFFF" SIZE="6">${it.message}</FONT></B></p></center>
 <br>
-<TABLE ALIGN="CENTER" BORDER="3" BORDERCOLOR="#CC0000" BGCOLOR="#FFCCCC" WIDTH="500" CELLSPACING="1" CELLPADDING="3">
+<div align="right">
+<TABLE BORDER="3" BORDERCOLOR="#CC0000" BGCOLOR="#FFCCCC" WIDTH="200px" CELLSPACING="1" CELLPADDING="3">
 	<TR>
 		<TH COLSPAN = "3"><FONT COLOR="#CC0000" SIZE="4"><B>Your Friend Requests</B></FONT>
 	</TR>
@@ -30,8 +31,6 @@ for(int i = 0 ; i < UserController.FriendRequests.size() ; i++)
 <%
 }
 %>
-</TABLE>
-<TABLE ALIGN="CENTER" BORDER="3" BORDERCOLOR="#CC0000" BGCOLOR="#FFCCCC" WIDTH="500" CELLSPACING="1" CELLPADDING="3">
 	<TR>
 		<TH COLSPAN = "3"><FONT COLOR="#CC0000" SIZE="4"><B>Your Sent Requests</B></FONT>
 	</TR>
@@ -50,8 +49,6 @@ for(int i = 0 ; i < UserController.UserSentRequests.size() ; i++)
 <%
 }
 %>
-</TABLE>
-<TABLE ALIGN="CENTER" BORDER="3" BORDERCOLOR="#CC0000" BGCOLOR="#FFCCCC" WIDTH="500" CELLSPACING="1" CELLPADDING="3">
 	<TR>
 		<TH COLSPAN = "3"><FONT COLOR="#CC0000" SIZE="4"><B>Your Friends</B></FONT>
 	</TR>
@@ -71,36 +68,43 @@ for(int i = 0 ; i < UserController.Friends.size() ; i++)
 }
 %>
 </TABLE>
+<!-- <TABLE ALIGN="CENTER" BORDER="3" BORDERCOLOR="#CC0000" BGCOLOR="#FFCCCC" WIDTH="500" CELLSPACING="1" CELLPADDING="3">
+	
+</TABLE>
+<TABLE ALIGN="CENTER" BORDER="3" BORDERCOLOR="#CC0000" BGCOLOR="#FFCCCC" WIDTH="500" CELLSPACING="1" CELLPADDING="3">
+	
+</TABLE> -->
 
 <br>
-<center><form action="/social/Accept" method = "POST" >
- 	<input type="text" name="fname" value="Accepted Friend Request Name" onfocus="this.style.color='#000'; this.value='';"
- 	style="font-size:16px; 
- 	height:30px; 
- 	width:250px; 
- 	font-family: 'Exo', sans-serif; 
+
+<form action="/social/Accept" method = "POST" >
+ 	<input type="text" name="fname" align="right" value="Accepted Friend Request Name" onfocus="this.style.color='#000'; this.value='';"
+ 	style="font-size:12px;
+ 	height:25px;
+ 	width:200px;
+ 	font-family: 'Exo', sans-serif;
  	background: transparent;
  	border: 1px solid #fff;
 	border-radius: 2px;
 	color: #fff;
 	padding: 6px;"> <br><br>
- 	<input type="image" src="http://www.clker.com/cliparts/M/C/n/R/d/n/accept-button-hi.png" alt="Submit" width="300" height="40"><br><br>
-</form></center>
+ 	<input type="image" src="http://www.clker.com/cliparts/M/C/n/R/d/n/accept-button-hi.png" alt="Submit" width="200px" height="40"><br><br>
+</form>
 <br>
-<center><form action="/social/request" method="post">
+<form action="/social/request" method="post">
  	<input type="text" name="friend" value="Friend Name" onfocus="this.style.color='#000'; this.value='';"
- 	style="font-size:16px; 
- 	height:30px; 
- 	width:250px; 
+ 	style="font-size:12px; 
+ 	height:25px; 
+ 	width:200px; 
  	font-family: 'Exo', sans-serif; 
  	background: transparent;
  	border: 1px solid #fff;
 	border-radius: 2px;
 	color: #fff;
 	padding: 6px;"> <br><br>
-  	<input type="image" src="http://www.calvarymbcmagee.com/wp-content/uploads/2013/02/prayer-request-button.png" alt="Submit" width="300" height="40"><br><br>
+  	<input type="image" src="http://www.calvarymbcmagee.com/wp-content/uploads/2013/02/prayer-request-button.png" alt="Submit" width="200px" height="40"><br><br>
   	<FONT COLOR="#CC0000" SIZE="6"><B><a href="/social/signout">Sign out</a> <br></B></FONT>
 </form>
-</center>
+</div>
 </body>
 </html>

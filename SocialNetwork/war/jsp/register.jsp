@@ -55,7 +55,7 @@ body{
 	float: left;
 	color: #fff;
 	font-family: 'Exo', sans-serif;
-	font-size: 35px;
+	font-size: 40px;
 	font-weight: 200;
 }
 
@@ -170,7 +170,7 @@ body{
 <div class="body"></div>
 <div class="grad"></div>
 <div class="header">
-	<div><b>Lolli<span><font color="#990000">pops</font></span></b></div>
+	<div><b>Lolli<span><font color="#cccccc">pops</font></span></b></div>
 </div>
 <br>
 <div class="signup">
