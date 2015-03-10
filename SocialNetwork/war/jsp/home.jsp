@@ -12,7 +12,7 @@
 <center><p><B><FONT COLOR="#FFFFFF" SIZE="6">${it.message}</FONT></B></p></center>
 <br>
 <div align="right">
-<TABLE BORDER="3" BORDERCOLOR="#CC0000" BGCOLOR="#FFCCCC" WIDTH="200px" CELLSPACING="1" CELLPADDING="3">
+<TABLE BORDER="3" BORDERCOLOR="#CC0000" BGCOLOR="#FFCCCC" WIDTH="225" CELLSPACING="1" CELLPADDING="3">
 	<TR>
 		<TH COLSPAN = "3"><FONT COLOR="#CC0000" SIZE="4"><B>Your Friend Requests</B></FONT>
 	</TR>
@@ -24,7 +24,7 @@ for(int i = 0 ; i < UserController.FriendRequests.size() ; i++)
 		<TD BGCOLOR="WHITE"><FONT COLOR="#CC0000" SIZE="4"><I><B>
 		<% 
 		String friend = UserController.FriendRequests.get(i);
-		out.println(friend); 
+		out.println(friend);
 		%>
 		</B></I></FONT></TD>
 	</TR>
@@ -68,12 +68,6 @@ for(int i = 0 ; i < UserController.Friends.size() ; i++)
 }
 %>
 </TABLE>
-<!-- <TABLE ALIGN="CENTER" BORDER="3" BORDERCOLOR="#CC0000" BGCOLOR="#FFCCCC" WIDTH="500" CELLSPACING="1" CELLPADDING="3">
-	
-</TABLE>
-<TABLE ALIGN="CENTER" BORDER="3" BORDERCOLOR="#CC0000" BGCOLOR="#FFCCCC" WIDTH="500" CELLSPACING="1" CELLPADDING="3">
-	
-</TABLE> -->
 
 <br>
 
@@ -88,7 +82,7 @@ for(int i = 0 ; i < UserController.Friends.size() ; i++)
 	border-radius: 2px;
 	color: #fff;
 	padding: 6px;"> <br><br>
- 	<input type="image" src="http://www.clker.com/cliparts/M/C/n/R/d/n/accept-button-hi.png" alt="Submit" width="200px" height="40"><br><br>
+ 	<input type="image" src="http://www.clker.com/cliparts/M/C/n/R/d/n/accept-button-hi.png" alt="Submit" width="230px" height="45"><br><br>
 </form>
 <br>
 <form action="/social/request" method="post">
@@ -102,8 +96,10 @@ for(int i = 0 ; i < UserController.Friends.size() ; i++)
 	border-radius: 2px;
 	color: #fff;
 	padding: 6px;"> <br><br>
-  	<input type="image" src="http://www.calvarymbcmagee.com/wp-content/uploads/2013/02/prayer-request-button.png" alt="Submit" width="200px" height="40"><br><br>
-  	<FONT COLOR="#CC0000" SIZE="6"><B><a href="/social/signout">Sign out</a> <br></B></FONT>
+  	<input type="image" src="https://lh3.googleusercontent.com/-GLSU52J7C3A/VP87V3XsrKI/AAAAAAAAAIE/tA0QbPmeSYg/w600-h270-no/ghhray-thin-button-blank-hi.png" alt="Submit" width="230px" height="50"><br><br>
+</form>
+<form action="/social/signout">
+	<input type="image" src="http://www.clker.com/cliparts/H/1/c/C/6/F/gray-login-thin-button-hi.png" alt="Submit" width="230px" height="50"><br><br>
 </form>
 </div>
 </body>
