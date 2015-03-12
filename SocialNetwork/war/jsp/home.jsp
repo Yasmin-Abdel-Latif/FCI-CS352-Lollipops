@@ -8,20 +8,20 @@
 <title>Insert title here</title>
 
 </head>
-<body background= "http://www.dualimg.com/wp-content/wallpapers/20130115/ooliizxpm5q734.jpg">
+<body background= "http://k35.kn3.net/88DF8BDE0.jpg">
 <center><p><B><FONT COLOR="#FFFFFF" SIZE="6">${it.message}</FONT></B></p></center>
 <br>
 <div align="right">
-<TABLE BORDER="3" BORDERCOLOR="#CC0000" BGCOLOR="#FFCCCC" WIDTH="225" CELLSPACING="1" CELLPADDING="3">
+<TABLE BORDER="3" BORDERCOLOR="#65267a" BGCOLOR="#e5bdf2" WIDTH="225" CELLSPACING="1" CELLPADDING="3">
 	<TR>
-		<TH COLSPAN = "3"><FONT COLOR="#CC0000" SIZE="4"><B>Your Friend Requests</B></FONT>
+		<TH COLSPAN = "3"><FONT COLOR="#65267a" SIZE="4"><B>Your Friend Requests</B></FONT>
 	</TR>
 <%
 for(int i = 0 ; i < UserController.FriendRequests.size() ; i++)
 {
 %>
 	<TR ALIGN="CENTER">
-		<TD BGCOLOR="WHITE"><FONT COLOR="#CC0000" SIZE="4"><I><B>
+		<TD BGCOLOR="WHITE"><FONT COLOR="#65267a" SIZE="4"><I><B>
 		<% 
 		String friend = UserController.FriendRequests.get(i);
 		out.println(friend);
@@ -32,14 +32,14 @@ for(int i = 0 ; i < UserController.FriendRequests.size() ; i++)
 }
 %>
 	<TR>
-		<TH COLSPAN = "3"><FONT COLOR="#CC0000" SIZE="4"><B>Your Sent Requests</B></FONT>
+		<TH COLSPAN = "3"><FONT COLOR="#65267a" SIZE="4"><B>Your Sent Requests</B></FONT>
 	</TR>
 <%
 for(int i = 0 ; i < UserController.UserSentRequests.size() ; i++)
 {
 %>
 	<TR ALIGN="CENTER">
-		<TD BGCOLOR="WHITE"><FONT COLOR="#CC0000" SIZE="4"><I><B>
+		<TD BGCOLOR="WHITE"><FONT COLOR="#65267a" SIZE="4"><I><B>
 		<% 
 		String friend = UserController.UserSentRequests.get(i);
 		out.println(friend); 
@@ -50,14 +50,14 @@ for(int i = 0 ; i < UserController.UserSentRequests.size() ; i++)
 }
 %>
 	<TR>
-		<TH COLSPAN = "3"><FONT COLOR="#CC0000" SIZE="4"><B>Your Friends</B></FONT>
+		<TH COLSPAN = "3"><FONT COLOR="#65267a" SIZE="4"><B>Your Friends</B></FONT>
 	</TR>
 <%
 for(int i = 0 ; i < UserController.Friends.size() ; i++)
 {
 %>
 	<TR ALIGN="CENTER">
-		<TD BGCOLOR="WHITE"><FONT COLOR="#CC0000" SIZE="4"><I><B>
+		<TD BGCOLOR="WHITE"><FONT COLOR="#65267a" SIZE="4"><I><B>
 		<%
 		String friend = UserController.Friends.get(i);
 		out.println(friend); 

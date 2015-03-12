@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1256">
-  <title>bad friend request</title>
+  <title>bad Registeration</title>
 <style>
 @import url(http://fonts.googleapis.com/css?family=Exo:100,200,400);
 @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,400,300);
@@ -62,6 +62,40 @@ body{
 .header div span{
 	color: #CC0000 !important;
 }
+.Back{
+	position: absolute;
+	top: calc(65% - 90px);
+	left: calc(50% - 50px);
+	height: 150px;
+	width: 350px;
+	padding: 10px;
+	z-index: 2;
+}
+.Back input[type=submit]{
+	width: 260px;
+	height: 35px;
+	background: #fff;
+	border: 1px solid #fff;
+	cursor: pointer;
+	border-radius: 2px;
+	color: #a18d6c;
+	font-family: 'Exo', sans-serif;
+	font-size: 16px;
+	font-weight: 400;
+	padding: 6px;
+	margin-top: 10px;
+}
+
+.Back input[type=submit]:hover{
+	opacity: 0.8;
+}
+
+.Back input[type=submit]:active{
+	opacity: 0.6;
+}
+.Back input[type=submit]:focus{
+	outline: none;
+}
 </style>
 <script src="js/prefixfree.min.js"></script>
 </head>
@@ -69,10 +103,15 @@ body{
 <div class="body"></div>
 <div class="grad"></div>
 <div class="header">
-	<div>the request has failed  maybe because you have already sent one 
-	<br>or both of you are friends
-	<br>or there is no such a user with this name
-	<br>or the system is in a bad condition ad3eloh :p</div>
+	<div> The User Name is Already Taken </div>
 </div>
+<br>
+<div class="Back">
+<form action="/social/signup">
+  <input type="submit" value="Back">
+</form>
+</div>
+<script src='http://codepen.io/assets/libs/fullpage/jquery.js'></script>
+
 </body>
 </html>

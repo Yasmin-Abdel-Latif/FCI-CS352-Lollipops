@@ -117,6 +117,8 @@ public class Friend {
 					&& entity.getProperty("friend").toString()
 							.equals(Friend.sName))
 				return false;
+			if(rName.equals(sName))
+				return false;
 		}
 		// check now if there is a user with this name
 		if (UserEntity.getUserWithName(rName) == null)

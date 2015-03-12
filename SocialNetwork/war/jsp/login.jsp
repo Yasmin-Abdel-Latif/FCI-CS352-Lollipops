@@ -25,7 +25,7 @@ body{
 	bottom: -40px;
 	width: auto;
 	height: auto;
-	background-image: url(http://www.zastavki.com/pictures/2560x1600/2009/Funny_wallpapers_Creative_Wallpaper_Global_Network_013822_.jpg);
+	background-image: url(http://thumbs.dreamstime.com/z/purple-worldwide-business-communications-6542420.jpg);
 	background-size: cover;
 	-webkit-filter: blur(5px);
 	z-index: 0;

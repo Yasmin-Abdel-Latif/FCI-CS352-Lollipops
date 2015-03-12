@@ -159,14 +159,11 @@ public class UserController {
 	 */
 	@POST
 	@Path("/response")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String response(@FormParam("uname") String uname,
+	@Produces("text/html")
+	public Response response(@FormParam("uname") String uname,
 			@FormParam("email") String email, @FormParam("password") String pass) {
 		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/RegistrationService";
 		try {
-			if (UserEntity.getUserWithName(uname) != null) {
-				return "The User Name is Already Taken ";
-			}
 			URL url = new URL(serviceUrl);
 			String urlParameters = "uname=" + uname + "&email=" + email
 					+ "&password=" + pass;
@@ -196,8 +193,10 @@ public class UserController {
 			JSONParser parser = new JSONParser();
 			Object obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
-			if (object.get("Status").equals("OK"))
-				return "Registered Successfully";
+			if (object.get("Status").equals("Failed"))
+				return Response.ok(new Viewable("/jsp/Registeration")).build();
+			
+			return Response.ok(new Viewable("/jsp/login")).build();
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -212,7 +211,7 @@ public class UserController {
 		 * UserEntity user = new UserEntity(uname, email, pass);
 		 * user.saveUser(); return uname;
 		 */
-		return "Failed";
+		return null;
 	}
 
 	/**
@@ -267,16 +266,7 @@ public class UserController {
 			Map<String, String> map = new HashMap<String, String>();
 			UserEntity user = UserEntity.getUser(object.toJSONString());
 			userData = user;
-			if (firstTime == true) {
-				map.put("message",
-						"Welcome " + user.getName());
-				firstTime = false;
-			} else if (sentFriend == true) {
-				map.put("message", "your Friend request is sent :D ");
-				sentFriend = false;
-			} else {
-				map.put("message", "mnorna :D ");
-			}
+			map.put("message","Welcome " + user.getName());
 			FriendRequests = Friend.getUserFriendRequests(userData.getName());
 			Friends = Friend.getUserFriends(userData.getName());
 			UserSentRequests = Friend.getUserSentRequests(userData.getName());
@@ -343,16 +333,7 @@ public class UserController {
 
 			if (object.get("Status").equals("Failed"))
 				return Response.ok(new Viewable("/jsp/SendFriendRequest")).build();
-			if (firstTime == true) {
-				map.put("message",
-						"Welcome " + userData.getName());
-				firstTime = false;
-			} else if (sentFriend == true) {
-				map.put("message", "your Friend request is sent :D ");
-				sentFriend = false;
-			} else {
-				map.put("message", "mnorna :D ");
-			}
+			map.put("message","Welcome " + userData.getName());
 			UserSentRequests = Friend.getUserSentRequests(userData.getName());
 			map.put("name", userData.getName());
 		} catch (MalformedURLException e) {
@@ -413,8 +394,7 @@ public class UserController {
 			JSONObject object = (JSONObject) obj;
 			if (object.get("Status").equals("Failed"))
 				return null;
-			map.put("message",
-					"Welcome " + userData.getName());
+			map.put("message","Welcome " + userData.getName());
 			FriendRequests = Friend.getUserFriendRequests(userData.getName());
 			Friends = Friend.getUserFriends(userData.getName());
 			UserSentRequests = Friend.getUserSentRequests(userData.getName());
