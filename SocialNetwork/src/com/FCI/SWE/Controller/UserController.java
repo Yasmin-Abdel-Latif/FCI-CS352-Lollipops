@@ -102,6 +102,19 @@ public class UserController {
 	}
 
 	/**
+	 * Action Function to direct to message page
+	 * using url like this /rest/Messages
+	 * 
+	 * @return Messages page
+	 */
+	
+	@GET
+	@Path("/msg")
+	public Response Message() {
+		return Response.ok(new Viewable("/jsp/messages")).build();
+	}
+	
+	/**
 	 * Action function to redirect user to startup page after signing out.
 	 * 
 	 * @return entryPoint page
@@ -410,5 +423,194 @@ public class UserController {
 			e.printStackTrace();
 		}
 		return Response.ok(new Viewable("/jsp/home", map)).build();
+	}
+	
+	/**
+	 * Action function to send one-to-one msg to a friend
+	 * 
+	 * @param fName
+	 *            provided requested friend name
+	 * @return Home page view
+	 */
+	@POST
+	@Path("/ChatMsg")
+	@Produces("text/html")
+	public Response chatMsg(@FormParam("friendsNames") String fName, @FormParam("chatMsg") String msg) {
+		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/ChatMsgService";
+		Map<String, String> map = new HashMap<String, String>();
+
+		try {
+			URL url = new URL(serviceUrl);
+			String urlParameters = "friendsNames=" + fName + "&chatMsg=" + msg;
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setInstanceFollowRedirects(false);
+			connection.setRequestMethod("POST");
+			connection.setConnectTimeout(60000); // 60 Seconds
+			connection.setReadTimeout(60000); // 60 Seconds
+
+			connection.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded;charset=UTF-8");
+			OutputStreamWriter writer = new OutputStreamWriter(
+					connection.getOutputStream());
+			writer.write(urlParameters);
+			writer.flush();
+			String line, retJson = "";
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					connection.getInputStream()));
+
+			while ((line = reader.readLine()) != null) {
+				retJson += line;
+			}
+			writer.close();
+			reader.close();
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+
+			String echo = "Message Sent Successfully";
+			if (object.get("Status").equals("Failed"))
+				echo = "You Are Not Friend To This User";
+			map.put("message","Welcome " + userData.getName() + "<br>" + echo);
+			map.put("name", userData.getName());
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return Response.ok(new Viewable("/jsp/home", map)).build();
+	}
+	
+	/**
+	 * Action function to send one-to-one msg to a friend
+	 * 
+	 * @param fName
+	 *            provided requested friend name
+	 * @return Home page view
+	 */
+	@POST
+	@Path("/CreateConversation")
+	@Produces("text/html")
+	public Response createConversation(@FormParam("friendsNames") String fName, @FormParam("conversationName") String cName) {
+		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/conversationService";
+		Map<String, String> map = new HashMap<String, String>();
+
+		try {
+			URL url = new URL(serviceUrl);
+			String urlParameters = "friendsNames=" + fName + "&conversationName=" + cName;
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setInstanceFollowRedirects(false);
+			connection.setRequestMethod("POST");
+			connection.setConnectTimeout(60000); // 60 Seconds
+			connection.setReadTimeout(60000); // 60 Seconds
+
+			connection.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded;charset=UTF-8");
+			OutputStreamWriter writer = new OutputStreamWriter(
+					connection.getOutputStream());
+			writer.write(urlParameters);
+			writer.flush();
+			String line, retJson = "";
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					connection.getInputStream()));
+
+			while ((line = reader.readLine()) != null) {
+				retJson += line;
+			}
+			writer.close();
+			reader.close();
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+
+			String echo = "Created Successfully";
+			if (object.get("Status").equals("Failed"))
+				echo = "Conversation Name Already Exist";
+			map.put("message", echo);
+			map.put("name", userData.getName());
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return Response.ok(new Viewable("/jsp/messages", map)).build();
+	}
+	
+	/**
+	 * Action function to send one-to-one msg to a friend
+	 * 
+	 * @param fName
+	 *            provided requested friend name
+	 * @return Home page view
+	 */
+	@POST
+	@Path("/SendMsg")
+	@Produces("text/html")
+	public Response groupMsg(@FormParam("conversationName") String cName, @FormParam("groupMsg") String msg) {
+		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/SendGroupMsgService";
+		Map<String, String> map = new HashMap<String, String>();
+
+		try {
+			URL url = new URL(serviceUrl);
+			String urlParameters = "conversationName=" + cName + "&groupMsg=" + msg;
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setInstanceFollowRedirects(false);
+			connection.setRequestMethod("POST");
+			connection.setConnectTimeout(60000); // 60 Seconds
+			connection.setReadTimeout(60000); // 60 Seconds
+
+			connection.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded;charset=UTF-8");
+			OutputStreamWriter writer = new OutputStreamWriter(
+					connection.getOutputStream());
+			writer.write(urlParameters);
+			writer.flush();
+			String line, retJson = "";
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					connection.getInputStream()));
+
+			while ((line = reader.readLine()) != null) {
+				retJson += line;
+			}
+			writer.close();
+			reader.close();
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+
+			String echo = "Message Sent Successfully";
+			if (object.get("Status").equals("Failed"))
+				echo = "Conversation Name Doesn't Exist";
+			map.put("message", echo);
+			map.put("name", userData.getName());
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return Response.ok(new Viewable("/jsp/messages", map)).build();
 	}
 }

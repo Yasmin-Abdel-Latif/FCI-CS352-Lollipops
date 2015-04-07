@@ -12,8 +12,7 @@ import javax.ws.rs.core.MediaType;
 import org.json.simple.JSONObject;
 
 import com.FCI.SWE.Controller.UserController;
-import com.FCI.SWE.Models.Friend;
-import com.FCI.SWE.Models.UserEntity;
+import com.FCI.SWE.Models.*;
 
 
 /**
@@ -162,6 +161,96 @@ public class Service {
 			friendObj.Accept(UserController.userData.getName(),friend);
 			
 			object.put("Status", "OK");
+		}
+		return object.toString();
+	}
+	
+	/**
+	 * Accept friend request service
+	 * @param sender friend name
+	 * @return friend request in json format converted to string
+	 */
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("/ChatMsgService")
+	public String ChatMsgService(@FormParam("friendsNames") String fName, @FormParam("chatMsg") String msg) 
+	{
+		JSONObject object = new JSONObject();
+		
+		if(UserController.Friends.contains(fName))
+		{
+			Messages chatMsgObj = new ChatMsg(fName, UserController.userData.getName(), msg);
+			boolean isDone = chatMsgObj.sendMessage();
+			if (!isDone) 
+			{
+				object.put("Status", "Failed");
+			} 
+			else
+			{
+				object.put("Status", "OK");
+			}
+		}
+		else
+		{
+			object.put("Status", "Failed");
+		} 
+		return object.toString();
+	}
+	
+	/**
+	 * Accept friend request service
+	 * @param sender friend name
+	 * @return friend request in json format converted to string
+	 */
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("/conversationService")
+	public String createConversation(@FormParam("friendsNames") String fName, @FormParam("conversationName") String cName) 
+	{
+		JSONObject object = new JSONObject();
+		
+		GroupMsg groupMsgObj = GroupMsg.getConversationWithName(cName);
+		if (groupMsgObj != null) 
+		{
+			object.put("Status", "Failed");
+		} 
+		else
+		{
+			groupMsgObj = new GroupMsg(cName, UserController.userData.getName(), "");
+			groupMsgObj.saveConversation(fName);
+			object.put("Status", "OK");
+		}
+		return object.toString();
+	}
+	
+	/**
+	 * Accept friend request service
+	 * @param sender friend name
+	 * @return friend request in json format converted to string
+	 */
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("/SendGroupMsgService")
+	public String GroupMsgService(@FormParam("conversationName") String cName, @FormParam("groupMsg") String msg)
+	{
+		JSONObject object = new JSONObject();
+		
+		
+		Messages groupMsgObj = GroupMsg.getConversationWithName(cName);
+		if (groupMsgObj == null) 
+		{
+			object.put("Status", "Failed");
+		}
+		else
+		{
+			if(GroupMsg.getAllRecievers(cName).contains(UserController.userData.getName()) || GroupMsg.getCreator(cName).equals(UserController.userData.getName()))
+			{
+				groupMsgObj = new GroupMsg(cName, UserController.userData.getName(), msg);
+				groupMsgObj.sendMessage();
+				object.put("Status", "OK");
+			}
+			else
+				object.put("Status", "Failed");
 		}
 		return object.toString();
 	}
