@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.FCI.SWE.Controller.UserController;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -109,16 +110,40 @@ public class Friend {
 		for (Entity entity : pq.asIterable()) {
 			if (entity.getProperty("name").toString().equals(sName)
 					&& entity.getProperty("friend").toString()
-							.equals(Friend.rName))
+							.equals(Friend.rName) && entity.getProperty("state").toString().equals("true"))
+			{
+				UserController.echo = "You are already friends";
 				return false;
-
+			}
 			// if already the other user is a friend or sent a request
 			if (entity.getProperty("name").toString().equals(rName)
 					&& entity.getProperty("friend").toString()
-							.equals(Friend.sName))
+							.equals(Friend.sName) && entity.getProperty("state").toString().equals("true"))
+			{
+				UserController.echo = "You are already friends";
 				return false;
+			}
+			
+			if (entity.getProperty("name").toString().equals(sName)
+					&& entity.getProperty("friend").toString()
+							.equals(Friend.rName) && !entity.getProperty("state").toString().equals("true"))
+			{
+				UserController.echo = "You already sent request before";
+				return false;
+			}
+			// if already the other user is a friend or sent a request
+			if (entity.getProperty("name").toString().equals(rName)
+					&& entity.getProperty("friend").toString()
+							.equals(Friend.sName) && !entity.getProperty("state").toString().equals("true"))
+			{
+				UserController.echo = "You already have a request from this user";
+				return false;
+			}
 			if(rName.equals(sName))
+			{
+				UserController.echo = "You are sending request to yourself! o.O DUH :D";
 				return false;
+			}
 		}
 		// check now if there is a user with this name
 		if (UserEntity.getUserWithName(rName) == null)

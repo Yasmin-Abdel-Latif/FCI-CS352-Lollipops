@@ -29,8 +29,8 @@ import com.FCI.SWE.Models.*;
 public class Service {
 	
 	public static String nameLoggedin;
-	public static String FriendRequestName;
-	public static ArrayList<String> CheckedFriends;
+	public static String friendRequestName;
+	public static ArrayList<String> checkedFriends;
 	
 	@GET
 	@Path("/index")
@@ -116,6 +116,7 @@ public class Service {
 		if (user == null) 
 		{
 			object.put("Status", "Failed");
+			UserController.echo = "user name doesn't exist";
 		} 
 		else 
 		{
@@ -166,9 +167,10 @@ public class Service {
 	}
 	
 	/**
-	 * Accept friend request service
-	 * @param sender friend name
-	 * @return friend request in json format converted to string
+	 * Chat With a friend service
+	 * @param fName receiver friend name
+	 * @param msg the sent message
+	 * @return json object with status OK or failed
 	 */
 	@SuppressWarnings("unchecked")
 	@POST
@@ -177,30 +179,26 @@ public class Service {
 	{
 		JSONObject object = new JSONObject();
 		
-		if(UserController.Friends.contains(fName))
+		if(UserController.friends.contains(fName))
 		{
 			Messages chatMsgObj = new ChatMsg(fName, UserController.userData.getName(), msg);
-			boolean isDone = chatMsgObj.sendMessage();
-			if (!isDone) 
-			{
-				object.put("Status", "Failed");
-			} 
-			else
-			{
-				object.put("Status", "OK");
-			}
+			chatMsgObj.sendMessage();
+			UserController.echo = "Message Sent Successfully";
+			object.put("Status", "OK");
 		}
 		else
 		{
+			UserController.echo = fName + " is not a friend";
 			object.put("Status", "Failed");
 		} 
 		return object.toString();
 	}
 	
 	/**
-	 * Accept friend request service
-	 * @param sender friend name
-	 * @return friend request in json format converted to string
+	 * create a conversation with some users
+	 * @param fName string contains receivers names separated with ;
+	 * @param cName the conversation name which is unique
+	 * @return json object with status OK or failed
 	 */
 	@SuppressWarnings("unchecked")
 	@POST
@@ -224,9 +222,10 @@ public class Service {
 	}
 	
 	/**
-	 * Accept friend request service
-	 * @param sender friend name
-	 * @return friend request in json format converted to string
+	 * send a message to a specific conversation(Group msg)
+	 * @param cName the conversation name which is unique
+	 * @param msg the sent message
+	 * @return json object with status OK or failed
 	 */
 	@SuppressWarnings("unchecked")
 	@POST
@@ -239,6 +238,7 @@ public class Service {
 		Messages groupMsgObj = GroupMsg.getConversationWithName(cName);
 		if (groupMsgObj == null) 
 		{
+			UserController.echo = "this Conversation doesn't exist";
 			object.put("Status", "Failed");
 		}
 		else
@@ -247,10 +247,82 @@ public class Service {
 			{
 				groupMsgObj = new GroupMsg(cName, UserController.userData.getName(), msg);
 				groupMsgObj.sendMessage();
+				UserController.echo = "Message Sent Successfully";
 				object.put("Status", "OK");
 			}
 			else
+			{
+				UserController.echo = "you don't this Conversation";
 				object.put("Status", "Failed");
+			}
+		}
+		return object.toString();
+	}
+	
+	/**
+	 * the creator the only one who can attach someone to an existing conversation
+	 * @param fName the person name to attach
+	 * @param cName the conversation name to attach to
+	 * @return json object with status OK or failed
+	 */
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("/attachService")
+	public String attachConversation(@FormParam("friendsNames") String fName, @FormParam("conversationName") String cName) 
+	{
+		JSONObject object = new JSONObject();
+		
+		GroupMsg groupMsgObj = GroupMsg.getConversationWithName(cName);
+		if (groupMsgObj == null) 
+		{
+			UserController.echo = "conversation not exist";
+			object.put("Status", "Failed");
+		} 
+		else
+		{
+			if(groupMsgObj.attach(fName, cName))
+			{
+				UserController.echo = fName + " attached to the conversation";
+				object.put("Status", "OK");
+			}
+			else
+			{
+				object.put("Status", "Failed");
+			}
+		}
+		return object.toString();
+	}
+	
+	/**
+	 * the creator can detach someone from a conversation and a receiver can detach himself but not others
+	 * @param fName the person name to detach
+	 * @param cName the conversation name to detach from
+	 * @return json object with status OK or failed
+	 */
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("/deattachService")
+	public String deattachConversation(@FormParam("friendsNames") String fName, @FormParam("conversationName") String cName) 
+	{
+		JSONObject object = new JSONObject();
+		
+		GroupMsg groupMsgObj = GroupMsg.getConversationWithName(cName);
+		if (groupMsgObj == null) 
+		{
+			UserController.echo = "conversation not exist";
+			object.put("Status", "Failed");
+		} 
+		else
+		{
+			UserController.echo = "conversation exist";
+			if(groupMsgObj.deattach(fName, cName))
+			{
+				object.put("Status", "OK");
+			}
+			else
+			{
+				object.put("Status", "Failed");
+			}
 		}
 		return object.toString();
 	}

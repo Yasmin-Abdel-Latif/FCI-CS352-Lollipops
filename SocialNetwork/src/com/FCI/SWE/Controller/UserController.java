@@ -48,9 +48,10 @@ public class UserController {
 	public static UserEntity userData = null;
 	private static boolean sentFriend = false;
 	private static boolean firstTime = true;
-	public static ArrayList<String> FriendRequests;
-	public static ArrayList<String> Friends;
-	public static ArrayList<String> UserSentRequests;
+	public static ArrayList<String> friendRequests;
+	public static ArrayList<String> friends;
+	public static ArrayList<String> userSentRequests;
+	public static String echo;
 
 	/**
 	 * Action function to render Signup page, this function will be executed
@@ -155,6 +156,17 @@ public class UserController {
 	@Path("/SendFriendRequest")
 	public Response SendRequest() {
 		return Response.ok(new Viewable("/jsp/SendFriendRequest")).build();
+	}
+	
+	/**
+	 * 
+	 * In case of failure, it redirects to sendfriendrequest page.
+	 * @return SendFriendRequest page
+	 */
+	@GET
+	@Path("/notify")
+	public Response notifyUser() {
+		return Response.ok(new Viewable("/jsp/notifyUser")).build();
 	}
 
 	/**
@@ -280,9 +292,9 @@ public class UserController {
 			UserEntity user = UserEntity.getUser(object.toJSONString());
 			userData = user;
 			map.put("message","Welcome " + user.getName());
-			FriendRequests = Friend.getUserFriendRequests(userData.getName());
-			Friends = Friend.getUserFriends(userData.getName());
-			UserSentRequests = Friend.getUserSentRequests(userData.getName());
+			friendRequests = Friend.getUserFriendRequests(userData.getName());
+			friends = Friend.getUserFriends(userData.getName());
+			userSentRequests = Friend.getUserSentRequests(userData.getName());
 			map.put("name", user.getName());
 
 			return Response.ok(new Viewable("/jsp/home", map)).build();
@@ -344,10 +356,8 @@ public class UserController {
 			Object obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
 
-			if (object.get("Status").equals("Failed"))
-				return Response.ok(new Viewable("/jsp/SendFriendRequest")).build();
-			map.put("message","Welcome " + userData.getName());
-			UserSentRequests = Friend.getUserSentRequests(userData.getName());
+			map.put("message","Welcome " + userData.getName() + "<br>" + echo);
+			userSentRequests = Friend.getUserSentRequests(userData.getName());
 			map.put("name", userData.getName());
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
@@ -408,9 +418,9 @@ public class UserController {
 			if (object.get("Status").equals("Failed"))
 				return null;
 			map.put("message","Welcome " + userData.getName());
-			FriendRequests = Friend.getUserFriendRequests(userData.getName());
-			Friends = Friend.getUserFriends(userData.getName());
-			UserSentRequests = Friend.getUserSentRequests(userData.getName());
+			friendRequests = Friend.getUserFriendRequests(userData.getName());
+			friends = Friend.getUserFriends(userData.getName());
+			userSentRequests = Friend.getUserSentRequests(userData.getName());
 			map.put("name", userData.getName());
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
@@ -470,9 +480,6 @@ public class UserController {
 			Object obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
 
-			String echo = "Message Sent Successfully";
-			if (object.get("Status").equals("Failed"))
-				echo = "You Are Not Friend To This User";
 			map.put("message","Welcome " + userData.getName() + "<br>" + echo);
 			map.put("name", userData.getName());
 		} catch (MalformedURLException e) {
@@ -489,10 +496,12 @@ public class UserController {
 	}
 	
 	/**
-	 * Action function to send one-to-one msg to a friend
+	 * Action function to create a conversation with some users as receivers
 	 * 
 	 * @param fName
-	 *            provided requested friend name
+	 *            receivers names separated by ;
+	 * @param cName
+	 * 			  the ID => the conversation
 	 * @return Home page view
 	 */
 	@POST
@@ -533,7 +542,7 @@ public class UserController {
 			Object obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
 
-			String echo = "Created Successfully";
+			echo = "Created Successfully";
 			if (object.get("Status").equals("Failed"))
 				echo = "Conversation Name Already Exist";
 			map.put("message", echo);
@@ -552,11 +561,12 @@ public class UserController {
 	}
 	
 	/**
-	 * Action function to send one-to-one msg to a friend
+	 * Action function to send a group msg to the conversation receiver
 	 * 
-	 * @param fName
-	 *            provided requested friend name
-	 * @return Home page view
+	 * @param cName the conversation name
+	 * @param msg the sent message
+	 * 						provided requested friend name
+	 * @return messages page view
 	 */
 	@POST
 	@Path("/SendMsg")
@@ -596,9 +606,126 @@ public class UserController {
 			Object obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
 
-			String echo = "Message Sent Successfully";
-			if (object.get("Status").equals("Failed"))
-				echo = "Conversation Name Doesn't Exist";
+			map.put("message", echo);
+			map.put("name", userData.getName());
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return Response.ok(new Viewable("/jsp/messages", map)).build();
+	}
+	
+	/**
+	 * Action function to attach someone to the conversation
+	 * 
+	 * @param fName the name of (attached use)
+	 * @param cName the conversation name
+	 * @return messages page view
+	 */
+	@POST
+	@Path("/AttachToConversation")
+	@Produces("text/html")
+	public Response attachConversation(@FormParam("friendsNames") String fName, @FormParam("conversationName") String cName) {
+		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/attachService";
+		Map<String, String> map = new HashMap<String, String>();
+
+		try {
+			URL url = new URL(serviceUrl);
+			String urlParameters = "friendsNames=" + fName + "&conversationName=" + cName;
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setInstanceFollowRedirects(false);
+			connection.setRequestMethod("POST");
+			connection.setConnectTimeout(60000); // 60 Seconds
+			connection.setReadTimeout(60000); // 60 Seconds
+
+			connection.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded;charset=UTF-8");
+			OutputStreamWriter writer = new OutputStreamWriter(
+					connection.getOutputStream());
+			writer.write(urlParameters);
+			writer.flush();
+			String line, retJson = "";
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					connection.getInputStream()));
+
+			while ((line = reader.readLine()) != null) {
+				retJson += line;
+			}
+			writer.close();
+			reader.close();
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+
+			map.put("message", echo);
+			map.put("name", userData.getName());
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return Response.ok(new Viewable("/jsp/messages", map)).build();
+	}
+	
+	/**
+	 * Action function to detach someone to the conversation
+	 * 
+	 * @param fName the name of (detached user)
+	 * @param cName the conversation name
+	 * @return messages page view
+	 */
+	@POST
+	@Path("/DeattachFromConversation")
+	@Produces("text/html")
+	public Response deattachConversation(@FormParam("friendsNames") String fName, @FormParam("conversationName") String cName) {
+		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/deattachService";
+		Map<String, String> map = new HashMap<String, String>();
+
+		try {
+			URL url = new URL(serviceUrl);
+			String urlParameters = "friendsNames=" + fName + "&conversationName=" + cName;
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setInstanceFollowRedirects(false);
+			connection.setRequestMethod("POST");
+			connection.setConnectTimeout(60000); // 60 Seconds
+			connection.setReadTimeout(60000); // 60 Seconds
+
+			connection.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded;charset=UTF-8");
+			OutputStreamWriter writer = new OutputStreamWriter(
+					connection.getOutputStream());
+			writer.write(urlParameters);
+			writer.flush();
+			String line, retJson = "";
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					connection.getInputStream()));
+
+			while ((line = reader.readLine()) != null) {
+				retJson += line;
+			}
+			writer.close();
+			reader.close();
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+
 			map.put("message", echo);
 			map.put("name", userData.getName());
 		} catch (MalformedURLException e) {

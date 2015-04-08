@@ -15,3 +15,5 @@ Request: https://lh3.googleusercontent.com/-GLSU52J7C3A/VP87V3XsrKI/AAAAAAAAAIE/
 Logout: http://www.clker.com/cliparts/H/1/c/C/6/F/gray-login-thin-button-hi.png
 Send: https://lh3.googleusercontent.com/-Ms2_bL8jeI4/VR_z9n6vHzI/AAAAAAAAAJs/DYbGJFAb8AQ/w600-h270-no/Send.png
 Messages: https://lh5.googleusercontent.com/-L57yI2Cy1nQ/VR_uRQSAXVI/AAAAAAAAAJA/M6ge35wLGLg/w600-h270-no/Message.png
+Notifications:
+Seen: https://lh3.googleusercontent.com/-wAhXPNfCuGA/VSPt6fnj5QI/AAAAAAAAAMk/CXYn6j_qpXU/w600-h270-no/Seen.png
