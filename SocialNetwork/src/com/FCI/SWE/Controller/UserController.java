@@ -26,8 +26,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import com.FCI.SWE.Models.Friend;
-import com.FCI.SWE.Models.UserEntity;
+import com.FCI.SWE.Models.*;
 import com.FCI.SWE.Services.Service;
 
 /**
@@ -52,6 +51,9 @@ public class UserController {
 	public static ArrayList<String> friends;
 	public static ArrayList<String> userSentRequests;
 	public static String echo;
+	public static uTimeline timeline= new uTimeline();
+	public static String fpName=""; //friend or page name to which timeline i wanna post to
+	public static fpTimeline FPageTimeline= new fpTimeline();
 
 	/**
 	 * Action function to render Signup page, this function will be executed
@@ -169,6 +171,33 @@ public class UserController {
 		return Response.ok(new Viewable("/jsp/notifyUser")).build();
 	}
 
+	/**
+	 * Action Function to direct to timeline
+	 * using url like this /rest/timeline
+	 * 
+	 * @return Messages page
+	 */
+	
+	@GET
+	@Path("/timeline")
+	public Response timeline() {
+		return Response.ok(new Viewable("/jsp/timeline")).build();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@POST
+	@Path("/fpTimeline")
+	public Response fpTimeline(@FormParam("searchBox") String fpName1) {
+		UserController.fpName=fpName1;
+		UserController.echo=UserController.fpName;
+		FPageTimeline.setPosts(fpTimeline.getAllPosts(fpName1));
+
+		return Response.ok(new Viewable("/jsp/fpTimeline")).build();
+	}
+	
 	/**
 	 * Action function to response to signup request, This function will act as
 	 * a controller part and it will calls RegistrationService to make
@@ -295,6 +324,7 @@ public class UserController {
 			friendRequests = Friend.getUserFriendRequests(userData.getName());
 			friends = Friend.getUserFriends(userData.getName());
 			userSentRequests = Friend.getUserSentRequests(userData.getName());
+			timeline.setPosts(uTimeline.getAllPosts(userData.getName()));
 			map.put("name", user.getName());
 
 			return Response.ok(new Viewable("/jsp/home", map)).build();
@@ -739,5 +769,119 @@ public class UserController {
 			e.printStackTrace();
 		}
 		return Response.ok(new Viewable("/jsp/messages", map)).build();
+	}
+	
+	/**
+	 * Action function to post a new post
+	 * 
+	 */
+	@POST
+	@Path("/createPost")
+	@Produces("text/html")
+	public Response createPost(@FormParam("postContent") String pContent) {
+		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/createPostService";
+		Map<String, String> map = new HashMap<String, String>();
+
+		try {
+			URL url = new URL(serviceUrl);
+			String urlParameters = "&postContent=" + pContent;
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setInstanceFollowRedirects(false);
+			connection.setRequestMethod("POST");
+			connection.setConnectTimeout(60000); // 60 Seconds
+			connection.setReadTimeout(60000); // 60 Seconds
+
+			connection.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded;charset=UTF-8");
+			OutputStreamWriter writer = new OutputStreamWriter(
+					connection.getOutputStream());
+			writer.write(urlParameters);
+			writer.flush();
+			String line, retJson = "";
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					connection.getInputStream()));
+
+			while ((line = reader.readLine()) != null) {
+				retJson += line;
+			}
+			writer.close();
+			reader.close();
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+
+			map.put("message", echo);
+			map.put("name", userData.getName());
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return Response.ok(new Viewable("/jsp/timeline", map)).build();
+	}
+	
+	/**
+	 * Action function to post a new post
+	 * 
+	 */
+	@POST
+	@Path("/createPostOnFP")
+	@Produces("text/html")
+	public Response createPostOnFP(@FormParam("postContent") String pContent) {
+		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/createPostOnFPService";
+		Map<String, String> map = new HashMap<String, String>();
+
+		try {
+			URL url = new URL(serviceUrl);
+			String urlParameters = "&postContent=" + pContent;
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setInstanceFollowRedirects(false);
+			connection.setRequestMethod("POST");
+			connection.setConnectTimeout(60000); // 60 Seconds
+			connection.setReadTimeout(60000); // 60 Seconds
+
+			connection.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded;charset=UTF-8");
+			OutputStreamWriter writer = new OutputStreamWriter(
+					connection.getOutputStream());
+			writer.write(urlParameters);
+			writer.flush();
+			String line, retJson = "";
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					connection.getInputStream()));
+
+			while ((line = reader.readLine()) != null) {
+				retJson += line;
+			}
+			writer.close();
+			reader.close();
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+
+			map.put("message", echo);
+			map.put("name", fpName);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return Response.ok(new Viewable("/jsp/fpTimeline", map)).build();
 	}
 }

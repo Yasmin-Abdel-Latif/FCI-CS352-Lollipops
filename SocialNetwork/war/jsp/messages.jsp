@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="Content-Type"
 	content="text/html; charset=windows-1256">
-<title>Insert title here</title>
+<title>Messages</title>
 
 </head>
 <body
@@ -19,9 +19,7 @@
 	<br>
 	<div style="width: 100%; overflow: auto;">
 		<div style="position: absolute; left: 0; width: 20%;">
-			<div ALIGN="center">
-				
-			</div>
+			<div ALIGN="center"></div>
 		</div>
 		<div style="position: absolute; left: 20%; right: 20%;">
 			<div ALIGN="center">
@@ -46,20 +44,22 @@
 						style="font-size: 16px; height: 50px; width: 500px; background: transparent; border: 1px solid #fff; border-radius: 2px; color: #ffffff; padding: 6px;">
 					<br> <br> <input type="image"
 						src="https://lh3.googleusercontent.com/-0Aeud_FxIkE/VSEhVHUZ2mI/AAAAAAAAAKc/xxZXZSBcOTg/w600-h270-no/CreateMsgi.png"
-						alt="Submit" width="300px" height="90" onclick="form.action= '/social/CreateConversation';"> <br> <br>
-						<input type="image"
+						alt="Submit" width="300px" height="90"
+						onclick="form.action= '/social/CreateConversation';"> <input
+						type="image"
 						src="https://lh3.googleusercontent.com/-6l_SsCAE5k8/VSUTHA5D9AI/AAAAAAAAANY/aUc5gnEWwzk/w600-h270-no/attach.png"
-						alt="Submit" width="300px" height="90" onclick="form.action= '/social/AttachToConversation';"> <br> <br>
-						<input type="image"
+						alt="Submit" width="300px" height="90"
+						onclick="form.action= '/social/AttachToConversation';"> <input
+						type="image"
 						src="https://lh3.googleusercontent.com/-tfH1xEDw7RY/VSUTHAlMEFI/AAAAAAAAANk/vjoGRFHusmg/w600-h270-no/deattach.png"
-						alt="Submit" width="300px" height="90" onclick="form.action= '/social/DeattachFromConversation';"> <br> <br>
+						alt="Submit" width="300px" height="90"
+						onclick="form.action= '/social/DeattachFromConversation';">
+					<br> <br>
 				</form>
 			</div>
 		</div>
 		<div style="position: absolute; right: 0; width: 20%;">
-			<div ALIGN="center">
-				
-			</div>
+			<div ALIGN="center"></div>
 		</div>
 	</div>
 </body>

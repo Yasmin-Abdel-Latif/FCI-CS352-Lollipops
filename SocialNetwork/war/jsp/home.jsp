@@ -1,21 +1,31 @@
 <%@ page import="java.util.*"%>
 <%@ page import="com.FCI.SWE.Controller.UserController"%>
 
+
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
+
 <head>
 <meta http-equiv="Content-Type"
 	content="text/html; charset=windows-1256">
-<title>Insert title here</title>
+<title>Home Page</title>
 
 </head>
 <body
 	background="http://wallpapercolor.net/wallpapers/syslinux-background-wallpaper-13542.jpg">
 	<center>
 		<p>
-			<B><FONT COLOR="#FFFFFF" SIZE="6">${it.message}</FONT></B>
+			<B><FONT COLOR="#FFFFFF" SIZE="6">${it.message}</FONT></B> 
+	
 		</p>
 	</center>
+	<form action="/social/timeline" method="GET">
+		<input type="image"
+			src="http://png-1.findicons.com/files/icons/1767/msn/128/online_girl.png"
+			alt="Submit" width="65px" height="65"><br>
+	</form>
 	<br>
 	<div style="width: 100%; overflow: auto;">
 		<div style="position: absolute; left: 0; width: 20%;">
@@ -43,8 +53,15 @@
 				</form>
 			</div>
 		</div>
-		<div style="position: absolute; left: 20%; right: 20%;">
+		<div style="position: absolute; left: 20%; right: 20%; top:10%">
 			<div ALIGN="center">
+			
+			<form action="/social/fpTimeline" method="POST">	
+	     	 <input type="text" name="searchBox"  placeholder="Search.." onfocus="this.value='';"
+				style="font-size: 16px; height: 35px; width: 270px; background: transparent; font-family: 'Exo', sans-serif; border: 1px solid #fff; border-radius: 2px; color: #ffffff; padding: 6px;">
+			  <input type="image" src="https://cdn3.iconfinder.com/data/icons/wpzoom-developer-icon-set/500/67-128.png" alt="Submit" width="65px" height="65" style= "top:15%;">
+			</form>
+			
 				<!-- 				<form action="/social/notify"> -->
 				<!-- 					<input type="image" -->
 				<!-- 						src="https://lh3.googleusercontent.com/-bKC68NVKF98/VSPt17n8hPI/AAAAAAAAAMA/Ouwj5HvxA3s/w600-h270-no/Notification.png" -->

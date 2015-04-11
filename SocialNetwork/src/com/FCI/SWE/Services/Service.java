@@ -138,7 +138,7 @@ public class Service {
 	}
 	/**
 	 * Accept friend request service
-	 * @param sender friend name
+	 * @param friend: sender friend name
 	 * @return friend request in json format converted to string
 	 */
 	@SuppressWarnings("unchecked")
@@ -167,10 +167,10 @@ public class Service {
 	}
 	
 	/**
-	 * Chat With a friend service
-	 * @param fName receiver friend name
-	 * @param msg the sent message
-	 * @return json object with status OK or failed
+	 * chat message service
+	 * @param fName: friend name to chat with
+	 * @param msg: message content
+	 * @return status by a json format converted to string
 	 */
 	@SuppressWarnings("unchecked")
 	@POST
@@ -195,10 +195,10 @@ public class Service {
 	}
 	
 	/**
-	 * create a conversation with some users
-	 * @param fName string contains receivers names separated with ;
-	 * @param cName the conversation name which is unique
-	 * @return json object with status OK or failed
+	 * conversation service
+	 * @param fName: friend name to chat with
+	 * @param cName: conversation name
+	 * @return status by a json format converted to string
 	 */
 	@SuppressWarnings("unchecked")
 	@POST
@@ -222,10 +222,10 @@ public class Service {
 	}
 	
 	/**
-	 * send a message to a specific conversation(Group msg)
-	 * @param cName the conversation name which is unique
-	 * @param msg the sent message
-	 * @return json object with status OK or failed
+	 * Group Msg service
+	 * @param cName: conversation name
+	 * @param msg: message to be sent
+	 * @return status by a json format converted to string
 	 */
 	@SuppressWarnings("unchecked")
 	@POST
@@ -260,10 +260,10 @@ public class Service {
 	}
 	
 	/**
-	 * the creator the only one who can attach someone to an existing conversation
-	 * @param fName the person name to attach
-	 * @param cName the conversation name to attach to
-	 * @return json object with status OK or failed
+	 * attach Conversation service
+	 * @param fName: friend name whom i want to attach
+	 * @param cName: conversation name
+	 * @return status by a json format converted to string
 	 */
 	@SuppressWarnings("unchecked")
 	@POST
@@ -293,11 +293,12 @@ public class Service {
 		return object.toString();
 	}
 	
+	
 	/**
-	 * the creator can detach someone from a conversation and a receiver can detach himself but not others
-	 * @param fName the person name to detach
-	 * @param cName the conversation name to detach from
-	 * @return json object with status OK or failed
+	 * detach service
+	 * @param fName: friend name whom i want to detach
+	 * @param cName: conversation name
+	 * @return status by a json format converted to string
 	 */
 	@SuppressWarnings("unchecked")
 	@POST
@@ -326,4 +327,60 @@ public class Service {
 		}
 		return object.toString();
 	}
+
+	
+	/**
+	 * create post service
+	 * @param pContent 
+	 *                 post content
+	 * @return
+	 *        status in a json object
+	 */
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("/createPostService")
+	public String createPostService(@FormParam("postContent") String pContent)
+	{
+		JSONObject object = new JSONObject();
+		
+		if(!pContent.equals(""))
+		{
+			UserController.timeline.createPost(pContent);
+			object.put("Status", "OK");
+		}
+		else
+		{
+			UserController.echo = " Your Post is empty.";
+			object.put("Status", "Failed");
+		} 
+		return object.toString();
+	}
+	
+	/**
+	 * create post on another friend timeline service
+	 * @param pContent 
+	 *                 post content
+	 * @return
+	 *        status in a json object
+	 */
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("/createPostOnFPService")
+	public String createPostOnFPService(@FormParam("postContent") String pContent)
+	{
+		JSONObject object = new JSONObject();
+		
+		if(!pContent.equals(" "))
+		{
+			Post newPost = new Post(UserController.fpName,UserController.userData.getName(), pContent, 0,"u");
+			UserController.FPageTimeline.addPost(newPost);
+			object.put("Status", "OK");
+		}
+		else
+		{
+			UserController.echo = " Your Post is empty.";
+			object.put("Status", "Failed");
+		} 
+		return object.toString();
+	}	
 }

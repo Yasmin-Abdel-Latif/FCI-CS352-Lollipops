@@ -1,6 +1,7 @@
 package com.FCI.SWE.Models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -10,6 +11,7 @@ import com.FCI.SWE.Controller.UserController;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
@@ -158,6 +160,21 @@ public class Friend {
 		friends.setProperty("friend", Friend.rName);
 		friends.setProperty("state", false);
 		datastore.put(friends);
+		
+		DatastoreService datastore1 = DatastoreServiceFactory
+				.getDatastoreService();
+		Query gaeQuery1 = new Query("Notifications");
+		PreparedQuery pq1 = datastore1.prepare(gaeQuery1);
+		List<Entity> list1 = pq1.asList(FetchOptions.Builder.withDefaults());
+		Entity messageNotify = new Entity("Notifications", list1.size()+1);
+
+		messageNotify.setProperty("Type", 2);
+		messageNotify.setProperty("Sender", sName);
+		messageNotify.setProperty("Name", rName);
+		messageNotify.setProperty("Msg", "You have friend request from "+sName);
+		messageNotify.setProperty("Seen", false);
+		datastore1.put(messageNotify);
+		UserController.echo = "Request Sent Successfully";
 		return true;
 	}
 
@@ -238,6 +255,20 @@ public class Friend {
 		Entity friends = pq.asSingleEntity();
 		friends.setProperty("state", this.state);
 		datastore.put(friends);
+		
+		DatastoreService datastore1 = DatastoreServiceFactory
+				.getDatastoreService();
+		Query gaeQuery1 = new Query("Notifications");
+		PreparedQuery pq1 = datastore1.prepare(gaeQuery1);
+		List<Entity> list1 = pq1.asList(FetchOptions.Builder.withDefaults());
+		Entity messageNotify = new Entity("Notifications", list1.size()+1);
+
+		messageNotify.setProperty("Type", 1);
+		messageNotify.setProperty("Sender", name);
+		messageNotify.setProperty("Name", friend);
+		messageNotify.setProperty("Msg", name+" Accepted your friend request");
+		messageNotify.setProperty("Seen", false);
+		datastore1.put(messageNotify);
 		return "Done";
 	}
 }
