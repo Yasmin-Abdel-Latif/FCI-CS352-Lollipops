@@ -21,30 +21,56 @@
 
 		<br> <br>
 		<form action="/social/createPost" method="POST">
+		
 			<textarea rows="2" cols="40" name="postContent"
 				placeholder="What's on your mind?"
 				style="font-size: 18px; background: transparent; border: 1px solid #fff; border-radius: 2px; color: #ffffff; padding: 6px;"></textarea>
+		
 			<input type="image"
 				src="http://icons.iconarchive.com/icons/uiconstock/dynamic-flat-android/128/check-icon.png"
 				alt="Submit" width="65px" height="65"><br>
+
+			<%-- 			<%UserController.passPostFeelings=request.getParameter("feelingSelect"); --%>
+<%-- 			%> --%>
 		</form>
+
+		<form action="/social/setFeelings" method="POST">
+			<select name="feelingSelect">
+				<option value="notValid">Select Feeling</option>	<!-- important -->		
+				<option value="Happy">Happy</option>
+				<option value="Relaxed">Relaxed</option>
+				<option value="Hyper">Hyper</option>
+				<option value="Meh">Meh</option>
+				<option value="Sad">Sad</option>
+				<option value="Angry">Angry</option>
+			</select>
+			 <input type="submit" value="Set Feeling">
+		</form>
+
 		<br>
 		
 		
 		<TABLE BORDER="3" BORDERCOLOR="#65267a" BGCOLOR="#e5bdf2" WIDTH="500"
 			CELLSPACING="1" CELLPADDING="3">
 			<%
-				for (int i = UserController.timeline.getAllPosts(UserController.userData.getName()).size()-1; i >=0 ; i--) {
+				for (int i = uTimeline.getAllPosts(UserController.userData.getName()).size()-1; i >=0 ; i--) {
 			%>
 			<TR ALIGN="LEFT">
 				<TD BGCOLOR="WHITE"><FONT COLOR="#65267a" SIZE="4"><I>
 							<%
 								String poster = UserController.timeline.getPosts().get(i).getPoster();
 								String content = UserController.timeline.getPosts().get(i).getContent();
+  								String feeling=UserController.timeline.getPosts().get(i).getFeeling();
 								int nLikes = UserController.timeline.getPosts().get(i).getnLikes();
 							%> <B> <% out.println(poster + " : "); %>
 			         		</B> <% out.println(content); %> <br>
-			         	   <FONT COLOR="#808080" SIZE="3"> <B> Likes: </B> <% out.println(nLikes); %> </FONT>
+			         		<%
+			         		if (!feeling.equals("notValid"))
+			         			{%>
+					         	   <FONT COLOR="#808080" SIZE="3"> <B> -Feeling: </B> <% out.print(feeling); %> </FONT>
+			         		<%	}
+			         		%>
+			         	   <FONT COLOR="#808080" SIZE="3"> <B> Likes: </B> <% out.print(+nLikes); %> </FONT>
 					</I></FONT></TD>
 			</TR>
 			<%

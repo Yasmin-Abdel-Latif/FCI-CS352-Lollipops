@@ -1,9 +1,6 @@
 <%@ page import="java.util.*"%>
 <%@ page import="com.FCI.SWE.Controller.UserController"%>
 
-
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 
@@ -17,14 +14,23 @@
 	background="http://wallpapercolor.net/wallpapers/syslinux-background-wallpaper-13542.jpg">
 	<center>
 		<p>
-			<B><FONT COLOR="#FFFFFF" SIZE="6">${it.message}</FONT></B> 
-	
+			<B><FONT COLOR="#FFFFFF" SIZE="6">${it.message}</FONT></B>
+
 		</p>
 	</center>
 	<form action="/social/timeline" method="GET">
-		<input type="image"
-			src="http://png-1.findicons.com/files/icons/1767/msn/128/online_girl.png"
-			alt="Submit" width="65px" height="65"><br>
+		<div style="float: left; width: 100 px">
+			<input type="image"
+				src="http://png-1.findicons.com/files/icons/1767/msn/128/online_girl.png"
+				alt="Submit" width="65px" height="65">
+		</div>
+	</form>
+	<form action="/social/Page" method="GET">
+		<div style="float: left; width: 100 px">
+			<input type="image"
+				src="https://cdn2.iconfinder.com/data/icons/designers-and-developers-icon-set/32/add_file-512.png"
+				alt="Submit" width="50px" height="50">
+		</div>
 	</form>
 	<br>
 	<div style="width: 100%; overflow: auto;">
@@ -46,27 +52,51 @@
 						src="https://lh5.googleusercontent.com/-L57yI2Cy1nQ/VR_uRQSAXVI/AAAAAAAAAJA/M6ge35wLGLg/w600-h270-no/Message.png"
 						alt="Submit" width="230px" height="65"><br>
 				</form>
+				<%
+					if (UserController.userUnSeenNotifications.size() > 0) {
+				%>
+				<form action="/social/notify">
+					<input type="image"
+						src="https://lh3.googleusercontent.com/-_xChkiPOaAs/VSq78XLk_UI/AAAAAAAAAOQ/O3qf47KbAXc/w600-h270-no/Notification2.png"
+						alt="Submit" width="230px" height="65">
+				</form>
+				<%
+					}
+				%>
+				<%
+					if (UserController.userUnSeenNotifications.size() == 0) {
+				%>
 				<form action="/social/notify">
 					<input type="image"
 						src="https://lh3.googleusercontent.com/-bKC68NVKF98/VSPt17n8hPI/AAAAAAAAAMA/Ouwj5HvxA3s/w600-h270-no/Notification.png"
 						alt="Submit" width="230px" height="65">
 				</form>
+				<%
+					}
+				%>
+
 			</div>
 		</div>
-		<div style="position: absolute; left: 20%; right: 20%; top:10%">
+		<div style="position: absolute; left: 20%; right: 20%; top: 10%">
 			<div ALIGN="center">
-			
-			<form action="/social/fpTimeline" method="POST">	
-	     	 <input type="text" name="searchBox"  placeholder="Search.." onfocus="this.value='';"
-				style="font-size: 16px; height: 35px; width: 270px; background: transparent; font-family: 'Exo', sans-serif; border: 1px solid #fff; border-radius: 2px; color: #ffffff; padding: 6px;">
-			  <input type="image" src="https://cdn3.iconfinder.com/data/icons/wpzoom-developer-icon-set/500/67-128.png" alt="Submit" width="65px" height="65" style= "top:15%;">
-			</form>
-			
-				<!-- 				<form action="/social/notify"> -->
-				<!-- 					<input type="image" -->
-				<!-- 						src="https://lh3.googleusercontent.com/-bKC68NVKF98/VSPt17n8hPI/AAAAAAAAAMA/Ouwj5HvxA3s/w600-h270-no/Notification.png" -->
-				<!-- 						alt="Submit" width="230px" height="65"> -->
-				<!-- 				</form> -->
+
+				<form action="/social/fpTimeline" method="POST">
+					<input type="text" name="searchBox" placeholder="Search.."
+						onfocus="this.value='';"
+						style="font-size: 16px; height: 35px; width: 270px; background: transparent; font-family: 'Exo', sans-serif; border: 1px solid #fff; border-radius: 2px; color: #ffffff; padding: 6px;">
+					<input type="image"
+						src="https://cdn3.iconfinder.com/data/icons/wpzoom-developer-icon-set/500/67-128.png"
+						alt="Submit" width="65px" height="65" style="top: 15%;">
+				</form>
+				<br>
+				<form action="/social/hashTimeline" method="POST">
+					<input type="text" name="searchBoxh" placeholder="Search hashtag or page .." 
+						onfocus="this.value='';"
+						style="font-size: 16px; height: 35px; width: 270px; background: transparent; font-family: 'Exo', sans-serif; border: 1px solid #fff; border-radius: 2px; color: #ffffff; padding: 6px;">
+					<input type="image"
+						src="https://cdn3.iconfinder.com/data/icons/wpzoom-developer-icon-set/500/67-128.png"
+						alt="Submit" width="65px" height="65" style="top: 15%;">
+				</form>
 			</div>
 		</div>
 		<div style="position: absolute; right: 0; width: 20%;">

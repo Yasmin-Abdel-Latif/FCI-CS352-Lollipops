@@ -50,11 +50,16 @@ public class UserController {
 	public static ArrayList<String> friendRequests;
 	public static ArrayList<String> friends;
 	public static ArrayList<String> userSentRequests;
+	public static ArrayList<String> userUnSeenNotifications;
+	public static ArrayList<String> userSeenNotifications;
 	public static String echo;
 	public static uTimeline timeline= new uTimeline();
 	public static String fpName=""; //friend or page name to which timeline i wanna post to
 	public static fpTimeline FPageTimeline= new fpTimeline();
-
+	public static String passPostFeelings="notValid";
+	public static boolean gotIntoSetFeelings=false;
+	public static HashTimeline hashTimeline;
+	
 	/**
 	 * Action function to render Signup page, this function will be executed
 	 * using url like this /rest/signup
@@ -168,7 +173,7 @@ public class UserController {
 	@GET
 	@Path("/notify")
 	public Response notifyUser() {
-		return Response.ok(new Viewable("/jsp/notifyUser")).build();
+		return Response.ok(new Viewable("/jsp/notifications")).build();
 	}
 
 	/**
@@ -196,6 +201,23 @@ public class UserController {
 		FPageTimeline.setPosts(fpTimeline.getAllPosts(fpName1));
 
 		return Response.ok(new Viewable("/jsp/fpTimeline")).build();
+	}
+	
+	@GET
+	@Path("/Page")
+	public Response page() {
+		return Response.ok(new Viewable("/jsp/createPage")).build();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@POST
+	@Path("/setFeelings")
+	public void setFeelings(@FormParam ("feelingSelect") String feelingSelect) {
+		UserController.passPostFeelings=feelingSelect;
+		gotIntoSetFeelings=true;
 	}
 	
 	/**
@@ -325,6 +347,25 @@ public class UserController {
 			friends = Friend.getUserFriends(userData.getName());
 			userSentRequests = Friend.getUserSentRequests(userData.getName());
 			timeline.setPosts(uTimeline.getAllPosts(userData.getName()));
+			passPostFeelings="notValid";
+			ArrayList<String> msgNotifications = MsgNotify.myUnSeenNotifications();
+			ArrayList<String> groupMsgNotifications = GroupMsgNotify.myUnSeenNotifications();
+			ArrayList<String> requestNotifications = RequestSent.myUnSeenNotifications();
+			ArrayList<String> acceptNotifications = AcceptedRequest.myUnSeenNotifications();
+			userUnSeenNotifications = new ArrayList<String>();
+			userUnSeenNotifications.addAll(msgNotifications);
+			userUnSeenNotifications.addAll(groupMsgNotifications);
+			userUnSeenNotifications.addAll(requestNotifications);
+			userUnSeenNotifications.addAll(acceptNotifications);
+			ArrayList<String> msgNotifications1 = MsgNotify.mySeenNotifications();
+			ArrayList<String> groupMsgNotifications1 = GroupMsgNotify.mySeenNotifications();
+			ArrayList<String> requestNotifications1 = RequestSent.mySeenNotifications();
+			ArrayList<String> acceptNotifications1 = AcceptedRequest.mySeenNotifications();
+			userSeenNotifications = new ArrayList<String>();
+			userSeenNotifications.addAll(msgNotifications1);
+			userSeenNotifications.addAll(groupMsgNotifications1);
+			userSeenNotifications.addAll(requestNotifications1);
+			userSeenNotifications.addAll(acceptNotifications1);
 			map.put("name", user.getName());
 
 			return Response.ok(new Viewable("/jsp/home", map)).build();
@@ -771,6 +812,134 @@ public class UserController {
 		return Response.ok(new Viewable("/jsp/messages", map)).build();
 	}
 	
+	@POST
+	@Path("/seenNotifications")
+	@Produces("text/html")
+	public Response seenNotification() {
+		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/seenService";
+		Map<String, String> map = new HashMap<String, String>();
+
+		try {
+			URL url = new URL(serviceUrl);
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setInstanceFollowRedirects(false);
+			connection.setRequestMethod("POST");
+			connection.setConnectTimeout(60000); // 60 Seconds
+			connection.setReadTimeout(60000); // 60 Seconds
+
+			connection.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded;charset=UTF-8");
+			OutputStreamWriter writer = new OutputStreamWriter(
+					connection.getOutputStream());
+			writer.flush();
+			String line, retJson = "";
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					connection.getInputStream()));
+
+			while ((line = reader.readLine()) != null) {
+				retJson += line;
+			}
+			writer.close();
+			reader.close();
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+
+			ArrayList<String> msgNotifications = MsgNotify.myUnSeenNotifications();
+			ArrayList<String> groupMsgNotifications = GroupMsgNotify.myUnSeenNotifications();
+			ArrayList<String> requestNotifications = RequestSent.myUnSeenNotifications();
+			ArrayList<String> acceptNotifications = AcceptedRequest.myUnSeenNotifications();
+			userUnSeenNotifications = new ArrayList<String>();
+			userUnSeenNotifications.addAll(msgNotifications);
+			userUnSeenNotifications.addAll(groupMsgNotifications);
+			userUnSeenNotifications.addAll(requestNotifications);
+			userUnSeenNotifications.addAll(acceptNotifications);
+			ArrayList<String> msgNotifications1 = MsgNotify.mySeenNotifications();
+			ArrayList<String> groupMsgNotifications1 = GroupMsgNotify.mySeenNotifications();
+			ArrayList<String> requestNotifications1 = RequestSent.mySeenNotifications();
+			ArrayList<String> acceptNotifications1 = AcceptedRequest.mySeenNotifications();
+			userSeenNotifications = new ArrayList<String>();
+			userSeenNotifications.addAll(msgNotifications1);
+			userSeenNotifications.addAll(groupMsgNotifications1);
+			userSeenNotifications.addAll(requestNotifications1);
+			userSeenNotifications.addAll(acceptNotifications1);
+			friendRequests = Friend.getUserFriendRequests(userData.getName());
+			friends = Friend.getUserFriends(userData.getName());
+			userSentRequests = Friend.getUserSentRequests(userData.getName());
+			map.put("message", "Welcome " + userData.getName());
+			map.put("name", userData.getName());
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return Response.ok(new Viewable("/jsp/home", map)).build();
+	}
+	
+	@POST
+	@Path("/chosenNotification")
+	@Produces("text/html")
+	public Response chosenNotification(@FormParam("ID") String ID, @FormParam("type") String type) {
+		
+		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/chosenService";
+		Map<String, String> map = new HashMap<String, String>();
+		try {
+			
+			URL url = new URL(serviceUrl);
+			String urlParameters = "ID=" + ID + "&type=" + type;
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setInstanceFollowRedirects(false);
+			connection.setRequestMethod("POST");
+			connection.setConnectTimeout(60000); // 60 Seconds
+			connection.setReadTimeout(60000); // 60 Seconds
+
+			connection.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded;charset=UTF-8");
+			OutputStreamWriter writer = new OutputStreamWriter(
+					connection.getOutputStream());
+			writer.write(urlParameters);
+			writer.flush();
+			String line, retJson = "";
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					connection.getInputStream()));
+
+			while ((line = reader.readLine()) != null) {
+				retJson += line;
+			}
+			writer.close();
+			reader.close();
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+
+			map.put("message", "Welcome " + userData.getName() + "<br>" + echo);
+			map.put("name", userData.getName());
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			map.put("message", "Welcome " + userData.getName() + "<br>MalformedURLException");
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block			
+			map.put("message", "Welcome " + userData.getName() + "<br>IOException");
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			map.put("message", "Welcome " + userData.getName() + "<br>ParseException");
+			e.printStackTrace();
+		}
+		return Response.ok(new Viewable("/jsp/pressedNotify", map)).build();
+	}
 	/**
 	 * Action function to post a new post
 	 * 
@@ -779,6 +948,13 @@ public class UserController {
 	@Path("/createPost")
 	@Produces("text/html")
 	public Response createPost(@FormParam("postContent") String pContent) {
+		if (!gotIntoSetFeelings)  // if i havent selected a feeling, set it to not valid in order not to print the last feeling selected 
+		{	UserController.passPostFeelings="notValid";
+		}
+		else
+		{
+			gotIntoSetFeelings=false;
+		}
 		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/createPostService";
 		Map<String, String> map = new HashMap<String, String>();
 
@@ -883,5 +1059,121 @@ public class UserController {
 			e.printStackTrace();
 		}
 		return Response.ok(new Viewable("/jsp/fpTimeline", map)).build();
+	}
+	
+	@POST
+	@Path("/CreatePage")
+	@Produces("text/html")
+	public Response CreatePage(@FormParam("PageName") String pageName ,
+			@FormParam("pageType") String pageType, @FormParam("pageCatg") String pageCatg) {
+		Map<String, String> map = new HashMap<String, String>();
+		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/createpageService";
+		try {
+			URL url = new URL(serviceUrl);
+			String urlParameters = "pageName=" + pageName+ "&pageType=" + pageType
+					+ "&pageCatg=" + pageCatg;
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setInstanceFollowRedirects(false);
+			connection.setRequestMethod("POST");
+			connection.setConnectTimeout(60000); // 60 Seconds
+			connection.setReadTimeout(60000); // 60 Seconds
+			connection.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded;charset=UTF-8");
+			OutputStreamWriter writer = new OutputStreamWriter(
+					connection.getOutputStream());
+			writer.write(urlParameters);
+			writer.flush();
+			String line, retJson = "";
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					connection.getInputStream()));
+
+			while ((line = reader.readLine()) != null) {
+				retJson += line;
+			}
+			writer.close();
+			reader.close();
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+			map.put("message", echo);
+			map.put("name", fpName);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		/*
+		 * UserEntity user = new UserEntity(uname, email, pass);
+		 * user.saveUser(); return uname;
+		 */
+		return Response.ok(new Viewable("/jsp/createPage", map)).build();
+
+	}
+	
+	@POST
+	@Path("/hashTimeline")
+	@Produces("text/html")
+	public Response search(@FormParam("searchBoxh") String text ) {
+		hashTimeline = new HashTimeline();
+		Map<String, String> map = new HashMap<String, String>();
+		String serviceUrl;
+		if (text.contains("#"))
+		 serviceUrl = "http://direct-hallway-864.appspot.com/rest/hashSearchService";
+		else
+		serviceUrl = "http://direct-hallway-864.appspot.com/rest/pageSearchService";
+		try {
+			URL url = new URL(serviceUrl);
+			String urlParameters = "search=" + text ;
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setInstanceFollowRedirects(false);
+			connection.setRequestMethod("POST");
+			connection.setConnectTimeout(60000); // 60 Seconds
+			connection.setReadTimeout(60000); // 60 Seconds
+			connection.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded;charset=UTF-8");
+			OutputStreamWriter writer = new OutputStreamWriter(
+					connection.getOutputStream());
+			writer.write(urlParameters);
+			writer.flush();
+			String line, retJson = "";
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					connection.getInputStream()));
+
+			while ((line = reader.readLine()) != null) {
+				retJson += line;
+			}
+			writer.close();
+			reader.close();
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+			map.put("message", echo);
+			map.put("name", fpName);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(text.contains("#"))
+			return Response.ok(new Viewable("/jsp/HashTimeline", map)).build();
+		
+		return Response.ok(new Viewable("/jsp/HashTimeline", map)).build();
+
 	}
 }

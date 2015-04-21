@@ -1,6 +1,9 @@
 package com.FCI.SWE.Services;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -31,6 +34,7 @@ public class Service {
 	public static String nameLoggedin;
 	public static String friendRequestName;
 	public static ArrayList<String> checkedFriends;
+	public static ArrayList<String> messages;
 	
 	@GET
 	@Path("/index")
@@ -132,6 +136,10 @@ public class Service {
 				object.put("name", UserController.userData.getName());
 				object.put("state", false);
 				object.put("Status", "OK");
+				RequestSent requestNotify = new RequestSent();
+				Invoker invoke = new Invoker();
+				invoke.setCommand(requestNotify);
+				invoke.add();
 			}
 		}
 		return object.toString();
@@ -162,6 +170,10 @@ public class Service {
 			friendObj.Accept(UserController.userData.getName(),friend);
 			
 			object.put("Status", "OK");
+			AcceptedRequest acceptNotify = new AcceptedRequest();
+			Invoker invoke = new Invoker();
+			invoke.setCommand(acceptNotify);
+			invoke.add();
 		}
 		return object.toString();
 	}
@@ -185,6 +197,10 @@ public class Service {
 			chatMsgObj.sendMessage();
 			UserController.echo = "Message Sent Successfully";
 			object.put("Status", "OK");
+			MsgNotify msgNotify = new MsgNotify();
+			Invoker invoke = new Invoker();
+			invoke.setCommand(msgNotify);
+			invoke.add();
 		}
 		else
 		{
@@ -249,6 +265,10 @@ public class Service {
 				groupMsgObj.sendMessage();
 				UserController.echo = "Message Sent Successfully";
 				object.put("Status", "OK");
+				GroupMsgNotify msgNotify = new GroupMsgNotify();
+				Invoker invoke = new Invoker();
+				invoke.setCommand(msgNotify);
+				invoke.add();
 			}
 			else
 			{
@@ -328,7 +348,77 @@ public class Service {
 		return object.toString();
 	}
 
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("/seenService")
+	public String seenNotification() 
+	{
+		JSONObject object = new JSONObject();
+		MsgNotify msgNotify = new MsgNotify();
+		GroupMsgNotify msgNotify2 = new GroupMsgNotify();
+		AcceptedRequest acceptNotify = new AcceptedRequest();
+		RequestSent requestNotify = new RequestSent();
+		Invoker invoke = new Invoker();
+		invoke.setCommand(msgNotify);
+		invoke.seen();
+		invoke.setCommand(msgNotify2);
+		invoke.seen();
+		invoke.setCommand(acceptNotify);
+		invoke.seen();
+		invoke.setCommand(requestNotify);
+		invoke.seen();
+		object.put("Status", "OK");
+		return object.toString();
+	}
 	
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("/chosenService")
+	public String chosenNotification(@FormParam("ID") String ID, @FormParam("type") String type) 
+	{
+		JSONObject object = new JSONObject();
+		messages = new ArrayList<String>();
+		if(type.equals("1"))
+		{
+			UserController.echo = "Your Friends";
+			AcceptedRequest acceptNotify = new AcceptedRequest();
+			Invoker invoke = new Invoker();
+			invoke.setCommand(acceptNotify);
+			messages = invoke.press(ID.toString());
+		}
+		if(type.equals("2"))
+		{
+			UserController.echo = "Your Friend Requests";
+			RequestSent requestNotify = new RequestSent();
+			Invoker invoke = new Invoker();
+			invoke.setCommand(requestNotify);
+			messages = invoke.press(ID.toString());
+		}
+		if(type.equals("3"))
+		{
+			UserController.echo = "Messages";
+			MsgNotify msgNotify = new MsgNotify();
+			Invoker invoke = new Invoker();
+			invoke.setCommand(msgNotify);
+			messages = invoke.press(ID.toString());
+		}
+		
+		if(type.equals("4"))
+		{
+			UserController.echo = "Messages";
+			GroupMsgNotify msgNotify = new GroupMsgNotify();
+			Invoker invoke = new Invoker();
+			invoke.setCommand(msgNotify);
+			messages = invoke.press(ID.toString());
+		}
+//		UserController.echo = "";
+//		for(int i = 0 ; i < messages.size() ; i++)
+//		{
+//			UserController.echo += messages.get(i) + "<br>";
+//		}
+		object.put("Status", "OK");
+		return object.toString();
+	}
 	/**
 	 * create post service
 	 * @param pContent 
@@ -345,7 +435,9 @@ public class Service {
 		
 		if(!pContent.equals(""))
 		{
-			UserController.timeline.createPost(pContent);
+			//UserController.echo=UserController.passPostFeelings;
+			String temp=UserController.passPostFeelings;
+			UserController.timeline.createPost(pContent,temp);
 			object.put("Status", "OK");
 		}
 		else
@@ -372,9 +464,29 @@ public class Service {
 		
 		if(!pContent.equals(" "))
 		{
-			Post newPost = new Post(UserController.fpName,UserController.userData.getName(), pContent, 0,"u");
-			UserController.FPageTimeline.addPost(newPost);
+			Post newPost = new Post(UserController.fpName,UserController.userData.getName(), pContent, 0,"u",""); //no feelings on someone else's wall
+			int postId = UserController.FPageTimeline.addPost(newPost);
 			object.put("Status", "OK");
+			if (pContent.contains("#")) {
+				Pattern MY_PATTERN = Pattern
+						.compile("(?:(?<=\\s)|^)#(\\w*[A-Za-z_]+\\w*)");
+				Matcher mat = MY_PATTERN.matcher(pContent);
+				ArrayList<String> alreadyInPost = new ArrayList<String>();
+				while (mat.find()) {
+					String hash = mat.group(1);
+					if (alreadyInPost.contains(hash)) // if this hashtag is
+														// repeated in the post
+						continue;
+					Hashtag hashObj = new Hashtag(hash);
+					if (!hashObj.checkHashTag()) {
+						hashObj.saveHashtag(postId);
+					} else {
+						hashObj.upDateHashtag(postId);
+					}
+					alreadyInPost.add(hash);
+
+				}
+			}
 		}
 		else
 		{
@@ -382,5 +494,52 @@ public class Service {
 			object.put("Status", "Failed");
 		} 
 		return object.toString();
-	}	
+	}
+	
+	@POST
+	@Path("/createpageService")
+	public String CreatePage(@FormParam("pageName") String pageName,
+			@FormParam("pageType") String pageType,
+			@FormParam("pageCatg") String pageCatg) {
+		JSONObject object = new JSONObject();
+		Page page = new Page(pageName, pageType, pageCatg,
+				UserController.userData.getName());
+		if (!page.checkPage()) {
+			page.savePage();
+			UserController.echo = "Page created successfully "; //
+		} else {
+			UserController.echo = "This Page Name is already exist";
+		}
+		return object.toString();
+	}
+
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("/hashSearchService")
+	public String hashSearch(@FormParam("search") String hash) {
+		JSONObject object = new JSONObject();
+		hash = hash.substring(1); // removing the hashtag symbol
+		Hashtag hashObj = new Hashtag(hash);
+		if (!hashObj.checkHashTag())
+			UserController.echo = "no such a hashtag";
+		else {
+			ArrayList<Integer> postID = hashObj.allPost();
+			for (int i = 0; i < postID.size(); i++) {
+				Post post = Post.getPostByName(postID.get(i));
+				UserController.hashTimeline.posts.add(post);
+			}
+		}
+		ArrayList<Hashtag> topHashes = hashObj.getAllHashtag();
+		Collections.sort(topHashes); // to order the hashtag by there number of
+										// hashes
+		if (topHashes.size() <= 10)
+			UserController.hashTimeline.hash = (ArrayList<Hashtag>) topHashes
+					.clone();
+		else
+		{
+			for (int i=topHashes.size()-10 ;i<topHashes.size();i++)
+				UserController.hashTimeline.hash.add(topHashes.get(i));
+		}
+		return object.toString();
+	}
 }

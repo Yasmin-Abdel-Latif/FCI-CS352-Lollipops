@@ -1,3 +1,12 @@
+/**
+ * 
+ * @author Nour Mohammed Srour Alwani
+ * @version 1.0
+ * @since 2014-02-12
+ *
+ */
+
+
 package com.FCI.SWE.Models;
 
 import java.util.ArrayList;
@@ -15,10 +24,11 @@ public class fpTimeline {
 	String coverPhoto;
 	ArrayList<Post> posts = new ArrayList<>();
 	
-	public void addPost (Post newPost)
+	public int addPost (Post newPost)
 	{
-		newPost.registerPostOnFP(UserController.fpName);
+		int postID = newPost.registerPostOnFP(UserController.fpName);
 		this.posts.add(newPost);
+		return postID;
 	}
 	
 	/**
@@ -36,6 +46,8 @@ public class fpTimeline {
 		String postContent =null;
 		String postOwner="";
 		String postPoster="";
+		String postFeelings="";
+		String postUserOrPage="";
 		int nLikes=0;
 		ArrayList<Post> posts = new ArrayList<Post>();
 
@@ -45,10 +57,12 @@ public class fpTimeline {
 				postOwner=entity.getProperty("Owner").toString();
 				postPoster=entity.getProperty("Poster").toString();
 				postContent=entity.getProperty("Content").toString();
-//				postUserOrPage=entity.getProperty("UserOrPage").toString();
 				nLikes=Integer.parseInt(entity.getProperty("nLikes").toString());
+				postUserOrPage=entity.getProperty("UserOrPage").toString();
+				postFeelings=entity.getProperty("Feelings").toString();
+
 				
-				posts.add(new Post(postOwner, postPoster, postContent, nLikes,"u"));
+				posts.add(new Post(postOwner, postPoster, postContent, nLikes,postUserOrPage,postFeelings));
 			}
 		}
 		return posts;

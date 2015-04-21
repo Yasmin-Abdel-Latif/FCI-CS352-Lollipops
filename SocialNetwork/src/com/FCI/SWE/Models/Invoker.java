@@ -1,4 +1,8 @@
 package com.FCI.SWE.Models;
+
+import java.util.ArrayList;
+
+
 /** <h1>Invoker class</h1>
 * <p>
 * This class will act as an invoker of the notifications 
@@ -22,9 +26,16 @@ public class Invoker {
 	/**
 	 * Execution Function
 	 */
-	public void excute()
+	public void add()
 	{
-        this.noti.excute();
+        this.noti.addNotification();
     }
-	
+	public ArrayList<String> press(String ID)
+	{
+        return this.noti.pressedNotification(ID);
+    }
+	public void seen()
+	{
+        this.noti.seenNotification();
+    }
 }

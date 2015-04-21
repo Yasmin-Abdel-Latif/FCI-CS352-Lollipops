@@ -59,24 +59,6 @@ public class GroupMsg extends Messages{
 		message.setProperty("Msg", msg);
 		message.setProperty("Seen", false);
 		datastore.put(message);
-		
-		getAllRecievers(reciever);
-		for(int i = 0 ; i < recievers.size() ; i++)
-		{
-			DatastoreService datastore1 = DatastoreServiceFactory
-					.getDatastoreService();
-			Query gaeQuery1 = new Query("Notifications");
-			PreparedQuery pq1 = datastore1.prepare(gaeQuery1);
-			List<Entity> list1 = pq1.asList(FetchOptions.Builder.withDefaults());
-			Entity messageNotify = new Entity("Notifications", list1.size()+1);
-
-			messageNotify.setProperty("Type", 3);
-			messageNotify.setProperty("Sender", sender);
-			messageNotify.setProperty("Name", recievers.get(i));
-			messageNotify.setProperty("Msg", msg);
-			messageNotify.setProperty("Seen", false);
-			datastore1.put(messageNotify);
-		}
 		return true;
 	}
 

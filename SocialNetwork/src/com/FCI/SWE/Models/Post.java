@@ -1,3 +1,12 @@
+/**
+ * 
+ * @author Nour Mohammed Srour Alwani
+ * @version 1.0
+ * @since 2014-02-12
+ *
+ */
+
+
 package com.FCI.SWE.Models;
 
 import java.util.List;
@@ -9,6 +18,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.FilterOperator;
 
 public class Post {
 	String OwnerOfTimeline;
@@ -18,11 +28,12 @@ public class Post {
 	int iD;
 	static int staticID=0;
 	String userOrPage; //timeline of post indicator u for user - p for page
+	String feeling="default";
 	
 
 	
 	public Post(String ownerOfTimeline, String poster, String content,
-			int nLikes,String up) {
+			int nLikes,String up, String feelings1) {
 		super();
 		OwnerOfTimeline = ownerOfTimeline;
 		this.poster = poster;
@@ -31,6 +42,7 @@ public class Post {
 		staticID++; //post id starts with 1
 		iD=staticID;
 		userOrPage=up;
+		this.feeling=feelings1;
 	}
 
 	public String getOwnerOfTimeline() {
@@ -67,41 +79,73 @@ public class Post {
 	 * register post method to save it in datastore
 	 * @return true after saving
 	 */
-	public Boolean registerPost() {
+	public int registerPost() {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Query gaeQuery = new Query("post");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
-		Entity post = new Entity("post", list.size()+1);
+		int size = list.size()+1;
+		Entity post = new Entity("post", size);
 
+		post.setProperty("ID", size);
 		post.setProperty("Owner", OwnerOfTimeline);
 		post.setProperty("Poster", poster);
 		post.setProperty("Content", content);
 		post.setProperty("nLikes", nLikes);
 		post.setProperty("UserOrPage",userOrPage);
+		post.setProperty("Feelings",feeling);
 		datastore.put(post);
-		return true;
+		return size;
 
 	}
 	
+	public String getFeeling() {
+		return feeling;
+	}
+
+	public void setFeeling(String feeling) {
+		this.feeling = feeling;
+	}
+
 	/**
 	 * register post method to save it in datastore
 	 * @return true after saving
 	 */
-	public Boolean registerPostOnFP(String uName) {
+	public int registerPostOnFP(String uName) {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Query gaeQuery = new Query("post");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
-		Entity post = new Entity("post", list.size()+1);
+		int size = list.size()+1;
+		Entity post = new Entity("post", size);
 
+		post.setProperty("ID", size);
 		post.setProperty("Owner", UserController.fpName);
 		post.setProperty("Poster", poster);
 		post.setProperty("Content", content);
 		post.setProperty("nLikes", nLikes);
 		post.setProperty("UserOrPage",userOrPage);
+		post.setProperty("Feelings",feeling);
 		datastore.put(post);
-		return true;
+		return size;
 
+	}
+	@SuppressWarnings("deprecation")
+	public static Post getPostByName(int ID) 
+	{
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		Query query = new Query("post");
+		query.addFilter("ID", FilterOperator.EQUAL, ID);
+		PreparedQuery pq = datastore.prepare(query);
+		Entity postEntity = pq.asSingleEntity();
+		String owner= (postEntity.getProperty("Owner")).toString();
+		String poster=( postEntity.getProperty("Poster")).toString();
+		String content=	(postEntity.getProperty("Content")).toString();
+		int nlikes= Integer.parseInt((postEntity.getProperty("nLikes")).toString());
+		String userorpage=( postEntity.getProperty("UserOrPage")).toString();
+		String feeling = ( postEntity.getProperty("Feelings")).toString();
+		Post p = new Post(owner , poster , content , nlikes , userorpage, feeling);
+		return p;
 	}
 }

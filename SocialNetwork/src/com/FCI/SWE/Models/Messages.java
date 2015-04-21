@@ -12,9 +12,9 @@ package com.FCI.SWE.Models;
 public abstract class Messages {
 	
 	public static String sender;
-	Boolean type; // 0: one to one - 1: one to many
-	String reciever;
-	String msg;
+	public static Boolean type; // 0: one to one - 1: one to many
+	public static String reciever;
+	public static String msg;
 	
 	/**
 	 * Constructor 
@@ -25,8 +25,8 @@ public abstract class Messages {
 	 */
 	public Messages(String reciever, String sender, String msg) 
 	{
-		this.msg = msg;
-		this.reciever = reciever;
+		Messages.msg = msg;
+		Messages.reciever = reciever;
 		Messages.sender = sender;
 	}
 	/**

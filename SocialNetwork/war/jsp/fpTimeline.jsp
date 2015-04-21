@@ -1,4 +1,5 @@
 <%@page import="com.FCI.SWE.Models.uTimeline"%>
+<%@page import="com.FCI.SWE.Models.fpTimeline"%>
 <%@ page import="java.util.*"%>
 <%@ page import="com.FCI.SWE.Controller.UserController"%>
 
@@ -7,7 +8,7 @@
 <head>
 <meta http-equiv="Content-Type"
 	content="text/html; charset=windows-1256">
-<title>My Profile</title>
+<title>${it.message} Profile</title>
 
 </head>
 <body
@@ -34,14 +35,14 @@
 		<TABLE BORDER="3" BORDERCOLOR="#65267a" BGCOLOR="#e5bdf2" WIDTH="500"
 			CELLSPACING="1" CELLPADDING="3">
 			<%
-				for (int i = UserController.FPageTimeline.getAllPosts(UserController.fpName).size()-1; i >=0 ; i--) {
+				for (int i = fpTimeline.getAllPosts(UserController.fpName).size()-1; i >=0 ; i--) {
 			%>
 			<TR ALIGN="LEFT">
 				<TD BGCOLOR="WHITE"><FONT COLOR="#65267a" SIZE="4"><I>
 							<%
-								String poster = UserController.FPageTimeline.getAllPosts(UserController.fpName).get(i).getPoster();
-								String content =UserController.FPageTimeline.getAllPosts(UserController.fpName).get(i).getContent();
-								int nLikes =UserController.FPageTimeline.getAllPosts(UserController.fpName).get(i).getnLikes();
+								String poster = fpTimeline.getAllPosts(UserController.fpName).get(i).getPoster();
+								String content = fpTimeline.getAllPosts(UserController.fpName).get(i).getContent();
+								int nLikes = fpTimeline.getAllPosts(UserController.fpName).get(i).getnLikes();
 							%> <B> <% out.println(poster + " : "); %>
 			         		</B> <% out.println(content); %> <br>
 			         	   <FONT COLOR="#808080" SIZE="3"> <B> Likes: </B> <% out.println(nLikes); %> </FONT>

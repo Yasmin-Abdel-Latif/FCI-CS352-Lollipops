@@ -1,4 +1,8 @@
 package com.FCI.SWE.Models;
+
+import java.util.ArrayList;
+
+
 /** <h1>Notification class</h1>
 * <p>
 * This class will act as an interface command class 
@@ -10,9 +14,9 @@ package com.FCI.SWE.Models;
 * @since 9 - 4 - 2015
 */
 public interface Notification {
-	public String userName = "";
-	public String sName = "";
-	public int type = 0;
-	public boolean seen = false;
-	public void excute();
+	
+	public void addNotification();
+	public ArrayList<String> pressedNotification(String ID);
+	public void seenNotification();
+	public String toString();
 }
