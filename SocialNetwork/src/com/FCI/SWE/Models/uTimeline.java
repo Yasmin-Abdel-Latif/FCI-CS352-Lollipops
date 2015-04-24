@@ -48,10 +48,11 @@ public class uTimeline {
 	 * createPost method will create a new post and register it
 	 * @param pContent
 	 *                post content
+	 * @param postFeelings, postPrivacy
 	 */
-	public void createPost(String pContent, String feelings1)
+	public void createPost(String pContent, String postPrivacy, String postFeelings)
 	{
-		Post newPost = new Post(UserController.userData.getName(), UserController.userData.getName(),pContent, 0,"u",feelings1);
+		Post newPost = new Post(UserController.userData.getName(), UserController.userData.getName(),pContent, 0,"u",postPrivacy,postFeelings);
 		newPost.registerPost();
 		this.posts.add(newPost);
 	}
@@ -73,6 +74,7 @@ public class uTimeline {
 		String postOwner="";
 		String postPoster="";
 		String postFeelings="";
+		String postPrivacy="";
 		String postUserOrPage="";
 		int nLikes=0;
 		ArrayList<Post> posts = new ArrayList<Post>();
@@ -86,9 +88,10 @@ public class uTimeline {
 				nLikes=Integer.parseInt(entity.getProperty("nLikes").toString());
 				postUserOrPage=entity.getProperty("UserOrPage").toString();
 				postFeelings=entity.getProperty("Feelings").toString();
+				postPrivacy=entity.getProperty("Privacy").toString();
 
 				
-				posts.add(new Post(postOwner, postPoster, postContent, nLikes,postUserOrPage,postFeelings));
+				posts.add(new Post(postOwner, postPoster, postContent, nLikes, postUserOrPage, postPrivacy, postFeelings));
 			}
 		}
 		return posts;

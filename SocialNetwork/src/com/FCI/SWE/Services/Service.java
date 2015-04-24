@@ -2,8 +2,6 @@ package com.FCI.SWE.Services;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -411,11 +409,6 @@ public class Service {
 			invoke.setCommand(msgNotify);
 			messages = invoke.press(ID.toString());
 		}
-//		UserController.echo = "";
-//		for(int i = 0 ; i < messages.size() ; i++)
-//		{
-//			UserController.echo += messages.get(i) + "<br>";
-//		}
 		object.put("Status", "OK");
 		return object.toString();
 	}
@@ -435,9 +428,9 @@ public class Service {
 		
 		if(!pContent.equals(""))
 		{
-			//UserController.echo=UserController.passPostFeelings;
-			String temp=UserController.passPostFeelings;
-			UserController.timeline.createPost(pContent,temp);
+			String postPrivacy=UserController.passPostPrivacy;
+			String postFeelings=UserController.passPostFeelings;
+			UserController.timeline.createPost(pContent,postPrivacy,postFeelings);
 			object.put("Status", "OK");
 		}
 		else
@@ -461,38 +454,28 @@ public class Service {
 	public String createPostOnFPService(@FormParam("postContent") String pContent)
 	{
 		JSONObject object = new JSONObject();
-		
-		if(!pContent.equals(" "))
-		{
-			Post newPost = new Post(UserController.fpName,UserController.userData.getName(), pContent, 0,"u",""); //no feelings on someone else's wall
-			int postId = UserController.FPageTimeline.addPost(newPost);
-			object.put("Status", "OK");
-			if (pContent.contains("#")) {
-				Pattern MY_PATTERN = Pattern
-						.compile("(?:(?<=\\s)|^)#(\\w*[A-Za-z_]+\\w*)");
-				Matcher mat = MY_PATTERN.matcher(pContent);
-				ArrayList<String> alreadyInPost = new ArrayList<String>();
-				while (mat.find()) {
-					String hash = mat.group(1);
-					if (alreadyInPost.contains(hash)) // if this hashtag is
-														// repeated in the post
-						continue;
-					Hashtag hashObj = new Hashtag(hash);
-					if (!hashObj.checkHashTag()) {
-						hashObj.saveHashtag(postId);
-					} else {
-						hashObj.upDateHashtag(postId);
-					}
-					alreadyInPost.add(hash);
-
+		boolean friendOf=false;
+		//only friends can post on their friend timeline
+		ArrayList<String>ownerFriends=Friend.getUserFriends(UserController.fpName); //getting friends of the owner of the timeline to which am posting
+		for (int j = 0; j < ownerFriends.size(); j++) {
+			if (ownerFriends.get(j).equals(UserController.userData.getName())) {
+				friendOf = true;
+				if (!pContent.equals(" ")) {
+					Post newPost = new Post(UserController.fpName,UserController.userData.getName(), pContent, 0,"u", "", ""); // no feelings on someone else's wall
+					UserController.FPageTimeline.addPost(newPost);
+					object.put("Status", "OK");
+				} else {
+					UserController.echo = " Your Post is empty.";
+					object.put("Status", "Failed");
 				}
+				break;
 			}
 		}
-		else
-		{
-			UserController.echo = " Your Post is empty.";
+		if (!friendOf) {
+			UserController.echo = "You're not a friend of "+ UserController.fpName+ ". You can't post on thier timeline.\n Send them a friend request if you know them.";
 			object.put("Status", "Failed");
-		} 
+		}
+		
 		return object.toString();
 	}
 	

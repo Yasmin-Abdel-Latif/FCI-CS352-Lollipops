@@ -10,13 +10,10 @@
 package com.FCI.SWE.Models;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import com.FCI.SWE.Controller.UserController;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
 
 public class fpTimeline {
 	
@@ -39,38 +36,46 @@ public class fpTimeline {
 	 * @return posts
 	 *              arraylist of all posts of that OWNER
 	 */
-	public static ArrayList<Post> getAllPosts(String ownerName) {
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-		Query gaeQuery = new Query("post");
-		PreparedQuery pq = datastore.prepare(gaeQuery);
-		String postContent =null;
-		String postOwner="";
-		String postPoster="";
-		String postFeelings="";
-		String postUserOrPage="";
-		int nLikes=0;
+	public static ArrayList<Post> getAllPosts(String ownerName) 
+	{
 		ArrayList<Post> posts = new ArrayList<Post>();
-
-		for (Entity entity : pq.asIterable()) {
-			if (entity.getProperty("Owner").toString().equals(ownerName))
+		Privacy pub = new Public(); //always display public posts of the owner of the timeline am visiting OR posts with no privacy set => friend's post on that timline
+		pub.fillAccToPrivacy(posts,ownerName,UserController.userData.getName());
+		
+		ArrayList<String>ownerFriends=Friend.getUserFriends(ownerName); //allow displaying private posts only if am a friend to the timeline's owner
+		boolean friendOfOwner=false;
+		for (int i=0;i<ownerFriends.size();i++)
+		{
+			if (ownerFriends.get(i).equals(UserController.userData.getName()))
 			{
-				postOwner=entity.getProperty("Owner").toString();
-				postPoster=entity.getProperty("Poster").toString();
-				postContent=entity.getProperty("Content").toString();
-				nLikes=Integer.parseInt(entity.getProperty("nLikes").toString());
-				postUserOrPage=entity.getProperty("UserOrPage").toString();
-				postFeelings=entity.getProperty("Feelings").toString();
-
-				
-				posts.add(new Post(postOwner, postPoster, postContent, nLikes,postUserOrPage,postFeelings));
+				friendOfOwner=true;
+				Privacy pri = new Private(); 
+				pri.fillAccToPrivacy(posts,ownerName,UserController.userData.getName());
+				break;
 			}
 		}
+		
+		if (friendOfOwner) //if am a friend of the owner => check for custom posts am included in & display them
+		{
+			Privacy cus = new Custom();
+			cus.fillAccToPrivacy(posts, ownerName,UserController.userData.getName());
+		}
+		
+		Collections.sort(posts, postsSortedByID);
 		return posts;
 	}
-	
+	public static Comparator<Post> postsSortedByID = new Comparator<Post>() 
+	{
+		public int compare(Post p1, Post p2) 
+		{
+
+		   int pp1 = p1.iD;
+		   int pp2 = p2.iD;
+
+		   return pp1-pp2; // sort in an ascending order of id. (Display might be descending according to post type -- handled in jsp)
+		}
+	};
 	public void setPosts(ArrayList<Post> posts) {
 		this.posts = posts;
 	}
-
-
 }

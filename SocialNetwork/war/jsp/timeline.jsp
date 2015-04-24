@@ -29,11 +29,20 @@
 			<input type="image"
 				src="http://icons.iconarchive.com/icons/uiconstock/dynamic-flat-android/128/check-icon.png"
 				alt="Submit" width="65px" height="65"><br>
-
-			<%-- 			<%UserController.passPostFeelings=request.getParameter("feelingSelect"); --%>
-<%-- 			%> --%>
 		</form>
 
+		<form action="/social/setPrivacy" method="POST">
+			<select name="privacySelect">
+				<option value="notValid">Select Privacy Option</option>	<!-- important -->		
+				<option value="Public">Public</option>
+				<option value="Private">Private</option>
+				<option value="Custom">Custom</option>
+		
+			</select>
+			<input type="text" value="Set Custom List" name ="cList">
+			<input type="submit" value="Set Privacy">
+		</form>
+		
 		<form action="/social/setFeelings" method="POST">
 			<select name="feelingSelect">
 				<option value="notValid">Select Feeling</option>	<!-- important -->		

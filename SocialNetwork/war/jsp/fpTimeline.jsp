@@ -42,9 +42,16 @@
 							<%
 								String poster = fpTimeline.getAllPosts(UserController.fpName).get(i).getPoster();
 								String content = fpTimeline.getAllPosts(UserController.fpName).get(i).getContent();
+								String feeling= fpTimeline.getAllPosts(UserController.fpName).get(i).getFeeling();
 								int nLikes = fpTimeline.getAllPosts(UserController.fpName).get(i).getnLikes();
 							%> <B> <% out.println(poster + " : "); %>
 			         		</B> <% out.println(content); %> <br>
+			         		<%
+			         		if (!feeling.equals("notValid") && (!feeling.equals("")))
+			         			{%>
+					         	   <FONT COLOR="#808080" SIZE="3"> <B> -Feeling: </B> <% out.print(feeling); %> </FONT>
+			         		<%	}
+			         		%>
 			         	   <FONT COLOR="#808080" SIZE="3"> <B> Likes: </B> <% out.println(nLikes); %> </FONT>
 					</I></FONT></TD>
 			</TR>

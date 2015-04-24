@@ -57,7 +57,10 @@ public class UserController {
 	public static String fpName=""; //friend or page name to which timeline i wanna post to
 	public static fpTimeline FPageTimeline= new fpTimeline();
 	public static String passPostFeelings="notValid";
+	public static String passPostPrivacy="Public"; //default is public
 	public static boolean gotIntoSetFeelings=false;
+	public static boolean gotIntoSetPrivacy=false;
+	public static String[] customList;
 	public static HashTimeline hashTimeline;
 	
 	/**
@@ -221,6 +224,17 @@ public class UserController {
 	}
 	
 	/**
+	 *  setPrivacy method:
+	 *                     will set the privacy of this current post in order to user it later in service
+	 */
+	@POST
+	@Path("/setPrivacy")
+	public void setPrivacy(@FormParam ("privacySelect") String privacySelect,@FormParam ("cList") String cList) {
+		UserController.passPostPrivacy=privacySelect;
+		gotIntoSetPrivacy=true;
+		customList=cList.split("\\s*,\\s*");
+	}
+	/**
 	 * Action function to response to signup request, This function will act as
 	 * a controller part and it will calls RegistrationService to make
 	 * registration
@@ -348,6 +362,7 @@ public class UserController {
 			userSentRequests = Friend.getUserSentRequests(userData.getName());
 			timeline.setPosts(uTimeline.getAllPosts(userData.getName()));
 			passPostFeelings="notValid";
+			passPostPrivacy="Public";
 			ArrayList<String> msgNotifications = MsgNotify.myUnSeenNotifications();
 			ArrayList<String> groupMsgNotifications = GroupMsgNotify.myUnSeenNotifications();
 			ArrayList<String> requestNotifications = RequestSent.myUnSeenNotifications();
@@ -949,11 +964,20 @@ public class UserController {
 	@Produces("text/html")
 	public Response createPost(@FormParam("postContent") String pContent) {
 		if (!gotIntoSetFeelings)  // if i havent selected a feeling, set it to not valid in order not to print the last feeling selected 
-		{	UserController.passPostFeelings="notValid";
+		{	
+			UserController.passPostFeelings="notValid";
 		}
 		else
 		{
 			gotIntoSetFeelings=false;
+		}
+		if (!gotIntoSetPrivacy) // if i havent selected a privacy yet, set it to public in order not to print the last privacy selected
+		{
+			UserController.passPostPrivacy="Public";
+		} 
+		else 
+		{
+			gotIntoSetPrivacy = false;
 		}
 		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/createPostService";
 		Map<String, String> map = new HashMap<String, String>();
