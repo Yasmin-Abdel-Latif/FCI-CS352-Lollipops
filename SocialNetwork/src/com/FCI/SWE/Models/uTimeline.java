@@ -68,7 +68,7 @@ public class uTimeline {
 	 */
 	public static ArrayList<Post> getAllPosts(String ownerName) {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-		Query gaeQuery = new Query("post");
+		Query gaeQuery = new Query("Post");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 		String postContent =null;
 		String postOwner="";

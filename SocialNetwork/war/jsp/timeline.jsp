@@ -67,10 +67,10 @@
 			<TR ALIGN="LEFT">
 				<TD BGCOLOR="WHITE"><FONT COLOR="#65267a" SIZE="4"><I>
 							<%
-								String poster = UserController.timeline.getPosts().get(i).getPoster();
-								String content = UserController.timeline.getPosts().get(i).getContent();
-  								String feeling=UserController.timeline.getPosts().get(i).getFeeling();
-								int nLikes = UserController.timeline.getPosts().get(i).getnLikes();
+								String poster = uTimeline.getAllPosts(UserController.userData.getName()).get(i).getPoster();
+								String content = uTimeline.getAllPosts(UserController.userData.getName()).get(i).getContent();
+  								String feeling= uTimeline.getAllPosts(UserController.userData.getName()).get(i).getFeeling();
+								int nLikes = uTimeline.getAllPosts(UserController.userData.getName()).get(i).getnLikes();
 							%> <B> <% out.println(poster + " : "); %>
 			         		</B> <% out.println(content); %> <br>
 			         		<%
