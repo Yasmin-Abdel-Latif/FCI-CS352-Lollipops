@@ -33,6 +33,7 @@ public class Private implements Privacy{
 		String postPrivacy="";
 		String postUserOrPage="";
 		int nLikes=0;
+		int ID = 0;
 	
 		for (Entity entity : pq.asIterable()) {
 			if ((entity.getProperty("Owner").toString().equals(ownerName)) && (entity.getProperty("Privacy").toString().equals("Private")) )
@@ -44,8 +45,10 @@ public class Private implements Privacy{
 				postUserOrPage=entity.getProperty("UserOrPage").toString();
 				postPrivacy=entity.getProperty("Privacy").toString();
 				postFeelings=entity.getProperty("Feelings").toString();
-
-				posts.add(new Post(postOwner, postPoster, postContent, nLikes, "u", postPrivacy, postFeelings));
+				ID = Integer.parseInt(entity.getProperty("ID").toString());
+				Post post = new Post(postOwner, postPoster, postContent, nLikes, "u", postPrivacy, postFeelings);
+				post.setiD(ID);
+				posts.add(post);
 			}
 		}
 	}

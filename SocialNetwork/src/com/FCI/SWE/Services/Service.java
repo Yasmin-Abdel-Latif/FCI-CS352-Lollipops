@@ -152,6 +152,7 @@ public class Service {
 	@Path("/AcceptService")
 	public String AcceptRequestService(@FormParam("fname") String friend) 
 	{
+		friend = friend.trim();
 		JSONObject object = new JSONObject();
 		object.put("friend", UserController.userData.getName());
 		object.put("name", friend);
@@ -409,6 +410,18 @@ public class Service {
 			invoke.setCommand(msgNotify);
 			messages = invoke.press(ID.toString());
 		}
+		object.put("Status", "OK");
+		return object.toString();
+	}
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("/shareService")
+	public String sharePost(@FormParam("ID") String ID) 
+	{
+		ID = ID.trim();
+		JSONObject object = new JSONObject();
+		Share sharePost = new Share(Integer.parseInt(ID));
+		sharePost.share();
 		object.put("Status", "OK");
 		return object.toString();
 	}

@@ -955,6 +955,62 @@ public class UserController {
 		}
 		return Response.ok(new Viewable("/jsp/pressedNotify", map)).build();
 	}
+	@POST
+	@Path("/sharePost")
+	@Produces("text/html")
+	public Response sharePoste(@FormParam("ID") String ID) {
+		
+		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/shareService";
+		Map<String, String> map = new HashMap<String, String>();
+		try {
+			
+			URL url = new URL(serviceUrl);
+			String urlParameters = "ID=" + ID;
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setInstanceFollowRedirects(false);
+			connection.setRequestMethod("POST");
+			connection.setConnectTimeout(60000); // 60 Seconds
+			connection.setReadTimeout(60000); // 60 Seconds
+
+			connection.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded;charset=UTF-8");
+			OutputStreamWriter writer = new OutputStreamWriter(
+					connection.getOutputStream());
+			writer.write(urlParameters);
+			writer.flush();
+			String line, retJson = "";
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					connection.getInputStream()));
+
+			while ((line = reader.readLine()) != null) {
+				retJson += line;
+			}
+			writer.close();
+			reader.close();
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+
+			map.put("message", "Welcome " + userData.getName() + "<br>" + echo);
+			map.put("name", fpName);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			map.put("message", "Welcome " + userData.getName() + "<br>MalformedURLException");
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block			
+			map.put("message", "Welcome " + userData.getName() + "<br>IOException");
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			map.put("message", "Welcome " + userData.getName() + "<br>ParseException");
+			e.printStackTrace();
+		}
+		return Response.ok(new Viewable("/jsp/fpTimeline", map)).build();
+	}
 	/**
 	 * Action function to post a new post
 	 * 

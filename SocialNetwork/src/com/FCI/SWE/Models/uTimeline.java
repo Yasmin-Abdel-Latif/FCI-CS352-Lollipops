@@ -70,7 +70,7 @@ public class uTimeline {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Query gaeQuery = new Query("Post");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
-		String postContent =null;
+		String postContent = null;
 		String postOwner="";
 		String postPoster="";
 		String postFeelings="";
@@ -90,13 +90,45 @@ public class uTimeline {
 				postFeelings=entity.getProperty("Feelings").toString();
 				postPrivacy=entity.getProperty("Privacy").toString();
 
-				
 				posts.add(new Post(postOwner, postPoster, postContent, nLikes, postUserOrPage, postPrivacy, postFeelings));
 			}
 		}
 		return posts;
 	}
 	
+	public static ArrayList<Post> getAllSharedPosts(String ownerName) {
+		
+		ArrayList<Post> posts = new ArrayList<Post>();
+		DatastoreService datastore1 = DatastoreServiceFactory.getDatastoreService();
+		Query gaeQuery1 = new Query("Share");
+		PreparedQuery pq1 = datastore1.prepare(gaeQuery1);
+		for (Entity entity1 : pq1.asIterable()) 
+		{
+			if (entity1.getProperty("PostSharer").toString().equals(ownerName))
+			{
+				String postID = entity1.getProperty("PostID").toString();
+				DatastoreService datastore2 = DatastoreServiceFactory
+						.getDatastoreService();
+				Query gaeQuery2 = new Query("Post");
+				PreparedQuery pq2 = datastore2.prepare(gaeQuery2);
+				for (Entity entity2 : pq2.asIterable()) 
+				{
+					if (entity2.getProperty("ID").toString().equals(postID))
+					{
+						String postOwner1 = entity2.getProperty("Owner").toString();
+						String postPoster1 = entity2.getProperty("Poster").toString();
+						String postContent1 = entity2.getProperty("Content").toString();
+						int nLikes1 = Integer.parseInt(entity2.getProperty("nLikes").toString());
+						String postUserOrPage1 = entity2.getProperty("UserOrPage").toString();
+						String postFeelings1 = entity2.getProperty("Feelings").toString();
+						String postPrivacy1 = entity2.getProperty("Privacy").toString();
+						posts.add(new Post(postOwner1, postPoster1, postContent1, nLikes1, postUserOrPage1, postPrivacy1, postFeelings1));
+					}
+				}
+			}
+		}
+		return posts;
+	}
 	public String getProfilePicture() {
 		return profilePicture;
 	}

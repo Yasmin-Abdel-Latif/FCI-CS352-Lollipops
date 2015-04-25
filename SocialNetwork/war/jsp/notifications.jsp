@@ -24,11 +24,17 @@ jQuery(function () {
 		var NAme = PRint.substring(0, PRint.indexOf(":"));
 		$('input[name="ID"]').val(Id);
 		$('input[name="type"]').val(TYpe);
-		$('input[name="fname"]').val(NAme);
 		$( "#target" ).submit();
 	});
+	
+	$('#tableId').on('click', '.btn', function()
+	{
+		var PRint = $(this).closest('tr').find('td:first').text().substring($(this).closest('tr').find('td:first').text().indexOf(" ") + 1) + "  ";
+		var NAme = PRint.substring(0, PRint.indexOf(":"));
+		$('input[id="fname"]').val(NAme);
+		$( "#target" ).attr('action', '/social/Accept');
+	});
 });
-
 
 </script>
 </head>
@@ -67,7 +73,7 @@ jQuery(function () {
 						if(type.equals("2") && !UserController.friends.contains(name))
 						{ 
 						%>
-							<input type="Submit" onclick="form.action= '/social/Accept';" value="Accept" 
+							<input class="btn" type="Submit" id="acceptId" value="Accept" 
 							style="background: #fff;
 							border: 1px solid #fff;
 							cursor: pointer;
@@ -112,7 +118,7 @@ jQuery(function () {
 					if(type.equals("2") && !UserController.friends.contains(name))
 					{ 
 					%>
-						<input type="Submit" onclick="form.action= '/social/Accept';" value="Accept" 
+						<input class="btn" type="Submit" id="acceptId" value="Accept" 
 						style="background: #e5bdf2;
 						border: 1px solid #e5bdf2;
 						cursor: pointer;

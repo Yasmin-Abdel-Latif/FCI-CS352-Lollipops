@@ -21,8 +21,8 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 
 public class Post extends AbsPost{
-	String OwnerOfTimeline;
-	String poster;
+	static String OwnerOfTimeline;
+	static String poster;
 	String content=null;
 	int nLikes;
 	int iD;
@@ -36,7 +36,7 @@ public class Post extends AbsPost{
 			int nLikes,String up, String postPrivacy, String postFeelings) {
 		super();
 		OwnerOfTimeline = ownerOfTimeline;
-		this.poster = poster;
+		Post.poster = poster;
 		this.content = content;
 		this.nLikes = nLikes;
 		staticID++; //post id starts with 1
@@ -44,6 +44,14 @@ public class Post extends AbsPost{
 		userOrPage=up;
 		this.feeling=postFeelings;
 		this.privacy=postPrivacy;
+	}
+
+	public int getiD() {
+		return iD;
+	}
+
+	public void setiD(int iD) {
+		this.iD = iD;
 	}
 
 	public String getOwnerOfTimeline() {
@@ -59,7 +67,7 @@ public class Post extends AbsPost{
 	}
 
 	public void setPoster(String poster) {
-		this.poster = poster;
+		Post.poster = poster;
 	}
 
 	public String getContent() {

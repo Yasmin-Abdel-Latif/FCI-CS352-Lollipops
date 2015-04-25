@@ -32,26 +32,30 @@ public class Custom implements Privacy {
 		String postUserOrPage="";
 		int nLikes=0;
 		int i=0;
-		
+		int ID = 0;
 		for (Entity entity : pq.asIterable()) {
 			 i=0;
 			if ((entity.getProperty("Owner").toString().equals(ownerName))
 					&& (entity.getProperty("Privacy").toString()
-							.equals("Custom"))) {
-			for (int j=0;j<Integer.parseInt(entity.getProperty("CustomListNumber").toString());j++)
+							.equals("Custom"))) 
+			{
+				for (int j=0;j<Integer.parseInt(entity.getProperty("CustomListNumber").toString());j++)
 				{
-				if (entity.getProperty(("FriendCus# " + i)).toString().equals(viewerName)) {
-					postOwner = entity.getProperty("Owner").toString();
-					postPoster = entity.getProperty("Poster").toString();
-					postContent = entity.getProperty("Content").toString();
-					nLikes = Integer.parseInt(entity.getProperty("nLikes").toString());
-					postUserOrPage = entity.getProperty("UserOrPage").toString();
-					postPrivacy = entity.getProperty("Privacy").toString();
-					postFeelings = entity.getProperty("Feelings").toString();
-					posts.add(new Post(postOwner, postPoster, postContent,nLikes, "u", postPrivacy, postFeelings));
+					if (entity.getProperty(("FriendCus# " + i)).toString().equals(viewerName)) 
+					{
+						postOwner = entity.getProperty("Owner").toString();
+						postPoster = entity.getProperty("Poster").toString();
+						postContent = entity.getProperty("Content").toString();
+						nLikes = Integer.parseInt(entity.getProperty("nLikes").toString());
+						postUserOrPage = entity.getProperty("UserOrPage").toString();
+						postPrivacy = entity.getProperty("Privacy").toString();
+						postFeelings = entity.getProperty("Feelings").toString();
+						ID = Integer.parseInt(entity.getProperty("ID").toString());
+						Post post = new Post(postOwner, postPoster, postContent, nLikes, "u", postPrivacy, postFeelings);
+						post.setiD(ID);
+						posts.add(post);
 					}
-				i++;
-
+					i++;
 				}
 			}
 		}

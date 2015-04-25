@@ -65,22 +65,72 @@
 				for (int i = uTimeline.getAllPosts(UserController.userData.getName()).size()-1; i >=0 ; i--) {
 			%>
 			<TR ALIGN="LEFT">
-				<TD BGCOLOR="WHITE"><FONT COLOR="#65267a" SIZE="4"><I>
+				<TD BGCOLOR="WHITE">
+					<FONT COLOR="#65267a" SIZE="4">
+						<I>
 							<%
 								String poster = uTimeline.getAllPosts(UserController.userData.getName()).get(i).getPoster();
 								String content = uTimeline.getAllPosts(UserController.userData.getName()).get(i).getContent();
   								String feeling= uTimeline.getAllPosts(UserController.userData.getName()).get(i).getFeeling();
 								int nLikes = uTimeline.getAllPosts(UserController.userData.getName()).get(i).getnLikes();
-							%> <B> <% out.println(poster + " : "); %>
-			         		</B> <% out.println(content); %> <br>
+							%>
+							<B>
+							<% 
+								out.println(poster + " : "); 
+							%>
+			         		</B> 
+			         		<% 
+			         			out.println(content); 
+			         		%> 
+			         		<br>
 			         		<%
-			         		if (!feeling.equals("notValid"))
-			         			{%>
+				         		if (!feeling.equals("notValid"))
+			         			{
+			         		%>
 					         	   <FONT COLOR="#808080" SIZE="3"> <B> -Feeling: </B> <% out.print(feeling); %> </FONT>
-			         		<%	}
+				         	<%	
+				         		}
 			         		%>
 			         	   <FONT COLOR="#808080" SIZE="3"> <B> Likes: </B> <% out.print(+nLikes); %> </FONT>
-					</I></FONT></TD>
+						</I>
+					</FONT>
+				</TD>
+			</TR>
+			<%
+				}
+				for (int i = uTimeline.getAllSharedPosts(UserController.userData.getName()).size()-1; i >=0 ; i--) {
+			%>
+			<TR ALIGN="LEFT">
+				<TD BGCOLOR="WHITE">
+					<FONT COLOR="#65267a" SIZE="4">
+						<I>
+							<%
+								String poster = uTimeline.getAllSharedPosts(UserController.userData.getName()).get(i).getPoster();
+								String content = uTimeline.getAllSharedPosts(UserController.userData.getName()).get(i).getContent();
+  								String feeling= uTimeline.getAllSharedPosts(UserController.userData.getName()).get(i).getFeeling();
+								int nLikes = uTimeline.getAllSharedPosts(UserController.userData.getName()).get(i).getnLikes();
+							%>
+							<B>
+							<% 
+								out.println(UserController.userData.getName() + " Shared " + poster + "'s Post : "); 
+							%>
+			         		</B> 
+			         		<% 
+			         			out.println(content); 
+			         		%> 
+			         		<br>
+			         		<%
+				         		if (!feeling.equals("notValid"))
+			         			{
+			         		%>
+					         	   <FONT COLOR="#808080" SIZE="3"> <B> -Feeling: </B> <% out.print(feeling); %> </FONT>
+				         	<%	
+				         		}
+			         		%>
+			         	   <FONT COLOR="#808080" SIZE="3"> <B> Likes: </B> <% out.print(+nLikes); %> </FONT>
+						</I>
+					</FONT>
+				</TD>
 			</TR>
 			<%
 				}

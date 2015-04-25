@@ -25,32 +25,25 @@ public class PostNotify implements Notification {
 	 */
 	public void addNotification() {
 		type = 5;
-		rName = Messages.reciever;
-		sName = Messages.sender;
-		msg = Messages.msg;
+		rName = Post.OwnerOfTimeline;
+		sName = Post.poster;
+		msg = Post.poster + " Posted On Your Timeline";
 		seen = false;
+		
+		DatastoreService datastore1 = DatastoreServiceFactory
+				.getDatastoreService();
+		Query gaeQuery1 = new Query("Notifications");
+		PreparedQuery pq1 = datastore1.prepare(gaeQuery1);
+		List<Entity> list1 = pq1.asList(FetchOptions.Builder.withDefaults());
+		Entity messageNotify = new Entity("Notifications", list1.size()+1);
 
-		GroupMsg.getAllRecievers(Messages.reciever);
-		for (int i = 0; i < GroupMsg.recievers.size(); i++) 
-		{
-			DatastoreService datastore1 = DatastoreServiceFactory
-					.getDatastoreService();
-			Query gaeQuery1 = new Query("Notifications");
-			PreparedQuery pq1 = datastore1.prepare(gaeQuery1);
-			List<Entity> list1 = pq1.asList(FetchOptions.Builder
-					.withDefaults());
-			Entity messageNotify = new Entity("Notifications",
-					list1.size() + 1);
-
-			messageNotify.setProperty("ID", list1.size() + 1);
-			messageNotify.setProperty("Type", 4);
-			messageNotify.setProperty("Sender", Messages.sender);
-			messageNotify.setProperty("Name", GroupMsg.recievers.get(i));
-			messageNotify.setProperty("Msg", Messages.msg);
-			messageNotify.setProperty("Seen", false);
-			messageNotify.setProperty("Conversation", rName);
-			datastore1.put(messageNotify);
-		}
+		messageNotify.setProperty("ID", list1.size() + 1);
+		messageNotify.setProperty("Type", 5);
+		messageNotify.setProperty("Sender", Post.poster);
+		messageNotify.setProperty("Name", Post.OwnerOfTimeline);
+		messageNotify.setProperty("Msg", Post.poster + " Posted On Your Timeline");
+		messageNotify.setProperty("Seen", false);
+		datastore1.put(messageNotify);
 	}
 
 	@SuppressWarnings("deprecation")
