@@ -46,7 +46,8 @@ public class UserController {
 
 	//http://localhost:8080/rest/
 	//http://direct-hallway-864.appspot.com/rest/
-	public String webServiceLink = "http://localhost:8080/rest/";
+	//http://lollipops-social-network.appspot.com/rest/
+	public String webServiceLink = "http://lollipops-social-network.appspot.com/rest/";
 	public static UserEntity userData = null;
 	private static boolean sentFriend = false;
 	private static boolean firstTime = true;
