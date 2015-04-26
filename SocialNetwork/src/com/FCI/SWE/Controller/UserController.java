@@ -44,6 +44,9 @@ import com.FCI.SWE.Services.Service;
 @Produces("text/html")
 public class UserController {
 
+	//http://localhost:8080/rest/
+	//http://direct-hallway-864.appspot.com/rest/
+	public String webServiceLink = "http://localhost:8080/rest/";
 	public static UserEntity userData = null;
 	private static boolean sentFriend = false;
 	private static boolean firstTime = true;
@@ -62,6 +65,7 @@ public class UserController {
 	public static boolean gotIntoSetPrivacy=false;
 	public static String[] customList;
 	public static HashTimeline hashTimeline;
+	public static PageTimeline pageTimeline = new PageTimeline ();
 	
 	/**
 	 * Action function to render Signup page, this function will be executed
@@ -252,7 +256,7 @@ public class UserController {
 	@Produces("text/html")
 	public Response response(@FormParam("uname") String uname,
 			@FormParam("email") String email, @FormParam("password") String pass) {
-		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/RegistrationService";
+		String serviceUrl = webServiceLink + "RegistrationService";
 		try {
 			URL url = new URL(serviceUrl);
 			String urlParameters = "uname=" + uname + "&email=" + email
@@ -320,7 +324,7 @@ public class UserController {
 	@Produces("text/html")
 	public Response home(@FormParam("uname") String uname,
 			@FormParam("password") String pass) {
-		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/LoginService";
+		String serviceUrl = webServiceLink + "LoginService";
 		try {
 			URL url = new URL(serviceUrl);
 			String urlParameters = "uname=" + uname + "&password=" + pass;
@@ -367,20 +371,28 @@ public class UserController {
 			ArrayList<String> groupMsgNotifications = GroupMsgNotify.myUnSeenNotifications();
 			ArrayList<String> requestNotifications = RequestSent.myUnSeenNotifications();
 			ArrayList<String> acceptNotifications = AcceptedRequest.myUnSeenNotifications();
+			ArrayList<String> postNotifications = PostNotify.myUnSeenNotifications();
+			ArrayList<String> shareNotifications = ShareNotify.myUnSeenNotifications();
 			userUnSeenNotifications = new ArrayList<String>();
 			userUnSeenNotifications.addAll(msgNotifications);
 			userUnSeenNotifications.addAll(groupMsgNotifications);
 			userUnSeenNotifications.addAll(requestNotifications);
 			userUnSeenNotifications.addAll(acceptNotifications);
+			userUnSeenNotifications.addAll(postNotifications);
+			userUnSeenNotifications.addAll(shareNotifications);
 			ArrayList<String> msgNotifications1 = MsgNotify.mySeenNotifications();
 			ArrayList<String> groupMsgNotifications1 = GroupMsgNotify.mySeenNotifications();
 			ArrayList<String> requestNotifications1 = RequestSent.mySeenNotifications();
 			ArrayList<String> acceptNotifications1 = AcceptedRequest.mySeenNotifications();
+			ArrayList<String> postNotifications1 = PostNotify.mySeenNotifications();
+			ArrayList<String> shareNotifications1 = ShareNotify.mySeenNotifications();
 			userSeenNotifications = new ArrayList<String>();
 			userSeenNotifications.addAll(msgNotifications1);
 			userSeenNotifications.addAll(groupMsgNotifications1);
 			userSeenNotifications.addAll(requestNotifications1);
 			userSeenNotifications.addAll(acceptNotifications1);
+			userSeenNotifications.addAll(postNotifications1);
+			userSeenNotifications.addAll(shareNotifications1);
 			map.put("name", user.getName());
 
 			return Response.ok(new Viewable("/jsp/home", map)).build();
@@ -408,7 +420,7 @@ public class UserController {
 	@Path("/request")
 	@Produces("text/html")
 	public Response Request(@FormParam("friend") String fName) {
-		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/SendFriendRequestService";
+		String serviceUrl = webServiceLink + "SendFriendRequestService";
 		Map<String, String> map = new HashMap<String, String>();
 
 		try {
@@ -469,7 +481,7 @@ public class UserController {
 	@Path("/Accept")
 	@Produces("text/html")
 	public Response Accept(@FormParam("fname") String friend) {
-		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/AcceptService";
+		String serviceUrl = webServiceLink + "AcceptService";
 		Map<String, String> map = new HashMap<String, String>();
 		try {
 			URL url = new URL(serviceUrl);
@@ -532,7 +544,7 @@ public class UserController {
 	@Path("/ChatMsg")
 	@Produces("text/html")
 	public Response chatMsg(@FormParam("friendsNames") String fName, @FormParam("chatMsg") String msg) {
-		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/ChatMsgService";
+		String serviceUrl = webServiceLink + "ChatMsgService";
 		Map<String, String> map = new HashMap<String, String>();
 
 		try {
@@ -594,7 +606,7 @@ public class UserController {
 	@Path("/CreateConversation")
 	@Produces("text/html")
 	public Response createConversation(@FormParam("friendsNames") String fName, @FormParam("conversationName") String cName) {
-		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/conversationService";
+		String serviceUrl = webServiceLink + "conversationService";
 		Map<String, String> map = new HashMap<String, String>();
 
 		try {
@@ -658,7 +670,7 @@ public class UserController {
 	@Path("/SendMsg")
 	@Produces("text/html")
 	public Response groupMsg(@FormParam("conversationName") String cName, @FormParam("groupMsg") String msg) {
-		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/SendGroupMsgService";
+		String serviceUrl = webServiceLink + "SendGroupMsgService";
 		Map<String, String> map = new HashMap<String, String>();
 
 		try {
@@ -718,7 +730,7 @@ public class UserController {
 	@Path("/AttachToConversation")
 	@Produces("text/html")
 	public Response attachConversation(@FormParam("friendsNames") String fName, @FormParam("conversationName") String cName) {
-		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/attachService";
+		String serviceUrl = webServiceLink + "attachService";
 		Map<String, String> map = new HashMap<String, String>();
 
 		try {
@@ -778,7 +790,7 @@ public class UserController {
 	@Path("/DeattachFromConversation")
 	@Produces("text/html")
 	public Response deattachConversation(@FormParam("friendsNames") String fName, @FormParam("conversationName") String cName) {
-		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/deattachService";
+		String serviceUrl = webServiceLink + "deattachService";
 		Map<String, String> map = new HashMap<String, String>();
 
 		try {
@@ -831,7 +843,7 @@ public class UserController {
 	@Path("/seenNotifications")
 	@Produces("text/html")
 	public Response seenNotification() {
-		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/seenService";
+		String serviceUrl = webServiceLink + "seenService";
 		Map<String, String> map = new HashMap<String, String>();
 
 		try {
@@ -867,20 +879,28 @@ public class UserController {
 			ArrayList<String> groupMsgNotifications = GroupMsgNotify.myUnSeenNotifications();
 			ArrayList<String> requestNotifications = RequestSent.myUnSeenNotifications();
 			ArrayList<String> acceptNotifications = AcceptedRequest.myUnSeenNotifications();
+			ArrayList<String> postNotifications = PostNotify.myUnSeenNotifications();
+			ArrayList<String> shareNotifications = ShareNotify.myUnSeenNotifications();
 			userUnSeenNotifications = new ArrayList<String>();
 			userUnSeenNotifications.addAll(msgNotifications);
 			userUnSeenNotifications.addAll(groupMsgNotifications);
 			userUnSeenNotifications.addAll(requestNotifications);
 			userUnSeenNotifications.addAll(acceptNotifications);
+			userUnSeenNotifications.addAll(postNotifications);
+			userUnSeenNotifications.addAll(shareNotifications);
 			ArrayList<String> msgNotifications1 = MsgNotify.mySeenNotifications();
 			ArrayList<String> groupMsgNotifications1 = GroupMsgNotify.mySeenNotifications();
 			ArrayList<String> requestNotifications1 = RequestSent.mySeenNotifications();
 			ArrayList<String> acceptNotifications1 = AcceptedRequest.mySeenNotifications();
+			ArrayList<String> postNotifications1 = PostNotify.mySeenNotifications();
+			ArrayList<String> shareNotifications1 = ShareNotify.mySeenNotifications();
 			userSeenNotifications = new ArrayList<String>();
 			userSeenNotifications.addAll(msgNotifications1);
 			userSeenNotifications.addAll(groupMsgNotifications1);
 			userSeenNotifications.addAll(requestNotifications1);
 			userSeenNotifications.addAll(acceptNotifications1);
+			userSeenNotifications.addAll(postNotifications1);
+			userSeenNotifications.addAll(shareNotifications1);
 			friendRequests = Friend.getUserFriendRequests(userData.getName());
 			friends = Friend.getUserFriends(userData.getName());
 			userSentRequests = Friend.getUserSentRequests(userData.getName());
@@ -904,7 +924,7 @@ public class UserController {
 	@Produces("text/html")
 	public Response chosenNotification(@FormParam("ID") String ID, @FormParam("type") String type) {
 		
-		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/chosenService";
+		String serviceUrl = webServiceLink + "chosenService";
 		Map<String, String> map = new HashMap<String, String>();
 		try {
 			
@@ -960,7 +980,7 @@ public class UserController {
 	@Produces("text/html")
 	public Response sharePoste(@FormParam("ID") String ID) {
 		
-		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/shareService";
+		String serviceUrl = webServiceLink + "shareService";
 		Map<String, String> map = new HashMap<String, String>();
 		try {
 			
@@ -1035,7 +1055,7 @@ public class UserController {
 		{
 			gotIntoSetPrivacy = false;
 		}
-		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/createPostService";
+		String serviceUrl = webServiceLink + "createPostService";
 		Map<String, String> map = new HashMap<String, String>();
 
 		try {
@@ -1092,7 +1112,7 @@ public class UserController {
 	@Path("/createPostOnFP")
 	@Produces("text/html")
 	public Response createPostOnFP(@FormParam("postContent") String pContent) {
-		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/createPostOnFPService";
+		String serviceUrl = webServiceLink + "createPostOnFPService";
 		Map<String, String> map = new HashMap<String, String>();
 
 		try {
@@ -1141,13 +1161,188 @@ public class UserController {
 		return Response.ok(new Viewable("/jsp/fpTimeline", map)).build();
 	}
 	
+	/**
+	 * Action function to post a new post
+	 * 
+	 */
+	@POST
+	@Path("/createPostOnPage")
+	@Produces("text/html")
+	public Response createPostOnPage(@FormParam("postContent") String pContent) {
+		String serviceUrl = webServiceLink + "createPostOnpageService";
+		Map<String, String> map = new HashMap<String, String>();
+
+		try {
+			URL url = new URL(serviceUrl);
+			String urlParameters = "&postContent=" + pContent;
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setInstanceFollowRedirects(false);
+			connection.setRequestMethod("POST");
+			connection.setConnectTimeout(60000); // 60 Seconds
+			connection.setReadTimeout(60000); // 60 Seconds
+
+			connection.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded;charset=UTF-8");
+			OutputStreamWriter writer = new OutputStreamWriter(
+					connection.getOutputStream());
+			writer.write(urlParameters);
+			writer.flush();
+			String line, retJson = "";
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					connection.getInputStream()));
+
+			while ((line = reader.readLine()) != null) {
+				retJson += line;
+			}
+			writer.close();
+			reader.close();
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+
+			map.put("message", echo);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return Response.ok(new Viewable("/jsp/page", map)).build();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@POST
+	@Path("/likePage")
+	@Produces("text/html")
+	public Response likePage() {
+		Map<String, String> map = new HashMap<String, String>();
+		String serviceUrl = webServiceLink + "pagelikeService";
+		try {
+			URL url = new URL(serviceUrl);
+			String urlParameters = "name="+userData.getName();
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setInstanceFollowRedirects(false);
+			connection.setRequestMethod("POST");
+			connection.setConnectTimeout(60000); // 60 Seconds
+			connection.setReadTimeout(60000); // 60 Seconds
+			connection.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded;charset=UTF-8");
+			OutputStreamWriter writer = new OutputStreamWriter(
+					connection.getOutputStream());
+			writer.write(urlParameters);
+			writer.flush();
+			String line, retJson = "";
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					connection.getInputStream()));
+
+			while ((line = reader.readLine()) != null) {
+				retJson += line;
+			}
+			writer.close();
+			reader.close();
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+			map.put("message", echo);
+			map.put("name", fpName);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		/*
+		 * UserEntity user = new UserEntity(uname, email, pass);
+		 * user.saveUser(); return uname;
+		 */
+		return Response.ok(new Viewable("/jsp/Ppage", map)).build();
+
+	}
+	
+	/**
+	 * 
+	 * @param postID
+	 */
+	@POST
+	@Path("/likePost")
+	@Produces("text/html")
+	public void likePost(@FormParam("postID") String postID) {
+		Map<String, String> map = new HashMap<String, String>();
+		String serviceUrl = webServiceLink + "postlikeService";
+		try {
+			URL url = new URL(serviceUrl);
+			String urlParameters = "postID="+postID;
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setInstanceFollowRedirects(false);
+			connection.setRequestMethod("POST");
+			connection.setConnectTimeout(60000); // 60 Seconds
+			connection.setReadTimeout(60000); // 60 Seconds
+			connection.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded;charset=UTF-8");
+			OutputStreamWriter writer = new OutputStreamWriter(
+					connection.getOutputStream());
+			writer.write(urlParameters);
+			writer.flush();
+			String line, retJson = "";
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					connection.getInputStream()));
+
+			while ((line = reader.readLine()) != null) {
+				retJson += line;
+			}
+			writer.close();
+			reader.close();
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+			map.put("message", echo);
+			map.put("name", fpName);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	/**
+	 * 
+	 * @param pageName
+	 * @param pageType
+	 * @param pageCatg
+	 * @return
+	 */
 	@POST
 	@Path("/CreatePage")
 	@Produces("text/html")
 	public Response CreatePage(@FormParam("PageName") String pageName ,
 			@FormParam("pageType") String pageType, @FormParam("pageCatg") String pageCatg) {
 		Map<String, String> map = new HashMap<String, String>();
-		String serviceUrl = "http://direct-hallway-864.appspot.com/rest/createpageService";
+		String serviceUrl = webServiceLink + "createpageService";
 		try {
 			URL url = new URL(serviceUrl);
 			String urlParameters = "pageName=" + pageName+ "&pageType=" + pageType
@@ -1206,9 +1401,9 @@ public class UserController {
 		Map<String, String> map = new HashMap<String, String>();
 		String serviceUrl;
 		if (text.contains("#"))
-		 serviceUrl = "http://direct-hallway-864.appspot.com/rest/hashSearchService";
+		 serviceUrl = webServiceLink + "hashSearchService";
 		else
-		serviceUrl = "http://direct-hallway-864.appspot.com/rest/pageSearchService";
+		serviceUrl = webServiceLink + "pageSearchService";
 		try {
 			URL url = new URL(serviceUrl);
 			String urlParameters = "search=" + text ;
@@ -1252,8 +1447,9 @@ public class UserController {
 		}
 		if(text.contains("#"))
 			return Response.ok(new Viewable("/jsp/HashTimeline", map)).build();
+		if (pageTimeline.page.getPageOwner().equals(userData.getName())) //the user is the admain
+			return Response.ok(new Viewable("/jsp/page", map)).build();
 		
-		return Response.ok(new Viewable("/jsp/HashTimeline", map)).build();
-
+		return Response.ok(new Viewable("/jsp/Ppage", map)).build();
 	}
 }

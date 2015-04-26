@@ -41,7 +41,7 @@ public class Custom implements Privacy {
 			{
 				for (int j=0;j<Integer.parseInt(entity.getProperty("CustomListNumber").toString());j++)
 				{
-					if (entity.getProperty(("FriendCus# " + i)).toString().equals(viewerName)) 
+					if (entity.getProperty(("FriendCus# " + i)).toString().equals(viewerName) && (entity.getProperty("UserOrPage").toString().equals("u"))) 
 					{
 						postOwner = entity.getProperty("Owner").toString();
 						postPoster = entity.getProperty("Poster").toString();
@@ -51,8 +51,7 @@ public class Custom implements Privacy {
 						postPrivacy = entity.getProperty("Privacy").toString();
 						postFeelings = entity.getProperty("Feelings").toString();
 						ID = Integer.parseInt(entity.getProperty("ID").toString());
-						Post post = new Post(postOwner, postPoster, postContent, nLikes, "u", postPrivacy, postFeelings);
-						post.setiD(ID);
+						Post post = new Post(postOwner, postPoster, postContent, nLikes, "u", postPrivacy, postFeelings, ID);
 						posts.add(post);
 					}
 					i++;

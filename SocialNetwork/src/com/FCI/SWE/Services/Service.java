@@ -2,6 +2,8 @@ package com.FCI.SWE.Services;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -357,6 +359,8 @@ public class Service {
 		GroupMsgNotify msgNotify2 = new GroupMsgNotify();
 		AcceptedRequest acceptNotify = new AcceptedRequest();
 		RequestSent requestNotify = new RequestSent();
+		PostNotify postNotify = new PostNotify();
+		ShareNotify shareNotify = new ShareNotify();
 		Invoker invoke = new Invoker();
 		invoke.setCommand(msgNotify);
 		invoke.seen();
@@ -365,6 +369,10 @@ public class Service {
 		invoke.setCommand(acceptNotify);
 		invoke.seen();
 		invoke.setCommand(requestNotify);
+		invoke.seen();
+		invoke.setCommand(postNotify);
+		invoke.seen();
+		invoke.setCommand(shareNotify);
 		invoke.seen();
 		object.put("Status", "OK");
 		return object.toString();
@@ -410,6 +418,24 @@ public class Service {
 			invoke.setCommand(msgNotify);
 			messages = invoke.press(ID.toString());
 		}
+		
+		if(type.equals("5"))
+		{
+			UserController.echo = "Posts";
+			PostNotify postNotify = new PostNotify();
+			Invoker invoke = new Invoker();
+			invoke.setCommand(postNotify);
+			messages = invoke.press(ID.toString());
+		}
+		
+		if(type.equals("6"))
+		{
+			UserController.echo = "Posts";
+			ShareNotify shareNotify = new ShareNotify();
+			Invoker invoke = new Invoker();
+			invoke.setCommand(shareNotify);
+			messages = invoke.press(ID.toString());
+		}
 		object.put("Status", "OK");
 		return object.toString();
 	}
@@ -422,6 +448,10 @@ public class Service {
 		JSONObject object = new JSONObject();
 		Share sharePost = new Share(Integer.parseInt(ID));
 		sharePost.share();
+		ShareNotify shareNotify = new ShareNotify();
+		Invoker invoke = new Invoker();
+		invoke.setCommand(shareNotify);
+		invoke.add();
 		object.put("Status", "OK");
 		return object.toString();
 	}
@@ -443,8 +473,35 @@ public class Service {
 		{
 			String postPrivacy=UserController.passPostPrivacy;
 			String postFeelings=UserController.passPostFeelings;
-			UserController.timeline.createPost(pContent,postPrivacy,postFeelings);
+			Like like = new Like();
+			int likeID = like.nextLikeID();
+			int postId = UserController.timeline.createPost(pContent,postPrivacy,postFeelings, likeID);
+
+			like.setObjID(postId);
+			like.setPostOrPage("post");
+			like.likeObj(UserController.userData.getName());
 			object.put("Status", "OK");
+			if (pContent.contains("#")) 
+			{
+				Pattern MY_PATTERN = Pattern.compile("(?:(?<=\\s)|^)#(\\w*[A-Za-z_]+\\w*)");
+				Matcher mat = MY_PATTERN.matcher(pContent);
+				ArrayList<String> alreadyInPost = new ArrayList<String>();
+				while (mat.find()) {
+					String hash = mat.group(1);
+					if (alreadyInPost.contains(hash)) // if this hashtag is	repeated in the post
+						continue;
+					Hashtag hashObj = new Hashtag(hash);
+					if (!hashObj.checkHashTag()) 
+					{
+						hashObj.saveHashtag(postId);
+					} 
+					else 
+					{
+						hashObj.upDateHashtag(postId);
+					}
+					alreadyInPost.add(hash);
+				}
+			}
 		}
 		else
 		{
@@ -473,11 +530,39 @@ public class Service {
 		for (int j = 0; j < ownerFriends.size(); j++) {
 			if (ownerFriends.get(j).equals(UserController.userData.getName())) {
 				friendOf = true;
-				if (!pContent.equals(" ")) {
-					Post newPost = new Post(UserController.fpName,UserController.userData.getName(), pContent, 0,"u", "", ""); // no feelings on someone else's wall
-					UserController.FPageTimeline.addPost(newPost);
-					object.put("Status", "OK");
-				} else {
+				if (!pContent.equals(" ")) 
+				{
+					Post newPost = new Post(UserController.fpName,UserController.userData.getName(), pContent, 0,"u", "", "",0); // no feelings on someone else's wall
+					int postId = UserController.FPageTimeline.addPost(newPost);
+		 			object.put("Status", "OK");
+		 			PostNotify postNotify = new PostNotify();
+					Invoker invoke = new Invoker();
+					invoke.setCommand(postNotify);
+					invoke.add();
+					if (pContent.contains("#")) 
+					{
+						Pattern MY_PATTERN = Pattern.compile("(?:(?<=\\s)|^)#(\\w*[A-Za-z_]+\\w*)");
+						Matcher mat = MY_PATTERN.matcher(pContent);
+						ArrayList<String> alreadyInPost = new ArrayList<String>();
+						while (mat.find()) {
+							String hash = mat.group(1);
+							if (alreadyInPost.contains(hash)) // if this hashtag is	repeated in the post
+								continue;
+							Hashtag hashObj = new Hashtag(hash);
+							if (!hashObj.checkHashTag()) 
+							{
+								hashObj.saveHashtag(postId);
+							} 
+							else 
+							{
+								hashObj.upDateHashtag(postId);
+							}
+							alreadyInPost.add(hash);
+						}
+					}
+				} 
+				else 
+				{
 					UserController.echo = " Your Post is empty.";
 					object.put("Status", "Failed");
 				}
@@ -500,10 +585,18 @@ public class Service {
 		JSONObject object = new JSONObject();
 		Page page = new Page(pageName, pageType, pageCatg,
 				UserController.userData.getName());
-		if (!page.checkPage()) {
-			page.savePage();
+		if (!page.checkPage()) 
+		{
+			Like pageLike = new Like();
+			int likeID = pageLike.nextLikeID();
+			int objID = page.savePage(likeID);
+			pageLike.setObjID(objID);
+			pageLike.setPostOrPage("page");
+			pageLike.likeObj(UserController.userData.getName());
 			UserController.echo = "Page created successfully "; //
-		} else {
+		} 
+		else 
+		{
 			UserController.echo = "This Page Name is already exist";
 		}
 		return object.toString();
@@ -535,6 +628,138 @@ public class Service {
 		{
 			for (int i=topHashes.size()-10 ;i<topHashes.size();i++)
 				UserController.hashTimeline.hash.add(topHashes.get(i));
+		}
+		return object.toString();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@POST
+	@Path("/pagelikeService")
+	public String pageLike(@FormParam("name") String name) {
+		JSONObject object = new JSONObject();
+		if (UserController.pageTimeline.page.getPageName()==null)
+			UserController.echo = "no such a page";
+		else {
+			if (UserController.pageTimeline.like)
+					UserController.echo = "you already like this page" ;
+			else
+			{
+				Like like = new Like ();
+				like.setLikeID(UserController.pageTimeline.page.getLikeID());
+				like.likePage(name);
+				UserController.pageTimeline.like = true;
+			}
+		}
+		return object.toString();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@POST
+	@Path("/postlikeService")
+	public String postLike(@FormParam("postID") String postID) {
+		JSONObject object = new JSONObject();
+		int postId = Integer.parseInt(postID);
+		Like like = new Like();
+		like.setObjID(postId);
+		like.setPostOrPage("post");
+		like.allLikeUser();
+		ArrayList<String> users = like.getUsers();
+		if (users.contains(UserController.userData.getName()))
+			UserController.echo = "you already like this post";
+		else 
+			like.likePost(UserController.userData.getName());
+		
+		return object.toString();
+	}
+	
+	/**
+	 * 
+	 * @param page
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("/pageSearchService")
+	public String pageSearch(@FormParam("search") String page) {
+		JSONObject object = new JSONObject();
+		Page pageObj = new Page(page);
+		UserController.pageTimeline.page = new Page();
+		PageTimeline.posts = new ArrayList<Post> ();
+		if (!pageObj.checkPage())
+			UserController.echo = "no such a page";
+		else 
+		{
+			UserController.pageTimeline.page = pageObj.getPage();
+			PageTimeline.getAllPosts(page);
+			UserController.echo = page + " page";
+			int likeID = UserController.pageTimeline.page.getLikeID();
+			Like like = new Like ();
+			like.allLikeUserByID(likeID);
+			ArrayList <String> users = new ArrayList<String>();
+			users = (ArrayList<String>) like.getUsers().clone();
+			if (users.contains(UserController.userData.getName()))
+				UserController.pageTimeline.like= true;
+			else
+				UserController.pageTimeline.like= false;
+			
+		}
+		return object.toString();
+	}
+
+	/**
+	 * create post on page by admain
+	 * 
+	 * @param pContent
+	 *            post content
+	 * @return status in a json object
+	 */
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("/createPostOnpageService")
+	public String createPostOnPageService(
+			@FormParam("postContent") String pContent) {
+		JSONObject object = new JSONObject();
+		if (!pContent.equals(" ")) {
+			Like like = new Like();
+			int likeID = like.nextLikeID();
+			Post newPost = new Post(
+					UserController.pageTimeline.page.getPageName(),
+					UserController.pageTimeline.page.getPageName(), pContent,
+					likeID, "p", "", "", 0);
+			int postID = UserController.pageTimeline.createPost(newPost);
+			like.setObjID(postID);
+			like.setPostOrPage("post");
+			like.likeObj(UserController.userData.getName());
+			if (pContent.contains("#")) {
+				Pattern MY_PATTERN = Pattern
+						.compile("(?:(?<=\\s)|^)#(\\w*[A-Za-z_]+\\w*)");
+				Matcher mat = MY_PATTERN.matcher(pContent);
+				ArrayList<String> alreadyInPost = new ArrayList<String>();
+				while (mat.find()) {
+					String hash = mat.group(1);
+					if (alreadyInPost.contains(hash)) // if this hashtag is
+														// repeated in the post
+						continue;
+					Hashtag hashObj = new Hashtag(hash);
+					if (!hashObj.checkHashTag()) {
+						hashObj.saveHashtag(postID);
+					} else {
+						hashObj.upDateHashtag(postID);
+					}
+					alreadyInPost.add(hash);
+
+				}
+			}
+			object.put("Status", "OK");
+		} else {
+			UserController.echo = " Your Post is empty.";
+			object.put("Status", "Failed");
 		}
 		return object.toString();
 	}

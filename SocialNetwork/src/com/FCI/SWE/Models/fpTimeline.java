@@ -29,6 +29,7 @@ public class fpTimeline {
 	public int addPost (Post newPost)
 	{
 		int postID = newPost.registerPostOnFP(UserController.fpName);
+		newPost.setiD(postID);
 		this.posts.add(newPost);
 		return postID;
 	}
@@ -75,8 +76,8 @@ public class fpTimeline {
 		public int compare(Post p1, Post p2) 
 		{
 
-		   int pp1 = p1.iD;
-		   int pp2 = p2.iD;
+		   int pp1 = p1.getiD();
+		   int pp2 = p2.getiD();
 
 		   return pp1-pp2; // sort in an ascending order of id. (Display might be descending according to post type -- handled in jsp)
 		}
@@ -108,7 +109,7 @@ public class fpTimeline {
 						String postFeelings1 = entity2.getProperty("Feelings").toString();
 						String postPrivacy1 = entity2.getProperty("Privacy").toString();
 						int ID = Integer.parseInt(entity2.getProperty("ID").toString());
-						Post post = new Post(postOwner1, postPoster1, postContent1, nLikes1, postUserOrPage1, postPrivacy1, postFeelings1);
+						Post post = new Post(postOwner1, postPoster1, postContent1, nLikes1, postUserOrPage1, postPrivacy1, postFeelings1, ID);
 						post.setiD(ID);
 						posts.add(post);
 					}
@@ -125,7 +126,7 @@ public class fpTimeline {
 							String postFeelings1 = entity2.getProperty("Feelings").toString();
 							String postPrivacy1 = entity2.getProperty("Privacy").toString();
 							int ID = Integer.parseInt(entity2.getProperty("ID").toString());
-							Post post = new Post(postOwner1, postPoster1, postContent1, nLikes1, postUserOrPage1, postPrivacy1, postFeelings1);
+							Post post = new Post(postOwner1, postPoster1, postContent1, nLikes1, postUserOrPage1, postPrivacy1, postFeelings1, ID);
 							post.setiD(ID);
 							posts.add(post);
 						}
@@ -145,7 +146,7 @@ public class fpTimeline {
 								String postFeelings1 = entity2.getProperty("Feelings").toString();
 								String postPrivacy1 = entity2.getProperty("Privacy").toString();
 								int ID = Integer.parseInt(entity2.getProperty("ID").toString());
-								Post post = new Post(postOwner1, postPoster1, postContent1, nLikes1, postUserOrPage1, postPrivacy1, postFeelings1);
+								Post post = new Post(postOwner1, postPoster1, postContent1, nLikes1, postUserOrPage1, postPrivacy1, postFeelings1, ID);
 								post.setiD(ID);
 								posts.add(post);
 							}
@@ -163,7 +164,7 @@ public class fpTimeline {
 										String postFeelings1 = entity2.getProperty("Feelings").toString();
 										String postPrivacy1 = entity2.getProperty("Privacy").toString();
 										int ID = Integer.parseInt(entity2.getProperty("ID").toString());
-										Post post = new Post(postOwner1, postPoster1, postContent1, nLikes1, postUserOrPage1, postPrivacy1, postFeelings1);
+										Post post = new Post(postOwner1, postPoster1, postContent1, nLikes1, postUserOrPage1, postPrivacy1, postFeelings1, ID);
 										post.setiD(ID);
 										posts.add(post);
 									}

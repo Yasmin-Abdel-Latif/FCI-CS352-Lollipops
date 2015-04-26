@@ -13,10 +13,10 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 
 public class Share {
 
-	public String postOwner;
-	public String postSharer;
-	public int ID;
-	public int postID;
+	public static String postOwner;
+	public static String postSharer;
+	public static int ID;
+	public static int postID;
 	
 	public Share(){}
 	public Share(int postId)

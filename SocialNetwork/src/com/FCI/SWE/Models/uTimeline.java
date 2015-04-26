@@ -50,11 +50,12 @@ public class uTimeline {
 	 *                post content
 	 * @param postFeelings, postPrivacy
 	 */
-	public void createPost(String pContent, String postPrivacy, String postFeelings)
+	public int createPost(String pContent, String postPrivacy, String postFeelings, int likeID)
 	{
-		Post newPost = new Post(UserController.userData.getName(), UserController.userData.getName(),pContent, 0,"u",postPrivacy,postFeelings);
-		newPost.registerPost();
+		Post newPost = new Post(UserController.userData.getName(), UserController.userData.getName(),pContent, likeID,"u",postPrivacy,postFeelings, 0);
+		int postID = newPost.registerPost();
 		this.posts.add(newPost);
+		return postID;
 	}
 	
 	
@@ -89,8 +90,11 @@ public class uTimeline {
 				postUserOrPage=entity.getProperty("UserOrPage").toString();
 				postFeelings=entity.getProperty("Feelings").toString();
 				postPrivacy=entity.getProperty("Privacy").toString();
+				int ID = Integer.parseInt(entity.getProperty("ID").toString());
 
-				posts.add(new Post(postOwner, postPoster, postContent, nLikes, postUserOrPage, postPrivacy, postFeelings));
+				Post post = new Post(postOwner, postPoster, postContent, nLikes, postUserOrPage, postPrivacy, postFeelings, ID);
+				post.setPoster(postPoster);
+				posts.add(post);
 			}
 		}
 		return posts;
@@ -122,7 +126,8 @@ public class uTimeline {
 						String postUserOrPage1 = entity2.getProperty("UserOrPage").toString();
 						String postFeelings1 = entity2.getProperty("Feelings").toString();
 						String postPrivacy1 = entity2.getProperty("Privacy").toString();
-						posts.add(new Post(postOwner1, postPoster1, postContent1, nLikes1, postUserOrPage1, postPrivacy1, postFeelings1));
+						int ID = Integer.parseInt(entity2.getProperty("ID").toString());
+						posts.add(new Post(postOwner1, postPoster1, postContent1, nLikes1, postUserOrPage1, postPrivacy1, postFeelings1, ID));
 					}
 				}
 			}

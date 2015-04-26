@@ -24,23 +24,22 @@ public class Post extends AbsPost{
 	static String OwnerOfTimeline;
 	static String poster;
 	String content=null;
-	int nLikes;
-	int iD;
-	static int staticID=0;
+	int likeID;
+	static int iD;
 	String userOrPage; //timeline of post indicator u for user - p for page
 	String feeling="default";
 	String privacy;
 	String[] cList;
+	int seen ;
 	
 	public Post(String ownerOfTimeline, String poster, String content,
-			int nLikes,String up, String postPrivacy, String postFeelings) {
+			int nLikes,String up, String postPrivacy, String postFeelings, int ID) {
 		super();
 		OwnerOfTimeline = ownerOfTimeline;
 		Post.poster = poster;
 		this.content = content;
-		this.nLikes = nLikes;
-		staticID++; //post id starts with 1
-		iD=staticID;
+		this.likeID = nLikes;
+		iD=ID;
 		userOrPage=up;
 		this.feeling=postFeelings;
 		this.privacy=postPrivacy;
@@ -51,7 +50,7 @@ public class Post extends AbsPost{
 	}
 
 	public void setiD(int iD) {
-		this.iD = iD;
+		Post.iD = iD;
 	}
 
 	public String getOwnerOfTimeline() {
@@ -77,10 +76,10 @@ public class Post extends AbsPost{
 		this.content = content;
 	}
 	public int getnLikes() {
-		return nLikes;
+		return likeID;
 	}
 	public void setnLikes(int nLikes) {
-		this.nLikes = nLikes;
+		this.likeID = nLikes;
 	}
 
 
@@ -100,7 +99,7 @@ public class Post extends AbsPost{
 		post.setProperty("Owner", OwnerOfTimeline);
 		post.setProperty("Poster", poster);
 		post.setProperty("Content", content);
-		post.setProperty("nLikes", nLikes);
+		post.setProperty("nLikes", likeID);
 		post.setProperty("UserOrPage",userOrPage);
 		post.setProperty("Privacy",privacy);
 		post.setProperty("Feelings",feeling);
@@ -142,7 +141,7 @@ public class Post extends AbsPost{
 		post.setProperty("Owner", UserController.fpName);
 		post.setProperty("Poster", poster);
 		post.setProperty("Content", content);
-		post.setProperty("nLikes", nLikes);
+		post.setProperty("nLikes", likeID);
 		post.setProperty("UserOrPage",userOrPage);
 		post.setProperty("Privacy",privacy);
 		post.setProperty("Feelings",feeling);
@@ -166,7 +165,7 @@ public class Post extends AbsPost{
 		String userorpage=( postEntity.getProperty("UserOrPage")).toString();
 		String feeling = ( postEntity.getProperty("Feelings")).toString();
 		String privacy = ( postEntity.getProperty("Privacy")).toString();
-		Post p = new Post(owner , poster , content , nlikes , userorpage, privacy, feeling);
+		Post p = new Post(owner , poster , content , nlikes , userorpage, privacy, feeling, ID);
 		return p;
 	}
 }
