@@ -7,6 +7,7 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.FilterOperator;
 
 /**
  * 
@@ -19,6 +20,27 @@ public class PageTimeline {
 	public Page page ;
 	public Boolean like ; //if the current user like the page
 	
+	/**
+	 * this method to seen every post in a friend timeline
+	 */
+	@SuppressWarnings("deprecation")
+	public void seen ()
+	{
+		for (int i=0;i<posts.size();i++)
+		{
+			int seen = posts.get(i).getSeen()+1;
+			posts.get(i).setSeen(seen);
+			DatastoreService datastore = DatastoreServiceFactory
+					.getDatastoreService();
+			Query query = new Query("Post");
+			query.addFilter("ID", FilterOperator.EQUAL, posts.get(i).getiD());
+			PreparedQuery pq = datastore.prepare(query);
+			Entity postEntity = pq.asSingleEntity();
+			postEntity.setProperty("seen", seen);
+			datastore.put(postEntity);
+			
+		}
+	}
 	/**
 	 * 
 	 * @param pContent
@@ -52,6 +74,7 @@ public class PageTimeline {
 		String postUserOrPage="";
 		int nLikes=0;
 		int ID = 0;
+		int seen =0;
 		posts = new ArrayList<Post>();
 
 		for (Entity entity : pq.asIterable()) {
@@ -65,8 +88,8 @@ public class PageTimeline {
 				postFeelings = entity.getProperty("Feelings").toString();
 				postPrivacy = entity.getProperty("Privacy").toString();
 				ID = Integer.parseInt(entity.getProperty("ID").toString());
-				
-				Post post = new Post(postOwner, postPoster, postContent, nLikes,postUserOrPage,postPrivacy,postFeelings, ID);
+				seen = Integer.parseInt(entity.getProperty("seen").toString());
+				Post post = new Post(postOwner, postPoster, postContent, nLikes,postUserOrPage,postPrivacy,postFeelings, ID,seen);
 				post.setiD(ID);
 				posts.add(post);
 			}

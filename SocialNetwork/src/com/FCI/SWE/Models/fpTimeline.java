@@ -19,6 +19,7 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.FilterOperator;
 
 public class fpTimeline {
 	
@@ -35,6 +36,26 @@ public class fpTimeline {
 	}
 	
 	/**
+	 * this method to seen every post in a friend timeline
+	 */
+	@SuppressWarnings("deprecation")
+	public void seen ()
+	{
+		for (int i=0;i<posts.size();i++)
+		{
+			int seen = posts.get(i).getSeen()+1;
+			posts.get(i).setSeen(seen);
+			DatastoreService datastore = DatastoreServiceFactory
+					.getDatastoreService();
+			Query query = new Query("Post");
+			query.addFilter("ID", FilterOperator.EQUAL, posts.get(i).getiD());
+			PreparedQuery pq = datastore.prepare(query);
+			Entity postEntity = pq.asSingleEntity();
+			postEntity.setProperty("seen", seen);
+			datastore.put(postEntity);
+		}
+	}
+	/**
 	 * getAllPosts method : will return all posts of a certain OWNER
 	 * 
 	 * @param name
@@ -50,15 +71,11 @@ public class fpTimeline {
 		
 		ArrayList<String>ownerFriends=Friend.getUserFriends(ownerName); //allow displaying private posts only if am a friend to the timeline's owner
 		boolean friendOfOwner=false;
-		for (int i=0;i<ownerFriends.size();i++)
+		if (ownerFriends.contains(UserController.userData.getName()))
 		{
-			if (ownerFriends.get(i).equals(UserController.userData.getName()))
-			{
-				friendOfOwner=true;
-				Privacy pri = new Private(); 
-				pri.fillAccToPrivacy(posts,ownerName,UserController.userData.getName());
-				break;
-			}
+			friendOfOwner=true;
+			Privacy pri = new Private(); 
+			pri.fillAccToPrivacy(posts,ownerName,UserController.userData.getName());
 		}
 		
 		if (friendOfOwner) //if am a friend of the owner => check for custom posts am included in & display them
@@ -109,7 +126,8 @@ public class fpTimeline {
 						String postFeelings1 = entity2.getProperty("Feelings").toString();
 						String postPrivacy1 = entity2.getProperty("Privacy").toString();
 						int ID = Integer.parseInt(entity2.getProperty("ID").toString());
-						Post post = new Post(postOwner1, postPoster1, postContent1, nLikes1, postUserOrPage1, postPrivacy1, postFeelings1, ID);
+						int seen = Integer.parseInt(entity2.getProperty("seen").toString());
+						Post post = new Post(postOwner1, postPoster1, postContent1, nLikes1, postUserOrPage1, postPrivacy1, postFeelings1, ID,seen);
 						post.setiD(ID);
 						posts.add(post);
 					}
@@ -126,7 +144,8 @@ public class fpTimeline {
 							String postFeelings1 = entity2.getProperty("Feelings").toString();
 							String postPrivacy1 = entity2.getProperty("Privacy").toString();
 							int ID = Integer.parseInt(entity2.getProperty("ID").toString());
-							Post post = new Post(postOwner1, postPoster1, postContent1, nLikes1, postUserOrPage1, postPrivacy1, postFeelings1, ID);
+							int seen = Integer.parseInt(entity2.getProperty("seen").toString());
+							Post post = new Post(postOwner1, postPoster1, postContent1, nLikes1, postUserOrPage1, postPrivacy1, postFeelings1, ID,seen);
 							post.setiD(ID);
 							posts.add(post);
 						}
@@ -146,7 +165,8 @@ public class fpTimeline {
 								String postFeelings1 = entity2.getProperty("Feelings").toString();
 								String postPrivacy1 = entity2.getProperty("Privacy").toString();
 								int ID = Integer.parseInt(entity2.getProperty("ID").toString());
-								Post post = new Post(postOwner1, postPoster1, postContent1, nLikes1, postUserOrPage1, postPrivacy1, postFeelings1, ID);
+								int seen = Integer.parseInt(entity2.getProperty("seen").toString());
+								Post post = new Post(postOwner1, postPoster1, postContent1, nLikes1, postUserOrPage1, postPrivacy1, postFeelings1, ID,seen);
 								post.setiD(ID);
 								posts.add(post);
 							}
@@ -164,7 +184,8 @@ public class fpTimeline {
 										String postFeelings1 = entity2.getProperty("Feelings").toString();
 										String postPrivacy1 = entity2.getProperty("Privacy").toString();
 										int ID = Integer.parseInt(entity2.getProperty("ID").toString());
-										Post post = new Post(postOwner1, postPoster1, postContent1, nLikes1, postUserOrPage1, postPrivacy1, postFeelings1, ID);
+										int seen = Integer.parseInt(entity2.getProperty("seen").toString());
+										Post post = new Post(postOwner1, postPoster1, postContent1, nLikes1, postUserOrPage1, postPrivacy1, postFeelings1, ID,seen);
 										post.setiD(ID);
 										posts.add(post);
 									}
@@ -179,6 +200,10 @@ public class fpTimeline {
 		return posts;
 	}
 	public void setPosts(ArrayList<Post> posts) {
-		this.posts = posts;
+		this.posts = new ArrayList<Post>();
+		for(int i = 0 ; i < posts.size() ; i++)
+		{
+			this.posts.add(posts.get(i));
+		}
 	}
 }

@@ -80,6 +80,7 @@ public class Like {
 	 */
 	@SuppressWarnings("deprecation")
 	public int likePage(String userName) {
+		allLikeUserByID(likeID);
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Query query = new Query("Like");

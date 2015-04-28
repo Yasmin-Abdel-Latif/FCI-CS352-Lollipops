@@ -46,7 +46,8 @@ public class Public implements Privacy{
 
 				System.out.println("Poster: " + postPoster);
 				ID = Integer.parseInt(entity.getProperty("ID").toString());
-				Post post = new Post(postOwner, postPoster, postContent, nLikes, "u", postPrivacy, postFeelings, ID);
+				int seen = Integer.parseInt(entity.getProperty("seen").toString());
+				Post post = new Post(postOwner, postPoster, postContent, nLikes, "u", postPrivacy, postFeelings, ID,seen);
 				posts.add(post);
 			}
 		}

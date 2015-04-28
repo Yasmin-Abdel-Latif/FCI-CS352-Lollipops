@@ -524,52 +524,54 @@ public class Service {
 	public String createPostOnFPService(@FormParam("postContent") String pContent)
 	{
 		JSONObject object = new JSONObject();
-		boolean friendOf=false;
+		pContent = pContent.trim();
 		//only friends can post on their friend timeline
-		ArrayList<String>ownerFriends=Friend.getUserFriends(UserController.fpName); //getting friends of the owner of the timeline to which am posting
-		for (int j = 0; j < ownerFriends.size(); j++) {
-			if (ownerFriends.get(j).equals(UserController.userData.getName())) {
-				friendOf = true;
-				if (!pContent.equals(" ")) 
+		if (Friend.getUserFriends(UserController.fpName).contains(UserController.userData.getName())) 
+		{
+			if (!pContent.equals("")) 
+			{
+				UserController.FPageTimeline = new fpTimeline();
+				Post newPost = new Post(UserController.fpName,UserController.userData.getName(), pContent, 0,"u", "", "",0,0); // no feelings on someone else's wall
+				ArrayList<Post> friendPagePosts = new ArrayList<Post>();
+				friendPagePosts.addAll(fpTimeline.getAllPosts(UserController.fpName));
+				friendPagePosts.addAll(fpTimeline.getAllSharedPosts(UserController.fpName));
+				UserController.FPageTimeline.setPosts(friendPagePosts);
+				int postId = UserController.FPageTimeline.addPost(newPost);
+	 			object.put("Status", "OK");
+	 			PostNotify postNotify = new PostNotify();
+				Invoker invoke = new Invoker();
+				invoke.setCommand(postNotify);
+				invoke.add();
+				if (pContent.contains("#")) 
 				{
-					Post newPost = new Post(UserController.fpName,UserController.userData.getName(), pContent, 0,"u", "", "",0); // no feelings on someone else's wall
-					int postId = UserController.FPageTimeline.addPost(newPost);
-		 			object.put("Status", "OK");
-		 			PostNotify postNotify = new PostNotify();
-					Invoker invoke = new Invoker();
-					invoke.setCommand(postNotify);
-					invoke.add();
-					if (pContent.contains("#")) 
-					{
-						Pattern MY_PATTERN = Pattern.compile("(?:(?<=\\s)|^)#(\\w*[A-Za-z_]+\\w*)");
-						Matcher mat = MY_PATTERN.matcher(pContent);
-						ArrayList<String> alreadyInPost = new ArrayList<String>();
-						while (mat.find()) {
-							String hash = mat.group(1);
-							if (alreadyInPost.contains(hash)) // if this hashtag is	repeated in the post
-								continue;
-							Hashtag hashObj = new Hashtag(hash);
-							if (!hashObj.checkHashTag()) 
-							{
-								hashObj.saveHashtag(postId);
-							} 
-							else 
-							{
-								hashObj.upDateHashtag(postId);
-							}
-							alreadyInPost.add(hash);
+					Pattern MY_PATTERN = Pattern.compile("(?:(?<=\\s)|^)#(\\w*[A-Za-z_]+\\w*)");
+					Matcher mat = MY_PATTERN.matcher(pContent);
+					ArrayList<String> alreadyInPost = new ArrayList<String>();
+					while (mat.find()) {
+						String hash = mat.group(1);
+						if (alreadyInPost.contains(hash)) // if this hashtag is	repeated in the post
+							continue;
+						Hashtag hashObj = new Hashtag(hash);
+						if (!hashObj.checkHashTag()) 
+						{
+							hashObj.saveHashtag(postId);
+						} 
+						else 
+						{
+							hashObj.upDateHashtag(postId);
 						}
+						alreadyInPost.add(hash);
 					}
-				} 
-				else 
-				{
-					UserController.echo = " Your Post is empty.";
-					object.put("Status", "Failed");
 				}
-				break;
+			} 
+			else 
+			{
+				UserController.echo = " Your Post is empty.";
+				object.put("Status", "Failed");
 			}
 		}
-		if (!friendOf) {
+		else 
+		{
 			UserController.echo = "You're not a friend of "+ UserController.fpName+ ". You can't post on thier timeline.\n Send them a friend request if you know them.";
 			object.put("Status", "Failed");
 		}
@@ -657,13 +659,15 @@ public class Service {
 	}
 	
 	/**
-	 * 
+	 *  this method is to like posts 
+	 * @param postID
 	 * @return
 	 */
 	@POST
 	@Path("/postlikeService")
-	public String postLike(@FormParam("postID") String postID) {
+	public String postLike(@FormParam("ID") String postID) {
 		JSONObject object = new JSONObject();
+		postID = postID.trim();
 		int postId = Integer.parseInt(postID);
 		Like like = new Like();
 		like.setObjID(postId);
@@ -731,7 +735,7 @@ public class Service {
 			Post newPost = new Post(
 					UserController.pageTimeline.page.getPageName(),
 					UserController.pageTimeline.page.getPageName(), pContent,
-					likeID, "p", "", "", 0);
+					likeID, "p", "", "", 0,0);
 			int postID = UserController.pageTimeline.createPost(newPost);
 			like.setObjID(postID);
 			like.setPostOrPage("post");
@@ -756,6 +760,7 @@ public class Service {
 
 				}
 			}
+			UserController.echo = "Post Created Successfuly";
 			object.put("Status", "OK");
 		} else {
 			UserController.echo = " Your Post is empty.";

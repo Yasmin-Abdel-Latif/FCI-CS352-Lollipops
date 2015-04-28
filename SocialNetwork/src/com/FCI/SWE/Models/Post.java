@@ -33,7 +33,7 @@ public class Post extends AbsPost{
 	int seen ;
 	
 	public Post(String ownerOfTimeline, String poster, String content,
-			int nLikes,String up, String postPrivacy, String postFeelings, int ID) {
+			int nLikes,String up, String postPrivacy, String postFeelings, int ID, int seen2) {
 		super();
 		OwnerOfTimeline = ownerOfTimeline;
 		Post.poster = poster;
@@ -43,6 +43,15 @@ public class Post extends AbsPost{
 		userOrPage=up;
 		this.feeling=postFeelings;
 		this.privacy=postPrivacy;
+		seen = seen2;
+	}
+
+	public int getSeen() {
+		return seen;
+	}
+
+	public void setSeen(int seen) {
+		this.seen = seen;
 	}
 
 	public int getiD() {
@@ -103,6 +112,7 @@ public class Post extends AbsPost{
 		post.setProperty("UserOrPage",userOrPage);
 		post.setProperty("Privacy",privacy);
 		post.setProperty("Feelings",feeling);
+		post.setProperty("seen",0);
 		if (privacy.equals("Custom"))
 		{
 			post.setProperty("CustomListNumber", UserController.customList.length);
@@ -145,6 +155,7 @@ public class Post extends AbsPost{
 		post.setProperty("UserOrPage",userOrPage);
 		post.setProperty("Privacy",privacy);
 		post.setProperty("Feelings",feeling);
+		post.setProperty("seen",0);
 		datastore.put(post);
 		return size;
 
@@ -165,7 +176,8 @@ public class Post extends AbsPost{
 		String userorpage=( postEntity.getProperty("UserOrPage")).toString();
 		String feeling = ( postEntity.getProperty("Feelings")).toString();
 		String privacy = ( postEntity.getProperty("Privacy")).toString();
-		Post p = new Post(owner , poster , content , nlikes , userorpage, privacy, feeling, ID);
+		int seen = Integer.parseInt((postEntity.getProperty("seen")).toString());
+		Post p = new Post(owner , poster , content , nlikes , userorpage, privacy, feeling, ID,seen);
 		return p;
 	}
 }

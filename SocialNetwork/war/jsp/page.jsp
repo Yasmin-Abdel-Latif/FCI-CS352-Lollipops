@@ -49,11 +49,14 @@
 							<%
 								String poster = UserController.pageTimeline.posts.get(i).getPoster();
 								String content =  UserController.pageTimeline.posts.get(i).getContent();
-								//int LikeID = fpTimeline.getAllPosts(UserController.fpName).get(i).getnLikes();
-								//int nLikes = Like.nLikeByID(LikeID);
+								int LikeID = fpTimeline.getAllPosts(UserController.fpName).get(i).getnLikes();
+								int nLikes = Like.nLikeByID(LikeID);
+								int seen = UserController.pageTimeline.posts.get(i).getSeen();
 							%> <B> <% out.println(poster + " : "); %>
 						</B> <% out.println(content); %> <br> <FONT COLOR="#808080"
-							SIZE="3"> <B> Likes: </B> <% out.println(67); %>
+							SIZE="3"> <B> Likes: </B> <% out.println(nLikes);%>
+									 <B> seens: </B> <% out.println(seen);%>
+							
 						</FONT>
 					</I></FONT></TD>
 			</TR>

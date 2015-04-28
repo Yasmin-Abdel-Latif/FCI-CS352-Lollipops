@@ -1,5 +1,3 @@
-<%@page import="sun.misc.UCEncoder"%>
-<%@page import="com.google.api.server.spi.auth.common.User"%>
 <%@page import="com.FCI.SWE.Models.*"%>
 <%@ page import="java.util.*"%>
 <%@ page import="com.FCI.SWE.Controller.UserController"%>
@@ -9,23 +7,34 @@
 <head>
 <meta http-equiv="Content-Type"
 	content="text/html; charset=windows-1256">
-<title>${it.message}</title>
+<title>${it.message} Profile</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
+<style>
+    table.clickable tr:hover { background-color: White; }
+    table.clickable tr > td { cursor: pointer; }
+    table.clickable tr > td > a { display: block; text-decoration: none; }
+</style>
+<script>
 
+jQuery(function () {
+
+	$('#tableId').on('click', '.like', function()
+	{
+		var id = $(this).closest('tr').find('td:first').text().substring(0, $(this).closest('tr').find('td:first').text().indexOf("-"));
+		$('input[name="ID"]').val(id);
+		$( "#target" ).submit();
+	});
+});
+
+</script>
 </head>
 <body
 	background="http://wallpapercolor.net/wallpapers/syslinux-background-wallpaper-13542.jpg">
 	<center>
 		<p>
-			<B><FONT COLOR="#FFFFFF" SIZE="6">${it.message}</FONT></B> <br>
-			<B><FONT COLOR="#FFFFFF" SIZE="4">type : <% if (UserController.pageTimeline.page.getPageName()!=null)
-			out.print(UserController.pageTimeline.page.getType()); %></FONT></B>
-			<br> <B><FONT COLOR="#FFFFFF" SIZE="4">Category : <% if (UserController.pageTimeline.page.getPageName()!=null)
-			out.print(UserController.pageTimeline.page.getCategory()) ;%></FONT></B>
-			<br> <B><FONT COLOR="#FFFFFF" SIZE="4">more than  <% if (UserController.pageTimeline.page.getPageName()!=null)
-			out.print(Like.nLikeByID(UserController.pageTimeline.page.getLikeID())) ;%> person like this page</FONT></B>
-
+			<B><FONT COLOR="#FFFFFF" SIZE="6">${it.message}</FONT></B>
 		</p>
-	</center>
+		</center>
 	<div ALIGN="center">
 
 		<br> <br>
@@ -40,7 +49,7 @@
 		</form>
 		<br>
 
-
+		<form id="target" action="/social/likePost" method="POST">
 		<TABLE BORDER="3" BORDERCOLOR="#65267a" BGCOLOR="#e5bdf2" WIDTH="500"
 			CELLSPACING="1" CELLPADDING="3">
 			<%
@@ -49,22 +58,40 @@
 			<TR ALIGN="LEFT">
 				<TD BGCOLOR="WHITE"><FONT COLOR="#65267a" SIZE="4"><I>
 							<%
+								int ID = UserController.pageTimeline.posts.get(i).getiD();
 								String poster = UserController.pageTimeline.posts.get(i).getPoster();
 								String content =  UserController.pageTimeline.posts.get(i).getContent();
-								//int LikeID = fpTimeline.getAllPosts(UserController.fpName).get(i).getnLikes();
-								//int nLikes = Like.nLikeByID(LikeID);
-							%> <B> <% out.println(poster + " : "); %>
+								int LikeID = fpTimeline.getAllPosts(UserController.fpName).get(i).getnLikes();
+								int nLikes = Like.nLikeByID(LikeID);
+							%> 
+							<FONT COLOR="WHITE" SIZE="4">
+								<%
+									out.println(ID + "-");
+								%>
+								</FONT>
+							<B> <% out.println(poster + " : "); %>
 						</B> <% out.println(content); %> <br> <FONT COLOR="#808080"
-							SIZE="3"> <B> Likes: </B> <% out.println(67); %>
+							SIZE="3"> <B> Likes: </B> <% out.println(nLikes); %>
 						</FONT>
-					</I></FONT></TD>
+					</I></FONT>
+					<input class="like" type="Submit" id="likeId" value="like" 
+							style="background: #e5bdf2;
+							border: 1px solid #e5bdf2;
+							cursor: pointer;
+							border-radius: 2px;
+							color: #ffffff;
+							font-size: 16px;
+							font-weight: 400;
+							padding: 6px;"/>
+						<input type="hidden" id="ID" name="ID" value="<%=ID%>">
+						</TD>
 			</TR>
 			<%
 				}
 			%>
 
 		</TABLE>
-
+	</form>
 	</div>
 	<div style="width: 100%; overflow: auto;">
 		<div style="position: absolute; left: 0; width: 20%;">

@@ -204,10 +204,14 @@ public class UserController {
 	@POST
 	@Path("/fpTimeline")
 	public Response fpTimeline(@FormParam("searchBox") String fpName1) {
-		UserController.fpName=fpName1;
-		UserController.echo=UserController.fpName;
-		FPageTimeline.setPosts(fpTimeline.getAllPosts(fpName1));
-
+		fpName1 = fpName1.trim();
+		fpName = fpName1;
+		echo = fpName;
+		FPageTimeline = new fpTimeline();
+		ArrayList<Post> friendPagePosts = new ArrayList<Post>();
+		friendPagePosts.addAll(fpTimeline.getAllPosts(fpName));
+		FPageTimeline.setPosts(friendPagePosts);
+		FPageTimeline.seen();
 		return Response.ok(new Viewable("/jsp/fpTimeline")).build();
 	}
 	
@@ -1061,7 +1065,7 @@ public class UserController {
 
 		try {
 			URL url = new URL(serviceUrl);
-			String urlParameters = "&postContent=" + pContent;
+			String urlParameters = "postContent=" + pContent;
 			HttpURLConnection connection = (HttpURLConnection) url
 					.openConnection();
 			connection.setDoOutput(true);
@@ -1090,6 +1094,7 @@ public class UserController {
 			Object obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
 
+			
 			map.put("message", echo);
 			map.put("name", userData.getName());
 		} catch (MalformedURLException e) {
@@ -1118,7 +1123,7 @@ public class UserController {
 
 		try {
 			URL url = new URL(serviceUrl);
-			String urlParameters = "&postContent=" + pContent;
+			String urlParameters = "postContent=" + pContent;
 			HttpURLConnection connection = (HttpURLConnection) url
 					.openConnection();
 			connection.setDoOutput(true);
@@ -1175,7 +1180,7 @@ public class UserController {
 
 		try {
 			URL url = new URL(serviceUrl);
-			String urlParameters = "&postContent=" + pContent;
+			String urlParameters = "postContent=" + pContent;
 			HttpURLConnection connection = (HttpURLConnection) url
 					.openConnection();
 			connection.setDoOutput(true);
@@ -1278,18 +1283,18 @@ public class UserController {
 	}
 	
 	/**
-	 * 
+	 * 		to like post ID
 	 * @param postID
 	 */
 	@POST
 	@Path("/likePost")
 	@Produces("text/html")
-	public void likePost(@FormParam("postID") String postID) {
+	public void likePost(@FormParam("ID") String postID) {
 		Map<String, String> map = new HashMap<String, String>();
 		String serviceUrl = webServiceLink + "postlikeService";
 		try {
 			URL url = new URL(serviceUrl);
-			String urlParameters = "postID="+postID;
+			String urlParameters = "ID="+postID;
 			HttpURLConnection connection = (HttpURLConnection) url
 					.openConnection();
 			connection.setDoOutput(true);
@@ -1451,6 +1456,8 @@ public class UserController {
 		if (pageTimeline.page.getPageOwner().equals(userData.getName())) //the user is the admain
 			return Response.ok(new Viewable("/jsp/page", map)).build();
 		
+		//if a regular user
+		pageTimeline.seen();
 		return Response.ok(new Viewable("/jsp/Ppage", map)).build();
 	}
 }

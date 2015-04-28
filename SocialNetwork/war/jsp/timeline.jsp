@@ -1,4 +1,4 @@
-<%@page import="com.FCI.SWE.Models.uTimeline"%>
+<%@page import="com.FCI.SWE.Models.*"%>
 <%@ page import="java.util.*"%>
 <%@ page import="com.FCI.SWE.Controller.UserController"%>
 
@@ -72,7 +72,9 @@
 								String poster = uTimeline.getAllPosts(UserController.userData.getName()).get(i).getPoster();
 								String content = uTimeline.getAllPosts(UserController.userData.getName()).get(i).getContent();
   								String feeling= uTimeline.getAllPosts(UserController.userData.getName()).get(i).getFeeling();
-								int nLikes = uTimeline.getAllPosts(UserController.userData.getName()).get(i).getnLikes();
+								int likeID = uTimeline.getAllPosts(UserController.userData.getName()).get(i).getnLikes();
+								int nLikes = Like.nLikeByID(likeID);
+								int seen = uTimeline.getAllPosts(UserController.userData.getName()).get(i).getSeen();
 							%>
 							<B>
 							<% 
@@ -91,7 +93,9 @@
 				         	<%	
 				         		}
 			         		%>
-			         	   <FONT COLOR="#808080" SIZE="3"> <B> Likes: </B> <% out.print(+nLikes); %> </FONT>
+			         	   <FONT COLOR="#808080" SIZE="3"> 
+			         	   <B> Likes: </B> <% out.println(+nLikes); %> 
+			         	    <B> seens: </B> <% out.println(+seen); %></FONT>
 						</I>
 					</FONT>
 				</TD>

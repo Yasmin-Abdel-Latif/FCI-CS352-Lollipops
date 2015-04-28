@@ -51,7 +51,8 @@ public class Custom implements Privacy {
 						postPrivacy = entity.getProperty("Privacy").toString();
 						postFeelings = entity.getProperty("Feelings").toString();
 						ID = Integer.parseInt(entity.getProperty("ID").toString());
-						Post post = new Post(postOwner, postPoster, postContent, nLikes, "u", postPrivacy, postFeelings, ID);
+						int seen = Integer.parseInt(entity.getProperty("seen").toString());
+						Post post = new Post(postOwner, postPoster, postContent, nLikes, "u", postPrivacy, postFeelings, ID,seen);
 						posts.add(post);
 					}
 					i++;

@@ -1,5 +1,4 @@
-<%@page import="com.FCI.SWE.Models.uTimeline"%>
-<%@page import="com.FCI.SWE.Models.fpTimeline"%>
+<%@page import="com.FCI.SWE.Models.*"%>
 <%@ page import="java.util.*"%>
 <%@ page import="com.FCI.SWE.Controller.UserController"%>
 
@@ -24,6 +23,13 @@ jQuery(function () {
 		var id = $(this).closest('tr').find('td:first').text().substring(0, $(this).closest('tr').find('td:first').text().indexOf("-"));
 		$('input[name="ID"]').val(id);
 		$( "#target" ).submit();
+	});
+	
+	$('#tableId').on('click', '.like', function()
+	{
+		var id = $(this).closest('tr').find('td:first').text().substring(0, $(this).closest('tr').find('td:first').text().indexOf("-"));
+		$('input[name="ID"]').val(id);
+		$( "#target" ).attr('action', '/social/likePost');
 	});
 });
 
@@ -60,11 +66,18 @@ jQuery(function () {
 						<FONT COLOR="#65267a" SIZE="4">
 							<I>
 								<%
-									int ID = fpTimeline.getAllPosts(UserController.fpName).get(i).getiD();
-									String poster = fpTimeline.getAllPosts(UserController.fpName).get(i).getPoster();
-									String content = fpTimeline.getAllPosts(UserController.fpName).get(i).getContent();
-									String feeling= fpTimeline.getAllPosts(UserController.fpName).get(i).getFeeling();
-									int nLikes = fpTimeline.getAllPosts(UserController.fpName).get(i).getnLikes();
+									String poster = "";
+									String content = "";
+									String feeling = "";
+									int likeID = 0;
+									int nLikes = 0;
+									int ID = 0;
+									ID = fpTimeline.getAllPosts(UserController.fpName).get(i).getiD();
+									poster = fpTimeline.getAllPosts(UserController.fpName).get(i).getPoster();
+									content = fpTimeline.getAllPosts(UserController.fpName).get(i).getContent();
+									feeling= fpTimeline.getAllPosts(UserController.fpName).get(i).getFeeling();
+									likeID = fpTimeline.getAllPosts(UserController.fpName).get(i).getnLikes();
+									nLikes = Like.nLikeByID(likeID);
 								%> 
 								<FONT COLOR="WHITE" SIZE="4">
 								<%
@@ -100,6 +113,15 @@ jQuery(function () {
 							font-size: 16px;
 							font-weight: 400;
 							padding: 6px;"/>
+						<input class="like" type="Submit" id="likeId" value="like" 
+							style="background: #e5bdf2;
+							border: 1px solid #e5bdf2;
+							cursor: pointer;
+							border-radius: 2px;
+							color: #ffffff;
+							font-size: 16px;
+							font-weight: 400;
+							padding: 6px;"/>
 						<input type="hidden" id="ID" name="ID" value="<%=ID%>">
 					</TD>
 				</TR>
@@ -112,11 +134,18 @@ jQuery(function () {
 						<FONT COLOR="#65267a" SIZE="4">
 							<I>
 								<%
-									int ID = fpTimeline.getAllSharedPosts(UserController.fpName).get(i).getiD();
-									String poster = fpTimeline.getAllSharedPosts(UserController.fpName).get(i).getPoster();
-									String content = fpTimeline.getAllSharedPosts(UserController.fpName).get(i).getContent();
-									String feeling= fpTimeline.getAllSharedPosts(UserController.fpName).get(i).getFeeling();
-									int nLikes = fpTimeline.getAllSharedPosts(UserController.fpName).get(i).getnLikes();
+									String poster = "";
+									String content = "";
+									String feeling = "";
+									int likeID = 0;
+									int nLikes = 0;
+									int ID = 0;
+									ID = fpTimeline.getAllSharedPosts(UserController.fpName).get(i).getiD();
+									poster = fpTimeline.getAllSharedPosts(UserController.fpName).get(i).getPoster();
+									content = fpTimeline.getAllSharedPosts(UserController.fpName).get(i).getContent();
+									feeling= fpTimeline.getAllSharedPosts(UserController.fpName).get(i).getFeeling();
+									likeID = fpTimeline.getAllSharedPosts(UserController.fpName).get(i).getnLikes();
+									nLikes = Like.nLikeByID(likeID);
 								%> 
 								<FONT COLOR="WHITE" SIZE="4">
 								<%
@@ -144,6 +173,15 @@ jQuery(function () {
 							</I>
 						</FONT>
 						<input class="btn" type="Submit" id="shareId" value="Share" 
+							style="background: #e5bdf2;
+							border: 1px solid #e5bdf2;
+							cursor: pointer;
+							border-radius: 2px;
+							color: #ffffff;
+							font-size: 16px;
+							font-weight: 400;
+							padding: 6px;"/>
+						<input class="like" type="Submit" id="likeId" value="like" 
 							style="background: #e5bdf2;
 							border: 1px solid #e5bdf2;
 							cursor: pointer;
