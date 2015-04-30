@@ -21,10 +21,8 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 
-public class fpTimeline {
+public class FriendPageTimeline extends Timeline{
 	
-	String profilePicture;
-	String coverPhoto;
 	ArrayList<Post> posts = new ArrayList<>();
 	
 	public int addPost (Post newPost)

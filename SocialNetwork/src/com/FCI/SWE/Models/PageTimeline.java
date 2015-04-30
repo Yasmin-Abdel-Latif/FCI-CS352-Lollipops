@@ -14,7 +14,7 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
  * @author mariam
  *
  */
-public class PageTimeline {
+public class PageTimeline extends Timeline{
 
 	public static ArrayList <Post> posts;
 	public Page page ;

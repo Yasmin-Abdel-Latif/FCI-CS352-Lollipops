@@ -19,25 +19,21 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 
-public class uTimeline {
+public class UserTimeline extends Timeline {
 	
-	String profilePicture;
-	String coverPhoto;
 	ArrayList<Post> posts = new ArrayList<>();
 	String ownerOfTimeline;
 	
-	public uTimeline() {
+	public UserTimeline() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
 
 
-	public uTimeline(String profilePicture, String coverPhoto,
+	public UserTimeline(String profilePicture, String coverPhoto,
 			ArrayList<Post> posts, String ownerOfTimeline) {
-		super();
-		this.profilePicture = profilePicture;
-		this.coverPhoto = coverPhoto;
+		super(profilePicture, coverPhoto);
 		this.posts = posts;
 		this.ownerOfTimeline = ownerOfTimeline;
 	}
@@ -134,21 +130,6 @@ public class uTimeline {
 			}
 		}
 		return posts;
-	}
-	public String getProfilePicture() {
-		return profilePicture;
-	}
-
-	public void setProfilePicture(String profilePicture) {
-		this.profilePicture = profilePicture;
-	}
-
-	public String getCoverPhoto() {
-		return coverPhoto;
-	}
-
-	public void setCoverPhoto(String coverPhoto) {
-		this.coverPhoto = coverPhoto;
 	}
 
 	public ArrayList<Post> getPosts() {

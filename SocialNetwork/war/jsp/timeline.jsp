@@ -62,19 +62,19 @@
 		<TABLE BORDER="3" BORDERCOLOR="#65267a" BGCOLOR="#e5bdf2" WIDTH="500"
 			CELLSPACING="1" CELLPADDING="3">
 			<%
-				for (int i = uTimeline.getAllPosts(UserController.userData.getName()).size()-1; i >=0 ; i--) {
+				for (int i = UserTimeline.getAllPosts(UserController.userData.getName()).size()-1; i >=0 ; i--) {
 			%>
 			<TR ALIGN="LEFT">
 				<TD BGCOLOR="WHITE">
 					<FONT COLOR="#65267a" SIZE="4">
 						<I>
 							<%
-								String poster = uTimeline.getAllPosts(UserController.userData.getName()).get(i).getPoster();
-								String content = uTimeline.getAllPosts(UserController.userData.getName()).get(i).getContent();
-  								String feeling= uTimeline.getAllPosts(UserController.userData.getName()).get(i).getFeeling();
-								int likeID = uTimeline.getAllPosts(UserController.userData.getName()).get(i).getnLikes();
+								String poster = UserTimeline.getAllPosts(UserController.userData.getName()).get(i).getPoster();
+								String content = UserTimeline.getAllPosts(UserController.userData.getName()).get(i).getContent();
+  								String feeling= UserTimeline.getAllPosts(UserController.userData.getName()).get(i).getFeeling();
+								int likeID = UserTimeline.getAllPosts(UserController.userData.getName()).get(i).getnLikes();
 								int nLikes = Like.nLikeByID(likeID);
-								int seen = uTimeline.getAllPosts(UserController.userData.getName()).get(i).getSeen();
+								int seen = UserTimeline.getAllPosts(UserController.userData.getName()).get(i).getSeen();
 							%>
 							<B>
 							<% 
@@ -102,17 +102,17 @@
 			</TR>
 			<%
 				}
-				for (int i = uTimeline.getAllSharedPosts(UserController.userData.getName()).size()-1; i >=0 ; i--) {
+				for (int i = UserTimeline.getAllSharedPosts(UserController.userData.getName()).size()-1; i >=0 ; i--) {
 			%>
 			<TR ALIGN="LEFT">
 				<TD BGCOLOR="WHITE">
 					<FONT COLOR="#65267a" SIZE="4">
 						<I>
 							<%
-								String poster = uTimeline.getAllSharedPosts(UserController.userData.getName()).get(i).getPoster();
-								String content = uTimeline.getAllSharedPosts(UserController.userData.getName()).get(i).getContent();
-  								String feeling= uTimeline.getAllSharedPosts(UserController.userData.getName()).get(i).getFeeling();
-								int nLikes = uTimeline.getAllSharedPosts(UserController.userData.getName()).get(i).getnLikes();
+								String poster = UserTimeline.getAllSharedPosts(UserController.userData.getName()).get(i).getPoster();
+								String content = UserTimeline.getAllSharedPosts(UserController.userData.getName()).get(i).getContent();
+  								String feeling= UserTimeline.getAllSharedPosts(UserController.userData.getName()).get(i).getFeeling();
+								int nLikes = UserTimeline.getAllSharedPosts(UserController.userData.getName()).get(i).getnLikes();
 							%>
 							<B>
 							<% 

@@ -61,7 +61,7 @@ jQuery(function () {
 								int ID = UserController.pageTimeline.posts.get(i).getiD();
 								String poster = UserController.pageTimeline.posts.get(i).getPoster();
 								String content =  UserController.pageTimeline.posts.get(i).getContent();
-								int LikeID = fpTimeline.getAllPosts(UserController.fpName).get(i).getnLikes();
+								int LikeID = FriendPageTimeline.getAllPosts(UserController.fpName).get(i).getnLikes();
 								int nLikes = Like.nLikeByID(LikeID);
 							%> 
 							<FONT COLOR="WHITE" SIZE="4">

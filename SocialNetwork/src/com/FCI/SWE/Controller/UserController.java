@@ -57,9 +57,9 @@ public class UserController {
 	public static ArrayList<String> userUnSeenNotifications;
 	public static ArrayList<String> userSeenNotifications;
 	public static String echo;
-	public static uTimeline timeline= new uTimeline();
+	public static UserTimeline timeline= new UserTimeline();
 	public static String fpName=""; //friend or page name to which timeline i wanna post to
-	public static fpTimeline FPageTimeline= new fpTimeline();
+	public static FriendPageTimeline FPageTimeline= new FriendPageTimeline();
 	public static String passPostFeelings="notValid";
 	public static String passPostPrivacy="Public"; //default is public
 	public static boolean gotIntoSetFeelings=false;
@@ -195,24 +195,6 @@ public class UserController {
 	@Path("/timeline")
 	public Response timeline() {
 		return Response.ok(new Viewable("/jsp/timeline")).build();
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@POST
-	@Path("/fpTimeline")
-	public Response fpTimeline(@FormParam("searchBox") String fpName1) {
-		fpName1 = fpName1.trim();
-		fpName = fpName1;
-		echo = fpName;
-		FPageTimeline = new fpTimeline();
-		ArrayList<Post> friendPagePosts = new ArrayList<Post>();
-		friendPagePosts.addAll(fpTimeline.getAllPosts(fpName));
-		FPageTimeline.setPosts(friendPagePosts);
-		FPageTimeline.seen();
-		return Response.ok(new Viewable("/jsp/fpTimeline")).build();
 	}
 	
 	@GET
@@ -369,7 +351,7 @@ public class UserController {
 			friendRequests = Friend.getUserFriendRequests(userData.getName());
 			friends = Friend.getUserFriends(userData.getName());
 			userSentRequests = Friend.getUserSentRequests(userData.getName());
-			timeline.setPosts(uTimeline.getAllPosts(userData.getName()));
+			timeline.setPosts(UserTimeline.getAllPosts(userData.getName()));
 			passPostFeelings="notValid";
 			passPostPrivacy="Public";
 			ArrayList<String> msgNotifications = MsgNotify.myUnSeenNotifications();
@@ -1459,5 +1441,64 @@ public class UserController {
 		//if a regular user
 		pageTimeline.seen();
 		return Response.ok(new Viewable("/jsp/Ppage", map)).build();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@POST
+	@Path("/fpTimeline")
+	@Produces("text/html")
+	public Response fpTimeline(@FormParam("searchBox") String fpName1) {
+		
+		Map<String, String> map = new HashMap<String, String>();
+		String serviceUrl = webServiceLink + "redirService";
+		try {
+			URL url = new URL(serviceUrl);
+			String urlParameters = "searchBox="+fpName1;
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setInstanceFollowRedirects(false);
+			connection.setRequestMethod("POST");
+			connection.setConnectTimeout(60000); // 60 Seconds
+			connection.setReadTimeout(60000); // 60 Seconds
+			connection.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded;charset=UTF-8");
+			OutputStreamWriter writer = new OutputStreamWriter(
+					connection.getOutputStream());
+			writer.write(urlParameters);
+			writer.flush();
+			String line, retJson = "";
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					connection.getInputStream()));
+
+			while ((line = reader.readLine()) != null) {
+				retJson += line;
+			}
+			writer.close();
+			reader.close();
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+			map.put("message", echo);
+			map.put("name", fpName);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		/*
+		 * UserEntity user = new UserEntity(uname, email, pass);
+		 * user.saveUser(); return uname;
+		 */
+		return Response.ok(new Viewable("/jsp/fpTimeline")).build();
 	}
 }

@@ -530,11 +530,11 @@ public class Service {
 		{
 			if (!pContent.equals("")) 
 			{
-				UserController.FPageTimeline = new fpTimeline();
+				UserController.FPageTimeline = new FriendPageTimeline();
 				Post newPost = new Post(UserController.fpName,UserController.userData.getName(), pContent, 0,"u", "", "",0,0); // no feelings on someone else's wall
 				ArrayList<Post> friendPagePosts = new ArrayList<Post>();
-				friendPagePosts.addAll(fpTimeline.getAllPosts(UserController.fpName));
-				friendPagePosts.addAll(fpTimeline.getAllSharedPosts(UserController.fpName));
+				friendPagePosts.addAll(FriendPageTimeline.getAllPosts(UserController.fpName));
+				friendPagePosts.addAll(FriendPageTimeline.getAllSharedPosts(UserController.fpName));
 				UserController.FPageTimeline.setPosts(friendPagePosts);
 				int postId = UserController.FPageTimeline.addPost(newPost);
 	 			object.put("Status", "OK");
@@ -766,6 +766,23 @@ public class Service {
 			UserController.echo = " Your Post is empty.";
 			object.put("Status", "Failed");
 		}
+		return object.toString();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("/redirService")
+	public String fpTimeline(@FormParam("searchBox") String fpName1) {
+		JSONObject object = new JSONObject();
+		fpName1 = fpName1.trim();
+		UserController.fpName = fpName1;
+		UserController.echo = UserController.fpName;
+		UserController.FPageTimeline = new FriendPageTimeline();
+		ArrayList<Post> friendPagePosts = new ArrayList<Post>();
+		friendPagePosts.addAll(FriendPageTimeline.getAllPosts(UserController.fpName));
+		UserController.FPageTimeline.setPosts(friendPagePosts);
+		UserController.FPageTimeline.seen();
+		object.put("Status", "OK");
 		return object.toString();
 	}
 }

@@ -59,7 +59,7 @@ jQuery(function () {
 			<TABLE id="tableId" BORDER="3" BORDERCOLOR="#65267a" BGCOLOR="#e5bdf2" WIDTH="500"
 				CELLSPACING="1" CELLPADDING="3">
 				<%
-					for (int i = fpTimeline.getAllPosts(UserController.fpName).size()-1; i >=0 ; i--) {
+					for (int i = FriendPageTimeline.getAllPosts(UserController.fpName).size()-1; i >=0 ; i--) {
 				%>
 				<TR ALIGN="LEFT">
 					<TD BGCOLOR="WHITE">
@@ -72,11 +72,11 @@ jQuery(function () {
 									int likeID = 0;
 									int nLikes = 0;
 									int ID = 0;
-									ID = fpTimeline.getAllPosts(UserController.fpName).get(i).getiD();
-									poster = fpTimeline.getAllPosts(UserController.fpName).get(i).getPoster();
-									content = fpTimeline.getAllPosts(UserController.fpName).get(i).getContent();
-									feeling= fpTimeline.getAllPosts(UserController.fpName).get(i).getFeeling();
-									likeID = fpTimeline.getAllPosts(UserController.fpName).get(i).getnLikes();
+									ID = FriendPageTimeline.getAllPosts(UserController.fpName).get(i).getiD();
+									poster = FriendPageTimeline.getAllPosts(UserController.fpName).get(i).getPoster();
+									content = FriendPageTimeline.getAllPosts(UserController.fpName).get(i).getContent();
+									feeling= FriendPageTimeline.getAllPosts(UserController.fpName).get(i).getFeeling();
+									likeID = FriendPageTimeline.getAllPosts(UserController.fpName).get(i).getnLikes();
 									nLikes = Like.nLikeByID(likeID);
 								%> 
 								<FONT COLOR="WHITE" SIZE="4">
@@ -127,7 +127,7 @@ jQuery(function () {
 				</TR>
 				<%
 					}
-					for (int i = fpTimeline.getAllSharedPosts(UserController.fpName).size()-1; i >=0 ; i--) {
+					for (int i = FriendPageTimeline.getAllSharedPosts(UserController.fpName).size()-1; i >=0 ; i--) {
 				%>
 				<TR ALIGN="LEFT">
 					<TD BGCOLOR="WHITE">
@@ -140,11 +140,11 @@ jQuery(function () {
 									int likeID = 0;
 									int nLikes = 0;
 									int ID = 0;
-									ID = fpTimeline.getAllSharedPosts(UserController.fpName).get(i).getiD();
-									poster = fpTimeline.getAllSharedPosts(UserController.fpName).get(i).getPoster();
-									content = fpTimeline.getAllSharedPosts(UserController.fpName).get(i).getContent();
-									feeling= fpTimeline.getAllSharedPosts(UserController.fpName).get(i).getFeeling();
-									likeID = fpTimeline.getAllSharedPosts(UserController.fpName).get(i).getnLikes();
+									ID = FriendPageTimeline.getAllSharedPosts(UserController.fpName).get(i).getiD();
+									poster = FriendPageTimeline.getAllSharedPosts(UserController.fpName).get(i).getPoster();
+									content = FriendPageTimeline.getAllSharedPosts(UserController.fpName).get(i).getContent();
+									feeling= FriendPageTimeline.getAllSharedPosts(UserController.fpName).get(i).getFeeling();
+									likeID = FriendPageTimeline.getAllSharedPosts(UserController.fpName).get(i).getnLikes();
 									nLikes = Like.nLikeByID(likeID);
 								%> 
 								<FONT COLOR="WHITE" SIZE="4">
