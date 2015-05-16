@@ -7,7 +7,13 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
-
+/**
+ * class Public
+ * @author Nur Alwani
+ * @date April 20, 2015
+ * @version 1.0
+ *
+ */
 public class Public implements Privacy{
 
 	/**
@@ -21,7 +27,7 @@ public class Public implements Privacy{
 	 */
 	@SuppressWarnings("unused")
 	@Override
-	public void fillAccToPrivacy(ArrayList<Post> posts, String ownerName,String viewerName) {
+	public ArrayList<Post> fillAccToPrivacy(ArrayList<Post> posts, String ownerName,String viewerName) {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Query gaeQuery = new Query("Post");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
@@ -51,5 +57,6 @@ public class Public implements Privacy{
 				posts.add(post);
 			}
 		}
+		return posts;
 	}
 }

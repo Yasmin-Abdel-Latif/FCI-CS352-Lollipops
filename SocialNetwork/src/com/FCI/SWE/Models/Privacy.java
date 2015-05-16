@@ -2,6 +2,11 @@ package com.FCI.SWE.Models;
 
 import java.util.ArrayList;
 
+/**
+ * this is the abstract class for privacy
+ * @author Nur
+ *
+ */
 public interface Privacy {
 	/**
 	 * 
@@ -12,6 +17,6 @@ public interface Privacy {
 	 * @param viewerName
 	 *                  name of the viewer of the timeline
 	 */
-	public void fillAccToPrivacy(ArrayList<Post> posts,String ownerName,String viewerName);
+	public ArrayList<Post> fillAccToPrivacy(ArrayList<Post> posts,String ownerName,String viewerName);
 
 }

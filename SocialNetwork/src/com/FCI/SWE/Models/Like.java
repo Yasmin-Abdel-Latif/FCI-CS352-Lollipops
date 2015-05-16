@@ -1,5 +1,6 @@
 package com.FCI.SWE.Models;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 
 /**
- * 
+ * this class is to control all the likes 
  * @author mariam
  *
  */
@@ -73,8 +74,9 @@ public class Like {
 	}
 
 	/**
-	 * 
+	 * this method is to like page
 	 * @param userName
+	 * 	the user name who like the page
 	 * @return
 	 * 		the ID of the like
 	 */
@@ -98,8 +100,9 @@ public class Like {
 
 
 	/**
-	 * 
+	 * this method is to add all the users that like this ID to the users ArrayList
 	 * @param ID
+	 * 		ID of the like object
 	 */
 	@SuppressWarnings("deprecation")
 	public void allLikeUserByID(int ID) {
@@ -114,14 +117,15 @@ public class Like {
 		String r = "user";
 		for (int i = 1; i <= Integer.parseInt(likeEntity.getProperty("nLikes")
 				.toString()); i++) {
-			String RecieverName = likeEntity.getProperty((String) (r + i))
+			String likeUserName = likeEntity.getProperty((String) (r + i))
 					.toString();
-			users.add(RecieverName);
+			users.add(likeUserName);
 		}
 	}
 	
 	/**
-	 * 
+	 * this method is to add all the like user names to the users arrayList by there objID
+	 * and the type of the object
 	 * 
 	 */
 	@SuppressWarnings("deprecation")
@@ -186,6 +190,11 @@ public class Like {
 		return false;
 	}
 
+	/**
+	 * get the next like id to be added to the table
+	 * @return
+	 * 	int ID
+	 */
 	public int nextLikeID() {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -196,6 +205,13 @@ public class Like {
 
 	}
 
+	/**
+	 * get the number of likes in an object using its id
+	 * @param ID
+	 * 	the object ID
+	 * @return
+	 * 	number of likes
+	 */
 	@SuppressWarnings("deprecation")
 	public static int nLikeByID(int ID) {
 		DatastoreService datastore = DatastoreServiceFactory
@@ -210,6 +226,14 @@ public class Like {
 
 	}
 
+	/**
+	 * {@link Constructor}
+	 * @param postOrPage
+	 * @param objID
+	 * @param nLikes
+	 * @param likeID
+	 * @param users
+	 */
 	public Like(String postOrPage, int objID, int nLikes, int likeID,
 			ArrayList<String> users) {
 		super();
@@ -220,52 +244,100 @@ public class Like {
 		this.users = users;
 	}
 
+	/**
+	 * Contructor
+	 * @param postOrPage
+	 * @param objID
+	 */
 	public Like(String postOrPage, int objID) {
 		super();
 		this.postOrPage = postOrPage;
 		this.objID = objID;
 	}
 
+	/**
+	 * empty Constructor
+	 */
 	public Like() {
 		// TODO Auto-generated constructor stub
 	}
-
+	
+	/**
+	 *  getter postOrpage
+	 * @return
+	 */
 	public String getPostOrPage() {
 		return postOrPage;
 	}
 
+	/**
+	 * setter postorPage
+	 * @param postOrPage
+	 */
 	public void setPostOrPage(String postOrPage) {
 		this.postOrPage = postOrPage;
 	}
 
+	/**
+	 * getter objID
+	 * @return
+	 */
 	public int getObjID() {
 		return objID;
 	}
 
+	/**
+	 * setter objID
+	 * @param objID
+	 */
 	public void setObjID(int objID) {
 		this.objID = objID;
 	}
 
+	/**
+	 * getter nLikes
+	 * @return
+	 */
 	public int getnLikes() {
 		return nLikes;
 	}
 
+	/**
+	 * setter nLikes
+	 * @param nLikes
+	 */
 	public void setnLikes(int nLikes) {
 		this.nLikes = nLikes;
 	}
 
+	/**
+	 * getter likeID
+	 * @return
+	 */
 	public int getLikeID() {
 		return likeID;
 	}
 
+	/**
+	 * setter LikeID
+	 * @param likeID
+	 */
 	public void setLikeID(int likeID) {
 		this.likeID = likeID;
 	}
 
+	/**
+	 * getter users
+	 * @return
+	 */
 	public ArrayList<String> getUsers() {
 		return users;
 	}
 
+	/**
+	 * setter users
+	 * @param users
+	 */
 	public void setUsers(ArrayList<String> users) {
 		this.users = users;
 	}

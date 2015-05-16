@@ -47,7 +47,7 @@ public class UserController {
 	//http://localhost:8080/rest/
 	//http://direct-hallway-864.appspot.com/rest/
 	//http://lollipops-social-network.appspot.com/rest/
-	public String webServiceLink = "http://lollipops-social-network.appspot.com/rest/";
+	public String webServiceLink = "http://localhost:8080/rest/";
 	public static UserEntity userData = null;
 	private static boolean sentFriend = false;
 	private static boolean firstTime = true;
@@ -58,7 +58,7 @@ public class UserController {
 	public static ArrayList<String> userSeenNotifications;
 	public static String echo;
 	public static UserTimeline timeline= new UserTimeline();
-	public static String fpName=""; //friend or page name to which timeline i wanna post to
+	public static String friendName=""; //friend or page name to which timeline i wanna post to
 	public static FriendPageTimeline FPageTimeline= new FriendPageTimeline();
 	public static String passPostFeelings="notValid";
 	public static String passPostPrivacy="Public"; //default is public
@@ -175,8 +175,8 @@ public class UserController {
 	
 	/**
 	 * 
-	 * In case of failure, it redirects to sendfriendrequest page.
-	 * @return SendFriendRequest page
+	 * it redirects to notification page.
+	 * @return notification page
 	 */
 	@GET
 	@Path("/notify")
@@ -186,9 +186,9 @@ public class UserController {
 
 	/**
 	 * Action Function to direct to timeline
-	 * using url like this /rest/timeline
+	 * using url like this social/timeline
 	 * 
-	 * @return Messages page
+	 * @return timeline page
 	 */
 	
 	@GET
@@ -197,6 +197,10 @@ public class UserController {
 		return Response.ok(new Viewable("/jsp/timeline")).build();
 	}
 	
+	/**
+	 * 
+	 * @return createPage
+	 */
 	@GET
 	@Path("/Page")
 	public Response page() {
@@ -204,8 +208,8 @@ public class UserController {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * setFeelings method:
+	 *                     will set the feeling of this current post
 	 */
 	@POST
 	@Path("/setFeelings")
@@ -825,7 +829,10 @@ public class UserController {
 		}
 		return Response.ok(new Viewable("/jsp/messages", map)).build();
 	}
-	
+	/**
+	 * Action function to detect that the user has seen the notifications
+	 * @return home page view
+	 */
 	@POST
 	@Path("/seenNotifications")
 	@Produces("text/html")
@@ -905,7 +912,12 @@ public class UserController {
 		}
 		return Response.ok(new Viewable("/jsp/home", map)).build();
 	}
-	
+	/**
+	 * detect which notification has been chosen
+	 * @param ID the notification Id in table Notifications
+	 * @param type the notification type
+	 * @return to a page to display the related data to this notification
+	 */
 	@POST
 	@Path("/chosenNotification")
 	@Produces("text/html")
@@ -962,6 +974,11 @@ public class UserController {
 		}
 		return Response.ok(new Viewable("/jsp/pressedNotify", map)).build();
 	}
+	/**
+	 * Action function to share a post from another timeline
+	 * @param ID the post ID in table Post
+	 * @return to the same page again
+	 */
 	@POST
 	@Path("/sharePost")
 	@Produces("text/html")
@@ -1002,7 +1019,7 @@ public class UserController {
 			JSONObject object = (JSONObject) obj;
 
 			map.put("message", "Welcome " + userData.getName() + "<br>" + echo);
-			map.put("name", fpName);
+			map.put("name", friendName);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			map.put("message", "Welcome " + userData.getName() + "<br>MalformedURLException");
@@ -1093,7 +1110,7 @@ public class UserController {
 	}
 	
 	/**
-	 * Action function to post a new post
+	 * Action function to post a new post on a friend timeline
 	 * 
 	 */
 	@POST
@@ -1135,7 +1152,7 @@ public class UserController {
 			JSONObject object = (JSONObject) obj;
 
 			map.put("message", echo);
-			map.put("name", fpName);
+			map.put("name", friendName);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1150,7 +1167,7 @@ public class UserController {
 	}
 	
 	/**
-	 * Action function to post a new post
+	 * Action function to post a new post on a page as the Owner of page
 	 * 
 	 */
 	@POST
@@ -1206,8 +1223,8 @@ public class UserController {
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Action function to allow the user to like a page
+	 * @return to the page again
 	 */
 	@POST
 	@Path("/likePage")
@@ -1245,7 +1262,7 @@ public class UserController {
 			Object obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
 			map.put("message", echo);
-			map.put("name", fpName);
+			map.put("name", friendName);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1265,7 +1282,7 @@ public class UserController {
 	}
 	
 	/**
-	 * 		to like post ID
+	 * Action function to allow the user to like post
 	 * @param postID
 	 */
 	@POST
@@ -1304,7 +1321,7 @@ public class UserController {
 			Object obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
 			map.put("message", echo);
-			map.put("name", fpName);
+			map.put("name", friendName);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1318,11 +1335,11 @@ public class UserController {
 
 	}
 	/**
-	 * 
-	 * @param pageName
-	 * @param pageType
-	 * @param pageCatg
-	 * @return
+	 * Action function to allow the user to create page
+	 * @param pageName unique
+	 * @param pageType (sport, education, social,....)
+	 * @param pageCatg => description of the page 
+	 * @return to the page creator
 	 */
 	@POST
 	@Path("/CreatePage")
@@ -1362,7 +1379,7 @@ public class UserController {
 			Object obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
 			map.put("message", echo);
-			map.put("name", fpName);
+			map.put("name", friendName);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1380,7 +1397,13 @@ public class UserController {
 		return Response.ok(new Viewable("/jsp/createPage", map)).build();
 
 	}
-	
+	/**
+	 * Action function to allow the user to find a specific hashtag or a specific page
+	 * depending on the input text
+	 * @param text if contains hashtag then the user is searching for a hashtag and if not then
+	 * he is searching for a page
+	 * @return to the hashtag jsp or the page jsp
+	 */
 	@POST
 	@Path("/hashTimeline")
 	@Produces("text/html")
@@ -1422,7 +1445,7 @@ public class UserController {
 			Object obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
 			map.put("message", echo);
-			map.put("name", fpName);
+			map.put("name", friendName);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1444,19 +1467,20 @@ public class UserController {
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * redirect me to someone's timeline
+	 * @param friendName1 the friend I want to go to his timeline
+	 * @return the friend page
 	 */
 	@POST
 	@Path("/fpTimeline")
 	@Produces("text/html")
-	public Response fpTimeline(@FormParam("searchBox") String fpName1) {
+	public Response friendTimeline(@FormParam("searchBox") String friendName1) {
 		
 		Map<String, String> map = new HashMap<String, String>();
 		String serviceUrl = webServiceLink + "redirService";
 		try {
 			URL url = new URL(serviceUrl);
-			String urlParameters = "searchBox="+fpName1;
+			String urlParameters = "searchBox="+friendName1;
 			HttpURLConnection connection = (HttpURLConnection) url
 					.openConnection();
 			connection.setDoOutput(true);
@@ -1484,7 +1508,7 @@ public class UserController {
 			Object obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
 			map.put("message", echo);
-			map.put("name", fpName);
+			map.put("name", friendName);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

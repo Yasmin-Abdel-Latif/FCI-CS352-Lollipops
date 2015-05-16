@@ -11,19 +11,25 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 
+/**
+ * class ShareNotify
+ * @author Jasmin Abdel Latif
+ * @date April 20, 2015
+ * @version 1.0
+ *
+ */
 public class ShareNotify implements Notification {
 
 	public String rName;
 	public String sName;
 	public String msg;
-	public int type;
+	public final static String TYPE = "6";
 	public boolean seen;
 
 	/**
-	 * Execution Function
+	 * add new notification for the other user
 	 */
 	public void addNotification() {
-		type = 6;
 		rName = Share.postOwner;
 		sName = Share.postSharer;
 		msg = Share.postSharer + " Shared Your Post";
@@ -37,7 +43,7 @@ public class ShareNotify implements Notification {
 		Entity messageNotify = new Entity("Notifications", list1.size()+1);
 
 		messageNotify.setProperty("ID", list1.size() + 1);
-		messageNotify.setProperty("Type", 6);
+		messageNotify.setProperty("Type", TYPE);
 		messageNotify.setProperty("Sender", Share.postSharer);
 		messageNotify.setProperty("Name", Share.postOwner);
 		messageNotify.setProperty("Msg", Share.postSharer + " Shared Your Post");
@@ -107,7 +113,7 @@ public class ShareNotify implements Notification {
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 		ArrayList<String> friends = new ArrayList<String>();
 		for (Entity entity : pq.asIterable()) {
-			if (entity.getProperty("Type").toString().equals("6")
+			if (entity.getProperty("Type").toString().equals(TYPE)
 					&& entity.getProperty("Seen").toString().equals("false")
 					&& entity.getProperty("Name").toString().equals(UserController.userData.getName())) 
 			{
@@ -125,7 +131,7 @@ public class ShareNotify implements Notification {
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 		ArrayList<String> friends = new ArrayList<String>();
 		for (Entity entity : pq.asIterable()) {
-			if (entity.getProperty("Type").toString().equals("6")
+			if (entity.getProperty("Type").toString().equals(TYPE)
 					&& entity.getProperty("Seen").toString().equals("true")
 					&& entity.getProperty("Name").toString().equals(UserController.userData.getName())) 
 			{
@@ -143,7 +149,7 @@ public class ShareNotify implements Notification {
 		PreparedQuery pq = datastore.prepare(query);
 		for(Entity notifications : pq.asIterable())
 		{
-			if (notifications.getProperty("Type").toString().equals("6")
+			if (notifications.getProperty("Type").toString().equals(TYPE)
 					&& notifications.getProperty("Seen").toString().equals("false")
 					&& notifications.getProperty("Name").toString().equals(UserController.userData.getName())) 
 			{
@@ -156,7 +162,7 @@ public class ShareNotify implements Notification {
 				Entity notifications2 = new Entity("Notifications", Integer.parseInt(ID));
 
 				notifications2.setProperty("ID", Integer.parseInt(ID));
-				notifications2.setProperty("Type", 6);
+				notifications2.setProperty("Type", TYPE);
 				notifications2.setProperty("Sender", sender);
 				notifications2.setProperty("Name", UserController.userData.getName());
 				notifications2.setProperty("Msg", msg);

@@ -32,6 +32,18 @@ public class Post extends AbsPost{
 	String[] cList;
 	int seen ;
 	
+	/**
+	 * Constructor
+	 * @param ownerOfTimeline
+	 * @param poster
+	 * @param content
+	 * @param nLikes
+	 * @param up
+	 * @param postPrivacy
+	 * @param postFeelings
+	 * @param ID
+	 * @param seen2
+	 */
 	public Post(String ownerOfTimeline, String poster, String content,
 			int nLikes,String up, String postPrivacy, String postFeelings, int ID, int seen2) {
 		super();
@@ -46,47 +58,98 @@ public class Post extends AbsPost{
 		seen = seen2;
 	}
 
+	/**
+	 * getter seen
+	 * @return
+	 */
 	public int getSeen() {
 		return seen;
 	}
 
+	/**
+	 * setter seen
+	 * @param seen
+	 */
 	public void setSeen(int seen) {
 		this.seen = seen;
 	}
 
+	/**
+	 * getter ID
+	 * @return
+	 */
 	public int getiD() {
 		return iD;
 	}
 
+	/**
+	 * getter ID
+	 * @param iD
+	 */
 	public void setiD(int iD) {
 		Post.iD = iD;
 	}
 
+	/**
+	 * getter ownerOfTimeLine
+	 * @return
+	 */
 	public String getOwnerOfTimeline() {
 		return OwnerOfTimeline;
 	}
 
+	/**
+	 * setter ownerOfTimeline
+	 * @param ownerOfTimeline
+	 */
 	public void setOwnerOfTimeline(String ownerOfTimeline) {
 		OwnerOfTimeline = ownerOfTimeline;
 	}
 
+	/**
+	 * getter poster
+	 * @return
+	 */
 	public String getPoster() {
 		return poster;
 	}
 
+	/**
+	 * setter poster
+	 * @param poster
+	 */
 	public void setPoster(String poster) {
 		Post.poster = poster;
 	}
+	
+	/**
+	 * getter Content
+	 * @return
+	 */
 
 	public String getContent() {
 		return content;
 	}
+	
+	/**
+	 * setter Content
+	 * @param content
+	 */
 	public void setContent(String content) {
 		this.content = content;
 	}
+	/**
+	 * getter nLikes
+	 * @return
+	 */
 	public int getnLikes() {
 		return likeID;
 	}
+	
+	/**
+	 * setter nLikes
+	 * @param nLikes
+	 */
 	public void setnLikes(int nLikes) {
 		this.likeID = nLikes;
 	}
@@ -127,10 +190,18 @@ public class Post extends AbsPost{
 
 	}
 	
+	/**
+	 * getter Feeling
+	 * @return
+	 */
 	public String getFeeling() {
 		return feeling;
 	}
 
+	/**
+	 * setter Feeling
+	 * @param feeling
+	 */
 	public void setFeeling(String feeling) {
 		this.feeling = feeling;
 	}
@@ -148,7 +219,7 @@ public class Post extends AbsPost{
 		Entity post = new Entity("Post", size);
 
 		post.setProperty("ID", size);
-		post.setProperty("Owner", UserController.fpName);
+		post.setProperty("Owner", uName);
 		post.setProperty("Poster", poster);
 		post.setProperty("Content", content);
 		post.setProperty("nLikes", likeID);
@@ -160,6 +231,13 @@ public class Post extends AbsPost{
 		return size;
 
 	}
+	/**
+	 * this method search the post table and get the post with this ID
+	 * @param ID
+	 * 		The ID of the post
+	 * @return
+	 * 		object from post
+	 */
 	@SuppressWarnings("deprecation")
 	public static Post getPostByName(int ID) 
 	{

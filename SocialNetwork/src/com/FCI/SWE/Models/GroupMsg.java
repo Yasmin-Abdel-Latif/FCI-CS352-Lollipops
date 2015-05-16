@@ -108,7 +108,8 @@ public class GroupMsg extends Messages{
 		conv.setProperty("ID", reciever);
 		conv.setProperty("Creator", UserController.userData.getName());
 		conv.setProperty("nRecievers", FriendsNames.length);
-		
+		System.out.println(conv.getProperty("ID"));
+		System.out.println(conv.getProperty("Creator"));
 		String r = "Reciever";
 		for(int i = 1 ; i <= FriendsNames.length ; i++)
 		{

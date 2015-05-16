@@ -117,6 +117,7 @@ public class Service {
 
 		JSONObject object = new JSONObject();
 		UserEntity user = UserEntity.getUserWithName(friend);
+		System.out.println("SERVICE");
 		if (user == null) 
 		{
 			object.put("Status", "Failed");
@@ -129,6 +130,7 @@ public class Service {
 			if (!isDone) 
 			{
 				object.put("Status", "Failed");
+				UserController.echo = "Request Faild";
 			} 
 			else
 			{
@@ -378,6 +380,12 @@ public class Service {
 		return object.toString();
 	}
 	
+	/**
+	 * this message is to get the handle the pressed notification
+	 * @param ID
+	 * @param type
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	@POST
 	@Path("/chosenService")
@@ -439,6 +447,14 @@ public class Service {
 		object.put("Status", "OK");
 		return object.toString();
 	}
+	
+	/**
+	 * 	share a post to the user timeline
+	 * @param ID
+	 * 	the id of the post
+	 * @return
+	 * JSONObject
+	 */
 	@SuppressWarnings("unchecked")
 	@POST
 	@Path("/shareService")
@@ -454,6 +470,35 @@ public class Service {
 		invoke.add();
 		object.put("Status", "OK");
 		return object.toString();
+	}
+	/**
+	 * check if there exist hashtag in post content and if true save the hashtag or update its frequency
+	 * @param pContent => post content
+	 * @param postId
+	 */
+	public void checkHashtag(String pContent, int postId)
+	{
+		if (pContent.contains("#")) 
+		{
+			Pattern MY_PATTERN = Pattern.compile("(?:(?<=\\s)|^)#(\\w*[A-Za-z_]+\\w*)");
+			Matcher mat = MY_PATTERN.matcher(pContent);
+			ArrayList<String> alreadyInPost = new ArrayList<String>();
+			while (mat.find()) {
+				String hash = mat.group(1);
+				if (alreadyInPost.contains(hash)) // if this hashtag is	repeated in the post
+					continue;
+				Hashtag hashObj = new Hashtag(hash);
+				if (!hashObj.checkHashTag()) 
+				{
+					hashObj.saveHashtag(postId);
+				} 
+				else 
+				{
+					hashObj.upDateHashtag(postId);
+				}
+				alreadyInPost.add(hash);
+			}
+		}
 	}
 	/**
 	 * create post service
@@ -481,27 +526,7 @@ public class Service {
 			like.setPostOrPage("post");
 			like.likeObj(UserController.userData.getName());
 			object.put("Status", "OK");
-			if (pContent.contains("#")) 
-			{
-				Pattern MY_PATTERN = Pattern.compile("(?:(?<=\\s)|^)#(\\w*[A-Za-z_]+\\w*)");
-				Matcher mat = MY_PATTERN.matcher(pContent);
-				ArrayList<String> alreadyInPost = new ArrayList<String>();
-				while (mat.find()) {
-					String hash = mat.group(1);
-					if (alreadyInPost.contains(hash)) // if this hashtag is	repeated in the post
-						continue;
-					Hashtag hashObj = new Hashtag(hash);
-					if (!hashObj.checkHashTag()) 
-					{
-						hashObj.saveHashtag(postId);
-					} 
-					else 
-					{
-						hashObj.upDateHashtag(postId);
-					}
-					alreadyInPost.add(hash);
-				}
-			}
+			checkHashtag(pContent, postId);
 		}
 		else
 		{
@@ -526,15 +551,15 @@ public class Service {
 		JSONObject object = new JSONObject();
 		pContent = pContent.trim();
 		//only friends can post on their friend timeline
-		if (Friend.getUserFriends(UserController.fpName).contains(UserController.userData.getName())) 
+		if (Friend.getUserFriends(UserController.friendName).contains(UserController.userData.getName())) 
 		{
 			if (!pContent.equals("")) 
 			{
 				UserController.FPageTimeline = new FriendPageTimeline();
-				Post newPost = new Post(UserController.fpName,UserController.userData.getName(), pContent, 0,"u", "", "",0,0); // no feelings on someone else's wall
+				Post newPost = new Post(UserController.friendName,UserController.userData.getName(), pContent, 0,"u", "", "",0,0); // no feelings on someone else's wall
 				ArrayList<Post> friendPagePosts = new ArrayList<Post>();
-				friendPagePosts.addAll(FriendPageTimeline.getAllPosts(UserController.fpName));
-				friendPagePosts.addAll(FriendPageTimeline.getAllSharedPosts(UserController.fpName));
+				friendPagePosts.addAll(FriendPageTimeline.getAllPosts(UserController.friendName));
+				friendPagePosts.addAll(FriendPageTimeline.getAllSharedPosts(UserController.friendName));
 				UserController.FPageTimeline.setPosts(friendPagePosts);
 				int postId = UserController.FPageTimeline.addPost(newPost);
 	 			object.put("Status", "OK");
@@ -542,27 +567,8 @@ public class Service {
 				Invoker invoke = new Invoker();
 				invoke.setCommand(postNotify);
 				invoke.add();
-				if (pContent.contains("#")) 
-				{
-					Pattern MY_PATTERN = Pattern.compile("(?:(?<=\\s)|^)#(\\w*[A-Za-z_]+\\w*)");
-					Matcher mat = MY_PATTERN.matcher(pContent);
-					ArrayList<String> alreadyInPost = new ArrayList<String>();
-					while (mat.find()) {
-						String hash = mat.group(1);
-						if (alreadyInPost.contains(hash)) // if this hashtag is	repeated in the post
-							continue;
-						Hashtag hashObj = new Hashtag(hash);
-						if (!hashObj.checkHashTag()) 
-						{
-							hashObj.saveHashtag(postId);
-						} 
-						else 
-						{
-							hashObj.upDateHashtag(postId);
-						}
-						alreadyInPost.add(hash);
-					}
-				}
+
+				checkHashtag(pContent, postId);
 			} 
 			else 
 			{
@@ -572,13 +578,25 @@ public class Service {
 		}
 		else 
 		{
-			UserController.echo = "You're not a friend of "+ UserController.fpName+ ". You can't post on thier timeline.\n Send them a friend request if you know them.";
+			UserController.echo = "You're not a friend of "+ UserController.friendName+ ". You can't post on thier timeline.\n Send them a friend request if you know them.";
 			object.put("Status", "Failed");
 		}
 		
 		return object.toString();
 	}
 	
+	/**
+	 * this service is to createPage Service
+	 * @param pageName
+	 * 		the page Name
+	 * @param pageType
+	 * 		the Type of the page
+	 * @param pageCatg
+	 * 		the category of the page
+	 * 
+	 * @return JSONObject
+	 */
+	@SuppressWarnings("unchecked")
 	@POST
 	@Path("/createpageService")
 	public String CreatePage(@FormParam("pageName") String pageName,
@@ -596,14 +614,22 @@ public class Service {
 			pageLike.setPostOrPage("page");
 			pageLike.likeObj(UserController.userData.getName());
 			UserController.echo = "Page created successfully "; //
+			object.put("Status", "OK");
 		} 
 		else 
 		{
 			UserController.echo = "This Page Name is already exist";
+			object.put("Status", "Failed");
 		}
 		return object.toString();
 	}
 
+	/**
+	 * this service is to search for specific hashTag
+	 * @param hash
+	 * 		the HashTag
+	 * @return JSONObject
+	 */
 	@SuppressWarnings("unchecked")
 	@POST
 	@Path("/hashSearchService")
@@ -635,8 +661,11 @@ public class Service {
 	}
 	
 	/**
+	 * this service is to like a page 
+	 * @param name
+	 * 	the user name 
+	 * @return JSONObject
 	 * 
-	 * @return
 	 */
 	@POST
 	@Path("/pagelikeService")
@@ -663,6 +692,7 @@ public class Service {
 	 * @param postID
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@POST
 	@Path("/postlikeService")
 	public String postLike(@FormParam("ID") String postID) {
@@ -675,17 +705,27 @@ public class Service {
 		like.allLikeUser();
 		ArrayList<String> users = like.getUsers();
 		if (users.contains(UserController.userData.getName()))
+		{
 			UserController.echo = "you already like this post";
+			object.put("Status", "Failed");
+		}
+			
 		else 
+		{
 			like.likePost(UserController.userData.getName());
+			object.put("Status", "OK");
+		}
+			
 		
 		return object.toString();
 	}
 	
 	/**
-	 * 
+	 * this method is to search for a specific page 
 	 * @param page
-	 * @return
+	 * 		page name
+	 * @return JSONObject
+	 * 	
 	 */
 	@SuppressWarnings("unchecked")
 	@POST
@@ -740,26 +780,8 @@ public class Service {
 			like.setObjID(postID);
 			like.setPostOrPage("post");
 			like.likeObj(UserController.userData.getName());
-			if (pContent.contains("#")) {
-				Pattern MY_PATTERN = Pattern
-						.compile("(?:(?<=\\s)|^)#(\\w*[A-Za-z_]+\\w*)");
-				Matcher mat = MY_PATTERN.matcher(pContent);
-				ArrayList<String> alreadyInPost = new ArrayList<String>();
-				while (mat.find()) {
-					String hash = mat.group(1);
-					if (alreadyInPost.contains(hash)) // if this hashtag is
-														// repeated in the post
-						continue;
-					Hashtag hashObj = new Hashtag(hash);
-					if (!hashObj.checkHashTag()) {
-						hashObj.saveHashtag(postID);
-					} else {
-						hashObj.upDateHashtag(postID);
-					}
-					alreadyInPost.add(hash);
 
-				}
-			}
+			checkHashtag(pContent, postID);
 			UserController.echo = "Post Created Successfuly";
 			object.put("Status", "OK");
 		} else {
@@ -769,17 +791,22 @@ public class Service {
 		return object.toString();
 	}
 	
+	/**
+	 * this method is to redirection to the friend page
+	 * @param fpName1
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	@POST
 	@Path("/redirService")
 	public String fpTimeline(@FormParam("searchBox") String fpName1) {
 		JSONObject object = new JSONObject();
 		fpName1 = fpName1.trim();
-		UserController.fpName = fpName1;
-		UserController.echo = UserController.fpName;
+		UserController.friendName = fpName1;
+		UserController.echo = UserController.friendName;
 		UserController.FPageTimeline = new FriendPageTimeline();
 		ArrayList<Post> friendPagePosts = new ArrayList<Post>();
-		friendPagePosts.addAll(FriendPageTimeline.getAllPosts(UserController.fpName));
+		friendPagePosts.addAll(FriendPageTimeline.getAllPosts(UserController.friendName));
 		UserController.FPageTimeline.setPosts(friendPagePosts);
 		UserController.FPageTimeline.seen();
 		object.put("Status", "OK");

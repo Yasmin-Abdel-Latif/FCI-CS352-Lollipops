@@ -20,7 +20,7 @@ public class Custom implements Privacy {
 	 * @param viewerName
 	 *                  name of the viewer of the timeline
 	 */
-	public void fillAccToPrivacy(ArrayList<Post> posts, String ownerName, String viewerName) {
+	public ArrayList<Post> fillAccToPrivacy(ArrayList<Post> posts, String ownerName, String viewerName) {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Query gaeQuery = new Query("Post");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
@@ -59,5 +59,6 @@ public class Custom implements Privacy {
 				}
 			}
 		}
+		return posts;
 	}
 }

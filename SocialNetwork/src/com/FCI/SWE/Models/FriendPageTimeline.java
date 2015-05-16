@@ -20,14 +20,32 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.FilterOperator;
-
+/**
+ * class FriendPageTimeline
+ * @author Nur Alwani
+ * @date April 20, 2015
+ * @version 1.0
+ *
+ */
 public class FriendPageTimeline extends Timeline{
 	
-	ArrayList<Post> posts = new ArrayList<>();
+	public static Comparator<Post> postsSortedByID = new Comparator<Post>() 
+			{
+				public int compare(Post post1, Post post2) 
+				{
+				   return post1.getiD()-post2.getiD(); // sort in an ascending order of id. (Display might be descending according to post type -- handled in jsp)
+				}
+			};
 	
+	ArrayList<Post> posts = new ArrayList<>();
+	/**
+	 * register post in datastore and return the post ID
+	 * @param newPost
+	 * @return postID
+	 */
 	public int addPost (Post newPost)
 	{
-		int postID = newPost.registerPostOnFP(UserController.fpName);
+		int postID = newPost.registerPostOnFP(UserController.friendName);
 		newPost.setiD(postID);
 		this.posts.add(newPost);
 		return postID;
@@ -64,39 +82,36 @@ public class FriendPageTimeline extends Timeline{
 	public static ArrayList<Post> getAllPosts(String ownerName) 
 	{
 		ArrayList<Post> posts = new ArrayList<Post>();
-		Privacy pub = new Public(); //always display public posts of the owner of the timeline am visiting OR posts with no privacy set => friend's post on that timline
-		pub.fillAccToPrivacy(posts,ownerName,UserController.userData.getName());
+		Privacy publicPost = new Public(); //always display public posts of the owner of the timeline am visiting OR posts with no privacy set => friend's post on that timline
+		publicPost.fillAccToPrivacy(posts,ownerName,UserController.userData.getName());
 		
 		ArrayList<String>ownerFriends=Friend.getUserFriends(ownerName); //allow displaying private posts only if am a friend to the timeline's owner
 		boolean friendOfOwner=false;
 		if (ownerFriends.contains(UserController.userData.getName()))
 		{
 			friendOfOwner=true;
-			Privacy pri = new Private(); 
-			pri.fillAccToPrivacy(posts,ownerName,UserController.userData.getName());
+			Privacy privatePost = new Private(); 
+			privatePost.fillAccToPrivacy(posts,ownerName,UserController.userData.getName());
 		}
 		
 		if (friendOfOwner) //if am a friend of the owner => check for custom posts am included in & display them
 		{
-			Privacy cus = new Custom();
-			cus.fillAccToPrivacy(posts, ownerName,UserController.userData.getName());
+			Privacy custom = new Custom();
+			custom.fillAccToPrivacy(posts, ownerName,UserController.userData.getName());
 		}
 		
 		Collections.sort(posts, postsSortedByID);
 		return posts;
 	}
 	
-	public static Comparator<Post> postsSortedByID = new Comparator<Post>() 
-	{
-		public int compare(Post p1, Post p2) 
-		{
-
-		   int pp1 = p1.getiD();
-		   int pp2 = p2.getiD();
-
-		   return pp1-pp2; // sort in an ascending order of id. (Display might be descending according to post type -- handled in jsp)
-		}
-	};
+	/**
+	 * this  method all the post that the user shared
+	 * @param ownerName
+	 * 		the owner of the timeline
+	 * @return
+	 * 		ArrayList of posts
+	 * 		
+	 */
 	public static ArrayList<Post> getAllSharedPosts(String ownerName) 
 	{
 		ArrayList<Post> posts = new ArrayList<Post>();
@@ -197,6 +212,11 @@ public class FriendPageTimeline extends Timeline{
 		Collections.sort(posts, postsSortedByID);
 		return posts;
 	}
+	
+	/**
+	 * setter for posts
+	 * @param posts
+	 */
 	public void setPosts(ArrayList<Post> posts) {
 		this.posts = new ArrayList<Post>();
 		for(int i = 0 ; i < posts.size() ; i++)

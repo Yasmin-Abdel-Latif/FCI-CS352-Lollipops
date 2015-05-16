@@ -1,5 +1,6 @@
 package com.FCI.SWE.Models;
 
+import java.lang.reflect.Constructor;
 import java.util.*;
 
 import com.google.appengine.api.datastore.DatastoreService;
@@ -90,6 +91,11 @@ public class Hashtag implements Comparable<Hashtag>{
 		return true;
 	}
 	
+	/**
+	 * this method get all the posts that has the hash on them
+	 * @return
+	 * 		ArrayList <Integer> IDs of the posts
+	 */
 	@SuppressWarnings("deprecation")
 	public ArrayList<Integer> allPost()
 	{
@@ -110,6 +116,11 @@ public class Hashtag implements Comparable<Hashtag>{
 		
 	}
 	
+	/**
+	 * this method return all the hashtags in the hashtag table
+	 * @return
+	 * 	ArrayList of hashtag
+	 */
 	public ArrayList <Hashtag> getAllHashtag ()
 	{
 		ArrayList <Hashtag> allHashtag = new ArrayList <Hashtag>();
@@ -127,21 +138,43 @@ public class Hashtag implements Comparable<Hashtag>{
 				
 	}
 
+	/**
+	 *  getter Hash
+	 * @return
+	 */
 	public String getHash() {
 		return hash;
 	}
 
+	/**
+	 *  Setter hash
+	 * @param hash
+	 */
 	public void setHash(String hash) {
 		this.hash = hash;
 	}
 
+	/**
+	 * getter nHahes
+	 * @return
+	 */
 	public int getnHashes() {
 		return nHashes;
 	}
 
+	/**
+	 * setter nHashes
+	 * @param nHashes
+	 */
 	public void setnHashes(int nHashes) {
 		this.nHashes = nHashes;
 	}
+	
+	/**
+	 * {@link Constructor}
+	 * @param hash
+	 * @param nHashes
+	 */
 
 	public Hashtag(String hash, int nHashes) {
 		super();
@@ -149,6 +182,9 @@ public class Hashtag implements Comparable<Hashtag>{
 		this.nHashes = nHashes;
 	}
 
+	/**
+	 * Compare to order the hashes by the number of posts 
+	 */
 	@Override
 	public int compareTo(Hashtag o) {
 		return this.nHashes - o.nHashes;

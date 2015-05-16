@@ -52,6 +52,8 @@ public class ChatMsg extends Messages {
 		message.setProperty("Msg", msg);
 		message.setProperty("Seen", false);
 		datastore.put(message);
+		System.out.println(message.getProperty("Reciever"));
+		System.out.println(message.getProperty("Sender"));
 		
 		return true;
 	}

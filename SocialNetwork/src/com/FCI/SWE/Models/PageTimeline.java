@@ -10,7 +10,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 
 /**
- * 
+ * this class has all the information to view a page timeline
  * @author mariam
  *
  */

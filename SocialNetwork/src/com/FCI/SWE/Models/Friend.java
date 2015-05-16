@@ -113,6 +113,7 @@ public class Friend {
 							.equals(Friend.rName) && entity.getProperty("state").toString().equals("true"))
 			{
 				UserController.echo = "You are already friends";
+				System.out.println(UserController.echo);
 				return false;
 			}
 			// if already the other user is a friend or sent a request
@@ -121,6 +122,7 @@ public class Friend {
 							.equals(Friend.sName) && entity.getProperty("state").toString().equals("true"))
 			{
 				UserController.echo = "You are already friends";
+				System.out.println(UserController.echo);
 				return false;
 			}
 			
@@ -129,6 +131,7 @@ public class Friend {
 							.equals(Friend.rName) && !entity.getProperty("state").toString().equals("true"))
 			{
 				UserController.echo = "You already sent request before";
+				System.out.println(UserController.echo);
 				return false;
 			}
 			// if already the other user is a friend or sent a request
@@ -137,17 +140,23 @@ public class Friend {
 							.equals(Friend.sName) && !entity.getProperty("state").toString().equals("true"))
 			{
 				UserController.echo = "You already have a request from this user";
+				System.out.println(UserController.echo);
 				return false;
 			}
 			if(rName.equals(sName))
 			{
 				UserController.echo = "You are sending request to yourself! o.O DUH :D";
+				System.out.println(UserController.echo);
 				return false;
 			}
 		}
 		// check now if there is a user with this name
 		if (UserEntity.getUserWithName(rName) == null)
+		{
+			UserController.echo = "User Not Exist";
+			System.out.println(UserController.echo);
 			return false;
+		}
 		Key UserKey = KeyFactory.createKey("friend",
 				((sName.length() * 3) + (rName.length() * 2)) * 2);
 		Entity friends = new Entity("friend", UserKey);
@@ -160,6 +169,7 @@ public class Friend {
 		datastore.put(friends);
 		
 		UserController.echo = "Request Sent Successfully";
+		System.out.println(UserController.echo);
 		return true;
 	}
 
@@ -182,6 +192,13 @@ public class Friend {
 		return friends;
 	}
 	
+	/**
+	 * this method is used to get all the friends of the user name
+	 * @param name
+	 * 		the user name
+	 * @return
+	 * 		ArrayList of all the friends names
+	 */
 	public static ArrayList<String> getUserFriends(String name) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -203,6 +220,13 @@ public class Friend {
 		return friends;
 	}
 	
+	/**
+	 * this method is used to get all the friends request of the user name
+	 * @param name
+	 * 		the user name
+	 * @return
+	 * 		ArrayList of all the friends request names
+	 */
 	public static ArrayList<String> getUserSentRequests(String name) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();

@@ -11,6 +11,11 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 
+/**
+ * this class control the share posts
+ * @author yasmeen
+ *
+ */
 public class Share {
 
 	public static String postOwner;
@@ -18,11 +23,25 @@ public class Share {
 	public static int ID;
 	public static int postID;
 	
-	public Share(){}
+	/**
+	 * Constructor
+	 */
+	public Share(){
+		
+	}
+	
+	/**
+	 * Constructor
+	 * @param postId
+	 */
 	public Share(int postId)
 	{
 		postID = postId;
 	}
+	
+	/**
+	 * this method share a post into user timeline
+	 */
 	@SuppressWarnings("deprecation")
 	public void share()
 	{

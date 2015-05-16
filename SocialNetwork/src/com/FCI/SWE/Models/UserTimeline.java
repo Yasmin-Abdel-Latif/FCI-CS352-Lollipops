@@ -24,13 +24,22 @@ public class UserTimeline extends Timeline {
 	ArrayList<Post> posts = new ArrayList<>();
 	String ownerOfTimeline;
 	
+	/**
+	 * Constructor
+	 */
 	public UserTimeline() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
 
-
+/**
+ * Constructor
+ * @param profilePicture
+ * @param coverPhoto
+ * @param posts
+ * @param ownerOfTimeline
+ */
 	public UserTimeline(String profilePicture, String coverPhoto,
 			ArrayList<Post> posts, String ownerOfTimeline) {
 		super(profilePicture, coverPhoto);
@@ -96,6 +105,13 @@ public class UserTimeline extends Timeline {
 		return posts;
 	}
 	
+	/**
+	 * this method is used to get all the shared post of the owner of the timeline
+	 * @param ownerName
+	 * owner of the timeline
+	 * @return
+	 * arrayList of posts
+	 */
 	public static ArrayList<Post> getAllSharedPosts(String ownerName) {
 		
 		ArrayList<Post> posts = new ArrayList<Post>();
@@ -132,10 +148,18 @@ public class UserTimeline extends Timeline {
 		return posts;
 	}
 
+	/**
+	 * getter posts
+	 * @return
+	 */
 	public ArrayList<Post> getPosts() {
 		return posts;
 	}
 
+	/**
+	 * setter posts
+	 * @param posts
+	 */
 	public void setPosts(ArrayList<Post> posts) {
 		this.posts = posts;
 	}

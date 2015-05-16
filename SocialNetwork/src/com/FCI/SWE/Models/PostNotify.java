@@ -16,14 +16,13 @@ public class PostNotify implements Notification {
 	public String rName;
 	public String sName;
 	public String msg;
-	public int type;
+	public final static String TYPE = "5";
 	public boolean seen;
 
 	/**
 	 * Execution Function
 	 */
 	public void addNotification() {
-		type = 5;
 		rName = Post.OwnerOfTimeline;
 		sName = Post.poster;
 		msg = Post.poster + " Posted On Your Timeline";
@@ -37,7 +36,7 @@ public class PostNotify implements Notification {
 		Entity messageNotify = new Entity("Notifications", list1.size()+1);
 
 		messageNotify.setProperty("ID", list1.size() + 1);
-		messageNotify.setProperty("Type", 5);
+		messageNotify.setProperty("Type", TYPE);
 		messageNotify.setProperty("Sender", Post.poster);
 		messageNotify.setProperty("Name", Post.OwnerOfTimeline);
 		messageNotify.setProperty("Msg", Post.poster + " Posted On Your Timeline");
@@ -93,7 +92,7 @@ public class PostNotify implements Notification {
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 		ArrayList<String> friends = new ArrayList<String>();
 		for (Entity entity : pq.asIterable()) {
-			if (entity.getProperty("Type").toString().equals("5")
+			if (entity.getProperty("Type").toString().equals(TYPE)
 					&& entity.getProperty("Seen").toString().equals("false")
 					&& entity.getProperty("Name").toString().equals(UserController.userData.getName())) 
 			{
@@ -111,7 +110,7 @@ public class PostNotify implements Notification {
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 		ArrayList<String> friends = new ArrayList<String>();
 		for (Entity entity : pq.asIterable()) {
-			if (entity.getProperty("Type").toString().equals("5")
+			if (entity.getProperty("Type").toString().equals(TYPE)
 					&& entity.getProperty("Seen").toString().equals("true")
 					&& entity.getProperty("Name").toString().equals(UserController.userData.getName())) 
 			{
@@ -129,7 +128,7 @@ public class PostNotify implements Notification {
 		PreparedQuery pq = datastore.prepare(query);
 		for(Entity notifications : pq.asIterable())
 		{
-			if (notifications.getProperty("Type").toString().equals("5")
+			if (notifications.getProperty("Type").toString().equals(TYPE)
 					&& notifications.getProperty("Seen").toString().equals("false")
 					&& notifications.getProperty("Name").toString().equals(UserController.userData.getName())) 
 			{
@@ -142,7 +141,7 @@ public class PostNotify implements Notification {
 				Entity notifications2 = new Entity("Notifications", Integer.parseInt(ID));
 
 				notifications2.setProperty("ID", Integer.parseInt(ID));
-				notifications2.setProperty("Type", 5);
+				notifications2.setProperty("Type", TYPE);
 				notifications2.setProperty("Sender", sender);
 				notifications2.setProperty("Name", UserController.userData.getName());
 				notifications2.setProperty("Msg", msg);
