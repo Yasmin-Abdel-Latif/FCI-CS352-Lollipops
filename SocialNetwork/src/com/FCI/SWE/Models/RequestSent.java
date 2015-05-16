@@ -29,6 +29,10 @@ public class RequestSent implements Notification{
 	public String msg;
 	public final static String TYPE = "2";
 	public boolean seen;
+	
+	/**
+	 * Action function to add new notification into the data store
+	 */
 	public void addNotification()
 	{
 		rName = Friend.rName;
@@ -52,6 +56,12 @@ public class RequestSent implements Notification{
 		datastore1.put(messageNotify);
 	}
 	
+	/**
+	 * Action function enters the data store and get all related records to the pressed 
+	 * notification which in this case, the history of sent requests
+	 * @param ID the notification ID
+	 * @return arraylist holds history of sent requests
+	 */
 	public ArrayList<String> pressedNotification(String ID)
 	{
 		ID = ID.trim();
@@ -71,6 +81,12 @@ public class RequestSent implements Notification{
 		messages = Friend.getUserFriendRequests(name);
 		return messages;
 	}
+	
+	/**
+	 * Action function enters the data store and get all unseen records of the sent request 
+	 * notifications
+	 * @return arraylist holds unseen notifications of type sentrequest
+	 */
 	public static ArrayList<String> myUnSeenNotifications()
 	{
 		DatastoreService datastore = DatastoreServiceFactory
@@ -88,6 +104,12 @@ public class RequestSent implements Notification{
 		}
 		return friends;
 	}
+	
+	/**
+	 * Action function enters the data store and get all seen records of the sent requests 
+	 * notifications
+	 * @return arraylist holds seen notifications of type sentrequest
+	 */
 	public static ArrayList<String> mySeenNotifications()
 	{
 		DatastoreService datastore = DatastoreServiceFactory
@@ -106,6 +128,10 @@ public class RequestSent implements Notification{
 		return friends;
 	}
 	
+	/**
+	 * Action function enters the data store and change the notifications of 
+	 * this user to seen notification
+	 */
 	public void seenNotification()
 	{
 		DatastoreService datastore = DatastoreServiceFactory

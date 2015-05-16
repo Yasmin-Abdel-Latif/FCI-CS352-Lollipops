@@ -52,6 +52,12 @@ public class ShareNotify implements Notification {
 		datastore1.put(messageNotify);
 	}
 
+	/**
+	 * Action function enters the data store and get all related records to the pressed 
+	 * notification which in this case, the shared post
+	 * @param ID the notification ID
+	 * @return arraylist holds the shared post format
+	 */
 	public ArrayList<String> pressedNotification(String ID) {
 		ID = ID.trim();
 		DatastoreService datastore = DatastoreServiceFactory
@@ -106,6 +112,11 @@ public class ShareNotify implements Notification {
 		return messages;
 	}
 
+	/**
+	 * Action function enters the data store and get all unseen records of the share post 
+	 * notifications
+	 * @return arraylist holds unseen notifications of type share
+	 */
 	public static ArrayList<String> myUnSeenNotifications() {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -123,6 +134,11 @@ public class ShareNotify implements Notification {
 		return friends;
 	}
 	
+	/**
+	 * Action function enters the data store and get all seen records of the share post 
+	 * notifications
+	 * @return arraylist holds seen notifications of type share
+	 */
 	public static ArrayList<String> mySeenNotifications()
 	{
 		DatastoreService datastore = DatastoreServiceFactory
@@ -141,6 +157,10 @@ public class ShareNotify implements Notification {
 		return friends;
 	}
 
+	/**
+	 * Action function enters the data store and change the notifications of 
+	 * this user to seen notification
+	 */
 	public void seenNotification()
 	{
 		DatastoreService datastore = DatastoreServiceFactory

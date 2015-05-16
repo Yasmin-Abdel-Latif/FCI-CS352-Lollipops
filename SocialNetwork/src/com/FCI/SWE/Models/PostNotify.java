@@ -10,7 +10,13 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
-
+/**
+ * class PostNotify
+ * @author Jasmin Abdel Latif
+ * @date April 20, 2015
+ * @version 1.0
+ *
+ */
 public class PostNotify implements Notification {
 
 	public String rName;
@@ -20,7 +26,7 @@ public class PostNotify implements Notification {
 	public boolean seen;
 
 	/**
-	 * Execution Function
+	 * Action function to add new notification into the data store
 	 */
 	public void addNotification() {
 		rName = Post.OwnerOfTimeline;
@@ -45,6 +51,12 @@ public class PostNotify implements Notification {
 		datastore1.put(messageNotify);
 	}
 
+	/**
+	 * Action function enters the data store and get all related records to the pressed 
+	 * notification which in this case, the post created on my timeline by a friend
+	 * @param ID the notification ID
+	 * @return arraylist holds the post format
+	 */
 	public ArrayList<String> pressedNotification(String ID) {
 		ID = ID.trim();
 		DatastoreService datastore = DatastoreServiceFactory
@@ -85,6 +97,11 @@ public class PostNotify implements Notification {
 		return messages;
 	}
 
+	/**
+	 * Action function enters the data store and get all unseen records of the post 
+	 * notifications
+	 * @return arraylist holds unseen notifications of type post
+	 */
 	public static ArrayList<String> myUnSeenNotifications() {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -101,7 +118,11 @@ public class PostNotify implements Notification {
 		}
 		return friends;
 	}
-	
+	/**
+	 * Action function enters the data store and get all seen records of the post 
+	 * notifications
+	 * @return arraylist holds seen notifications of type post
+	 */
 	public static ArrayList<String> mySeenNotifications()
 	{
 		DatastoreService datastore = DatastoreServiceFactory
@@ -120,6 +141,10 @@ public class PostNotify implements Notification {
 		return friends;
 	}
 
+	/**
+	 * Action function enters the data store and change the notifications of 
+	 * this user to be seen
+	 */
 	public void seenNotification()
 	{
 		DatastoreService datastore = DatastoreServiceFactory

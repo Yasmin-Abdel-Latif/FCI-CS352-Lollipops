@@ -32,7 +32,7 @@ public class MsgNotify implements Notification {
 	public boolean seen;
 
 	/**
-	 * Execution Function
+	 * Action function to add new notification into the data store
 	 */
 	public void addNotification() {
 		rName = Messages.reciever;
@@ -57,6 +57,12 @@ public class MsgNotify implements Notification {
 		datastore1.put(messageNotify);
 	}
 
+	/**
+	 * Action function enters the data store and get all related records to the pressed 
+	 * notification which in this case, the conversation between the user and his friend
+	 * @param ID the notification ID
+	 * @return arraylist holds history of conversation messages
+	 */
 	public ArrayList<String> pressedNotification(String ID) 
 	{
 		ID = ID.trim();
@@ -94,6 +100,11 @@ public class MsgNotify implements Notification {
 		return messages;
 	}
 
+	/**
+	 * Action function enters the data store and get all unseen records of the chat message 
+	 * notifications
+	 * @return arraylist holds unseen notifications of type chat message
+	 */
 	public static ArrayList<String> myUnSeenNotifications() {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -111,6 +122,11 @@ public class MsgNotify implements Notification {
 		return friends;
 	}
 	
+	/**
+	 * Action function enters the data store and get all seen records of the chat message 
+	 * notifications
+	 * @return arraylist holds seen notifications of type chat message
+	 */
 	public static ArrayList<String> mySeenNotifications()
 	{
 		DatastoreService datastore = DatastoreServiceFactory
@@ -129,6 +145,10 @@ public class MsgNotify implements Notification {
 		return friends;
 	}
 
+	/**
+	 * Action function enters the data store and change the notifications of 
+	 * this user to seen notification
+	 */
 	public void seenNotification()
 	{
 		DatastoreService datastore = DatastoreServiceFactory

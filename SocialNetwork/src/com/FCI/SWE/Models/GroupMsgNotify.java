@@ -20,7 +20,7 @@ public class GroupMsgNotify implements Notification {
 	public boolean seen;
 
 	/**
-	 * Execution Function
+	 * Action function to add new notification into the data store
 	 */
 	public void addNotification() {
 		rName = Messages.reciever;
@@ -55,6 +55,12 @@ public class GroupMsgNotify implements Notification {
 		}
 	}
 
+	/**
+	 * Action function enters the data store and get all related records to the pressed 
+	 * notification which in this case, the conversation messages
+	 * @param ID the notification ID
+	 * @return ArrayList holds the whole conversation
+	 */
 	public ArrayList<String> pressedNotification(String ID) 
 	{
 		ID = ID.trim();
@@ -87,6 +93,11 @@ public class GroupMsgNotify implements Notification {
 		return messages;
 	}
 
+	/**
+	 * Action function enters the data store and get all unseen records of the GroupMsg 
+	 * notifications
+	 * @return ArrayList holds unseen notifications of type GroupMsgNotify
+	 */
 	public static ArrayList<String> myUnSeenNotifications() {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -104,6 +115,11 @@ public class GroupMsgNotify implements Notification {
 		return friends;
 	}
 	
+	/**
+	 * Action function enters the data store and get all seen records of the GroupMsg 
+	 * notifications
+	 * @return ArrayList holds seen notifications of type GroupMsgNotify
+	 */
 	public static ArrayList<String> mySeenNotifications()
 	{
 		DatastoreService datastore = DatastoreServiceFactory
@@ -122,6 +138,10 @@ public class GroupMsgNotify implements Notification {
 		return friends;
 	}
 
+	/**
+	 * Action function enters the data store and change the notifications of 
+	 * this user to seen notification
+	 */
 	public void seenNotification()
 	{
 		DatastoreService datastore = DatastoreServiceFactory
