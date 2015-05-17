@@ -49,7 +49,7 @@
 							<%
 								String poster = UserController.pageTimeline.posts.get(i).getPoster();
 								String content =  UserController.pageTimeline.posts.get(i).getContent();
-								int LikeID = FriendPageTimeline.getAllPosts(UserController.fpName).get(i).getnLikes();
+								int LikeID = FriendPageTimeline.getAllPosts(UserController.friendName).get(i).getnLikes();
 								int nLikes = Like.nLikeByID(LikeID);
 								int seen = UserController.pageTimeline.posts.get(i).getSeen();
 							%> <B> <% out.println(poster + " : "); %>

@@ -53,7 +53,7 @@ public class Like {
 	/**
 	 * this method is to add user name to like post
 	 * @param userName
-	 * @return
+	 * @return the record ID
 	 */
 	@SuppressWarnings("deprecation")
 	public int likePost(String userName) {
@@ -105,7 +105,7 @@ public class Like {
 	 * 		ID of the like object
 	 */
 	@SuppressWarnings("deprecation")
-	public void allLikeUserByID(int ID) {
+	public int allLikeUserByID(int ID) {
 
 		users = new ArrayList<String>();
 		DatastoreService datastore = DatastoreServiceFactory
@@ -121,6 +121,7 @@ public class Like {
 					.toString();
 			users.add(likeUserName);
 		}
+		return users.size();
 	}
 	
 	/**
@@ -129,7 +130,7 @@ public class Like {
 	 * 
 	 */
 	@SuppressWarnings("deprecation")
-	public void allLikeUser() {
+	public int allLikeUser() {
 
 		users = new ArrayList<String>();
 		DatastoreService datastore = DatastoreServiceFactory
@@ -146,6 +147,7 @@ public class Like {
 					.toString();
 			users.add(RecieverName);
 		}
+		return users.size();
 	}
 
 	/**
@@ -159,7 +161,7 @@ public class Like {
 		Query gaeQuery = new Query("Like");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 		for (Entity entity : pq.asIterable()) {
-			if (entity.getProperty("likeID").toString().equals(likeID)) {
+			if (entity.getProperty("likeID").toString().equals("" + likeID)) {
 				return true;
 			}
 

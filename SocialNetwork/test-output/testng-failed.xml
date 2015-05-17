@@ -3,14 +3,14 @@
 <suite name="Failed suite [Default suite]">
   <test name="Default test(failed)">
     <classes>
-      <class name="com.FCI.SWE.Models.TestPrivacyEntity">
+      <class name="com.FCI.SWE.Models.TestLikeEntity">
         <methods>
           <include name="setUp"/>
-          <include name="fillAccToPrivacyPublicModelTest"/>
+          <include name="likePostModelTest"/>
+          <include name="likeObjModelTest1"/>
           <include name="tearDown"/>
-          <include name="fillAccToPrivacyPrivateModelTest"/>
         </methods>
-      </class> <!-- com.FCI.SWE.Models.TestPrivacyEntity -->
+      </class> <!-- com.FCI.SWE.Models.TestLikeEntity -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

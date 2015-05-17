@@ -1,33 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testng-results skipped="0" failed="0" total="3" passed="3">
+<testng-results skipped="0" failed="0" total="7" passed="7">
   <reporter-output>
   </reporter-output>
-  <suite name="Default suite" duration-ms="482" started-at="2015-05-10T21:55:19Z" finished-at="2015-05-10T21:55:19Z">
+  <suite name="Default suite" duration-ms="697" started-at="2015-05-17T16:47:20Z" finished-at="2015-05-17T16:47:21Z">
     <groups>
     </groups>
-    <test name="Default test" duration-ms="482" started-at="2015-05-10T21:55:19Z" finished-at="2015-05-10T21:55:19Z">
-      <class name="com.FCI.SWE.Models.TestPageEntity">
-        <test-method status="PASS" signature="setUp()[pri:0, instance:com.FCI.SWE.Models.TestPageEntity@482ef8a9]" name="setUp" is-config="true" duration-ms="35" started-at="2015-05-10T23:55:19Z" finished-at="2015-05-10T23:55:19Z">
+    <test name="Default test" duration-ms="697" started-at="2015-05-17T16:47:20Z" finished-at="2015-05-17T16:47:21Z">
+      <class name="com.FCI.SWE.Models.TestLikeEntity">
+        <test-method status="PASS" signature="setUp()[pri:0, instance:com.FCI.SWE.Models.TestLikeEntity@869fb6d]" name="setUp" is-config="true" duration-ms="56" started-at="2015-05-17T18:47:20Z" finished-at="2015-05-17T18:47:20Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- setUp -->
-        <test-method status="PASS" signature="SavePageModelTest()[pri:0, instance:com.FCI.SWE.Models.TestPageEntity@482ef8a9]" name="SavePageModelTest" duration-ms="425" started-at="2015-05-10T23:55:19Z" finished-at="2015-05-10T23:55:19Z">
+        <test-method status="PASS" signature="likeObjModelTest()[pri:0, instance:com.FCI.SWE.Models.TestLikeEntity@869fb6d]" name="likeObjModelTest" duration-ms="564" started-at="2015-05-17T18:47:20Z" finished-at="2015-05-17T18:47:21Z">
           <reporter-output>
           </reporter-output>
-        </test-method> <!-- SavePageModelTest -->
-        <test-method status="PASS" signature="checkPageModelTest()[pri:0, instance:com.FCI.SWE.Models.TestPageEntity@482ef8a9]" name="checkPageModelTest" duration-ms="7" started-at="2015-05-10T23:55:19Z" depends-on-methods="com.FCI.SWE.Models.TestPageEntity.SavePageModelTest" finished-at="2015-05-10T23:55:19Z">
+        </test-method> <!-- likeObjModelTest -->
+        <test-method status="PASS" signature="likeObjModelTest1()[pri:0, instance:com.FCI.SWE.Models.TestLikeEntity@869fb6d]" name="likeObjModelTest1" duration-ms="17" started-at="2015-05-17T18:47:21Z" finished-at="2015-05-17T18:47:21Z">
           <reporter-output>
           </reporter-output>
-        </test-method> <!-- checkPageModelTest -->
-        <test-method status="PASS" signature="getPageModelTest()[pri:0, instance:com.FCI.SWE.Models.TestPageEntity@482ef8a9]" name="getPageModelTest" duration-ms="1" started-at="2015-05-10T23:55:19Z" depends-on-methods="com.FCI.SWE.Models.TestPageEntity.SavePageModelTest" finished-at="2015-05-10T23:55:19Z">
+        </test-method> <!-- likeObjModelTest1 -->
+        <test-method status="PASS" signature="allLikeUsersByIDModelTest()[pri:0, instance:com.FCI.SWE.Models.TestLikeEntity@869fb6d]" name="allLikeUsersByIDModelTest" duration-ms="11" started-at="2015-05-17T18:47:21Z" depends-on-methods="com.FCI.SWE.Models.TestLikeEntity.likeObjModelTest" finished-at="2015-05-17T18:47:21Z">
           <reporter-output>
           </reporter-output>
-        </test-method> <!-- getPageModelTest -->
-        <test-method status="PASS" signature="tearDown()[pri:0, instance:com.FCI.SWE.Models.TestPageEntity@482ef8a9]" name="tearDown" is-config="true" duration-ms="0" started-at="2015-05-10T23:55:19Z" finished-at="2015-05-10T23:55:19Z">
+        </test-method> <!-- allLikeUsersByIDModelTest -->
+        <test-method status="PASS" signature="likePageModelTest()[pri:0, instance:com.FCI.SWE.Models.TestLikeEntity@869fb6d]" name="likePageModelTest" duration-ms="6" started-at="2015-05-17T18:47:21Z" depends-on-methods="com.FCI.SWE.Models.TestLikeEntity.likeObjModelTest" finished-at="2015-05-17T18:47:21Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- likePageModelTest -->
+        <test-method status="PASS" signature="likePostModelTest()[pri:0, instance:com.FCI.SWE.Models.TestLikeEntity@869fb6d]" name="likePostModelTest" duration-ms="5" started-at="2015-05-17T18:47:21Z" depends-on-methods="com.FCI.SWE.Models.TestLikeEntity.likeObjModelTest1" finished-at="2015-05-17T18:47:21Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- likePostModelTest -->
+        <test-method status="PASS" signature="allLikeUserModelTest()[pri:0, instance:com.FCI.SWE.Models.TestLikeEntity@869fb6d]" name="allLikeUserModelTest" duration-ms="4" started-at="2015-05-17T18:47:21Z" depends-on-methods="com.FCI.SWE.Models.TestLikeEntity.likePageModelTest" finished-at="2015-05-17T18:47:21Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- allLikeUserModelTest -->
+        <test-method status="PASS" signature="checkLikeIDModelTest()[pri:0, instance:com.FCI.SWE.Models.TestLikeEntity@869fb6d]" name="checkLikeIDModelTest" duration-ms="6" started-at="2015-05-17T18:47:21Z" depends-on-methods="com.FCI.SWE.Models.TestLikeEntity.likePageModelTest" finished-at="2015-05-17T18:47:21Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- checkLikeIDModelTest -->
+        <test-method status="PASS" signature="tearDown()[pri:0, instance:com.FCI.SWE.Models.TestLikeEntity@869fb6d]" name="tearDown" is-config="true" duration-ms="2" started-at="2015-05-17T18:47:21Z" finished-at="2015-05-17T18:47:21Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- tearDown -->
-      </class> <!-- com.FCI.SWE.Models.TestPageEntity -->
+      </class> <!-- com.FCI.SWE.Models.TestLikeEntity -->
     </test> <!-- Default test -->
   </suite> <!-- Default suite -->
 </testng-results>
